@@ -1,0 +1,986 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>연구</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>연구</h1>
+<p>주제: 목표: 동일한 웹 페이지를 대상으로 파이썬 웹 크롤링 라이브러리들의 다운로드 및 파싱 속도를 비교한다.
+할 일:
+1. 비교 대상 라이브러리 선정: requests+BeautifulSoup, aiohttp+asyncio+BeautifulSoup, Scrapy, httpx+selectolax, pyppeteer(또는 playwright).
+2. 테스트용 URL 선정(예: https://example.com 또는 실제 HTML 구조가 복잡한 공개 페이지).
+3. 각 라이브러리별로 10회 반복 요청·HTML 파싱을 수행하고 전체 소요 시간을 측정한다.
+4. 평균 응답·파싱 시간과 표준편차를 계산한다.
+5. 결과를 표 형태로 정리하고, 비동기/동기 방식, 헤드리스 브라우저 여부 등 부가 정보를 포함한다.
+성공 기준: 각 라이브러리별 평균 시간(ms)과 표준편차가 포함된 비교 표를 제공하고, 테스트 환경(파이썬 버전, OS, CPU)도 명시한다.<br>결과: 미완료 · 행동 39번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>지금까지 한 일<br><br>- 테스트 환경 확인: Python 3.12.15, Linux(Azure VM), CPU 4코어. 대상 라이브러리(requests, beautifulsoup4, aiohttp, httpx, selectolax, scrapy, playwright 등) 설치 완료.<br>- 테스트 URL: https://example.com 사용.<br>- requests+BeautifulSoup: 10회 반복 측정 완료. 평균 약 69.92 ms, 표준편차 약 8.61 ms.<br>- aiohttp+asyncio+BeautifulSoup: 10회 반복 측정 완료. 평균 약 33.51 ms, 표준편차 약 12.34 ms.<br>- httpx+selectolax: 초기에 selectolax modest 백엔드 deprecated 오류가 났으나, lexbor 엔진으로 변경 후 측정 완료. 평균 약 30.10 ms, 표준편차 약 9.75 ms.<br>- Scrapy: timing_spider.py 작성 및 실행 시도했으나, 측정 결과를 /tmp/scrapy_times.txt에 저장하는 데 실패(종료코드 1, 파일 없음).<br><br>막힌 점 / 남은 일<br><br>- Scrapy 측정 결과 저장 오류 해결 필요.<br>- playwright(또는 pyppeteer) 헤드리스 브라우저 방식 미측정.<br>- 모든 라이브러리 결과를 종합한 비교 표(평균·표준편차, 동기/비동기, 헤드리스 여부 등) 미작성.<br>- 테스트 환경 상세 정보(CPU 모델 등)를 결과 표에 포함할 필요.</p>
+<h2>결과 파일</h2><ul><li>없음</li></ul><h2>작업 기록</h2><details><summary>[1] search Python web crawling libraries requests BeautifulSoup aiohttp Scrapy httpx selectolax playwright perf</summary><pre></pre><pre>1. Best Python Web Scraping Libraries for 2026 - DEV Community
+https://dev.to/yasser_sami/best-python-web-scraping-libraries-for-2026-5bfn
+When evaluating the best Python web scraping libraries , developers often compare tools that do not actually compete. BeautifulSoup parses HTML, HTTPX fetches it, and Playwright renders JavaScript. To extract data reliably, you must combine these distinct layers based on your target&#x27;s complexity, execution scale, and downstream data consumer.
+
+2. Best Python Web Scraping Libraries in 2026 - context.dev
+https://www.context.dev/blog/best-python-web-scraping-libraries-2026
+TL;DR The best Python web scraping stack depends on which layer you need. This guide compares 11 distinct picks: ten Python tool choices and Context.dev, a managed API alternative rather than a Python library. Use Requests , HTTPX , or aiohttp to fetch static HTML; BeautifulSoup , lxml, or selectolax to parse it; Playwright or Selenium to render and interact with JavaScript-heavy pages; Scrapy or ...
+
+3. Best Python Scraping Libraries in 2026: 6 Compared | cloro
+https://cloro.dev/blog/python-scraping-libraries/
+Compare the 6 best Python scraping libraries for 2026: requests with BS4, Scrapy , Playwright , httpx , and Selenium, plus when to skip them entirely.
+
+4. Python Libraries for Web Scraping (With Examples)
+https://pythonguides.com/python-libraries-for-web-scraping/
+Python libraries for web scraping compared: Requests , Beautiful Soup, lxml, pandas, Scrapy , Selenium and Playwright , with real code and how to choose.
+
+5. Best Python Web Scraping Libraries in 2026: A Complete Comparison
+https://www.statproxies.com/blog/python-web-scraping-libraries
+Compare the best Python web scraping libraries in 2026 - requests , httpx , curl_cffi, BeautifulSoup , lxml, selectolax , Playwright , Scrapy , and more.
+
+6. Best Python scraping libraries 2026: Scrapy, BS4, more
+https://dataresearchtools.com/best-python-scraping-libraries-2026/
+Best Python scraping libraries 2026: Scrapy , BS4, more Best Python scraping libraries in 2026 cover a stack that has matured significantly since the requests + BeautifulSoup era. The HTTP client layer has been split into a dozen options optimized for different use cases. Browser automation has consolidated around Playwright . Parsing has stabilized on lxml under the hood with multiple frontend ...
+
+7. Best Python Web Scraping Libraries: Comparison and How to Choose
+https://decodo.com/blog/python-web-scraping-libraries
+Compare Python web scraping libraries by use case, performance , and scale. Find the right tool for static, dynamic, and large-scale scraping.
+
+8. Best Python Web Scraping Libraries (2026), Benchmarked
+https://webcrawlerapi.com/blog/best-python-web-scraping-libraries
+The best Python web scraping libraries for fetching, parsing, JS pages and crawling , run on the same 10-page job. Time, memory, size, and which to pick.</pre></details><details><summary>[2] shell uname -a &amp;&amp; python3 --version &amp;&amp; cat /proc/cpuinfo | grep &quot;model name&quot; | head -1 &amp;&amp; free -h | head -</summary><pre></pre><pre>[종료코드 0]
+Linux runnervm48cm3 7.0.0-1017-azure #17~24.04.1-Ubuntu SMP PREEMPT Thu Sep 24 18:46:57 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Python 3.12.15
+model name	: Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       1.0Gi        14Gi        43Mi       914Mi        14Gi
+</pre></details><details><summary>[3] shell mkdir -p ~/ws/out &amp;&amp; pip list 2&gt;/dev/null | grep -iE &quot;requests|beautifulsoup|aiohttp|scrapy|httpx|se</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[4] shell pip install requests beautifulsoup4 aiohttp httpx selectolax lxml playwright scrapy 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+Downloading filelock-4.2.4-py3-none-any.whl (162 kB)
+Downloading requests_file-3.0.1-py2.py3-none-any.whl (4.5 kB)
+Installing collected packages: pydispatcher, brotli, zope-interface, w3lib, urllib3, typing-extensions, soupsieve, selectolax, queuelib, pycparser, protego, propcache, platformdirs, packaging, multidict, lxml, jmespath, itemadapter, idna, h11, greenlet, frozenlist, filelock, defusedxml, cssselect, constantly, charset_normalizer, certifi, backports-zstd, automat, attrs, aiohappyeyeballs, yarl, requests, pyee, parsel, incremental, hyperlink, httpcore, cffi, beautifulsoup4, anyio, aiosignal, twisted, requests-file, playwright, itemloaders, httpx, cryptography, aiohttp, tldextract, service-identity, pyopenssl, scrapy
+
+Successfully installed aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiosignal-1.4.0 anyio-4.15.1 attrs-26.1.0 automat-25.4.16 backports-zstd-1.8.0 beautifulsoup4-4.15.0 brotli-1.2.1 certifi-2026.10.23 cffi-2.1.1 charset_normalizer-3.5.2 constantly-23.10.4 cryptography-50.0.2 cssselect-1.6.0 defusedxml-0.7.1 filelock-4.2.4 frozenlist-1.8.0 greenlet-3.5.6 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 hyperlink-21.0.0 idna-3.20 incremental-24.11.0 itemadapter-0.14.0 itemloaders-1.5.0 jmespath-1.1.0 lxml-6.1.3 multidict-7.2.1 packaging-26.3 parsel-1.12.1 platformdirs-4.14.0 playwright-1.64.1 propcache-0.5.4 protego-0.7.0 pycparser-3.12 pydispatcher-2.0.7 pyee-14.0.0 pyopenssl-26.4.0 queuelib-1.10.0 requests-2.34.2 requests-file-3.0.1 scrapy-2.19.0 selectolax-1.0.2 service-identity-26.1.0 soupsieve-3.0.4 tldextract-5.4.0 twisted-26.10.0 typing-extensions-4.16.0 urllib3-2.8.0 w3lib-2.5.0 yarl-1.25.1 zope-interface-8.7
+</pre></details><details><summary>[5] shell python3 -m playwright install chromium 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 120 MiB
+Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1248
+</pre></details><details><summary>[6] write ~/ws/benchmark.py</summary><pre>import time
+import statistics
+import asyncio
+import csv
+import os
+import logging
+
+import requests
+from bs4 import BeautifulSoup
+import aiohttp
+import httpx
+from selectolax.parser import HTMLParser
+from playwright.async_api import async_playwright
+
+# Scrapy (Twisted/asyncioreactor)
+from scrapy.crawler import CrawlerRunner
+from scrapy.http import Request
+from scrapy.utils.log import configure_logging
+from twisted.internet import asyncioreactor
+
+asyncioreactor.install()
+from twisted.internet import reactor  # noqa: E402
+
+logging.getLogger(&#x27;scrapy&#x27;).setLevel(logging.WARNING)
+configure_logging({&#x27;LOG_LEVEL&#x27;: &#x27;WARNING&#x27;})
+
+URL = &quot;https://example.com&quot;
+N = 10
+OUT_DIR = os.path.expanduser(&quot;~/ws/out&quot;)
+os.makedirs(OUT_DIR, exist_ok=True)
+
+results = []  # (library, mode, browser, mean_ms, std_ms, raw_times)
+
+# 1. requests + BeautifulSoup (sync)
+def bench_requests_bs4():
+    times = []
+    for _ in range(N):
+        t0 = time.perf_counter()
+        resp = requests.get(URL, timeout=15)
+        soup = BeautifulSoup(resp.text, &quot;html.parser&quot;)
+        _ = soup.title.string if soup.title else None
+        t1 = time.perf_counter()
+        times.append((t1 - t0) * 1000.0)
+    return times
+
+# 2. aiohttp + asyncio + BeautifulSoup (async)
+async def bench_aiohttp_bs4():
+    times = []
+    async with aiohttp.ClientSession() as session:
+        for _ in range(N):
+            t0 = time.perf_counter()
+            async with session.get(URL, timeout=15) as resp:
+                text = await resp.text()
+            soup = BeautifulSoup(text, &quot;html.parser&quot;)
+            _ = soup.title.string if soup.title else None
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+    return times
+
+# 3. httpx + selectolax (sync)
+def bench_httpx_selectolax():
+    times = []
+    with httpx.Client() as client:
+        for _ in range(N):
+            t0 = time.perf_counter()
+            resp = client.get(URL, timeout=15)
+            tree = HTMLParser(resp.text)
+            node = tree.css_first(&quot;title&quot;)
+            _ = node.text() if node else None
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+    return times
+
+# 4. Playwright headless chromium (async, browser reused, 10 page loads)
+async def bench_playwright():
+    times = []
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
+        page = await context.new_page()
+        for _ in range(N):
+            t0 = time.perf_counter()
+            await page.goto(URL, wait_until=&quot;domcontentloaded&quot;)
+            _ = await page.title()
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+        await browser.close()
+    return times
+
+# 5. Scrapy via CrawlerRunner (10 sequential-ish requests in one reactor run)
+scrapy_times = []
+
+class TimingSpider:
+    name = &quot;timing&quot;
+    custom_settings = {
+        &quot;ROBOTSTXT_OBEY&quot;: False,
+        &quot;DOWNLOAD_TIMEOUT&quot;: 15,
+        &quot;LOG_LEVEL&quot;:</pre><pre>저장함: benchmark.py (6365자)</pre></details><details><summary>[7] shell cd ~/ws &amp;&amp; python3 benchmark.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/benchmark.py&quot;, line 12, in &lt;module&gt;
+    from selectolax.parser import HTMLParser
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/selectolax/parser.py&quot;, line 13, in &lt;module&gt;
+    raise ImportError(DEPRECATION_MESSAGE)
+ImportError: Modest backend is deprecated since selectolax 1.0. The engine has not been updated since 2021, while lexbor has been available since 2021 and is actively developed. Modest is outdated, not maintained, contains bugs and does not follow modern HTML5 standards. Please use lexbor backend instead: `from selectolax.lexbor import LexborHTMLParser`. The APIs are nearly identical, so in most projects swapping the import is all that&#x27;s needed.
+</pre></details><details><summary>[8] write ~/ws/benchmark.py</summary><pre>import time
+import statistics
+import asyncio
+import csv
+import os
+import logging
+
+import requests
+from bs4 import BeautifulSoup
+import aiohttp
+import httpx
+from selectolax.lexbor import LexborHTMLParser
+from playwright.async_api import async_playwright
+
+# Scrapy (Twisted/asyncioreactor)
+from scrapy.crawler import CrawlerRunner
+from scrapy.http import Request
+from scrapy.utils.log import configure_logging
+from twisted.internet import asyncioreactor
+
+asyncioreactor.install()
+from twisted.internet import reactor  # noqa: E402
+
+logging.getLogger(&#x27;scrapy&#x27;).setLevel(logging.WARNING)
+configure_logging({&#x27;LOG_LEVEL&#x27;: &#x27;WARNING&#x27;})
+
+URL = &quot;https://example.com&quot;
+N = 10
+OUT_DIR = os.path.expanduser(&quot;~/ws/out&quot;)
+os.makedirs(OUT_DIR, exist_ok=True)
+
+results = []  # (library, mode, browser, mean_ms, std_ms, raw_times)
+
+# 1. requests + BeautifulSoup (sync)
+def bench_requests_bs4():
+    times = []
+    for _ in range(N):
+        t0 = time.perf_counter()
+        resp = requests.get(URL, timeout=15)
+        soup = BeautifulSoup(resp.text, &quot;html.parser&quot;)
+        _ = soup.title.string if soup.title else None
+        t1 = time.perf_counter()
+        times.append((t1 - t0) * 1000.0)
+    return times
+
+# 2. aiohttp + asyncio + BeautifulSoup (async)
+async def bench_aiohttp_bs4():
+    times = []
+    async with aiohttp.ClientSession() as session:
+        for _ in range(N):
+            t0 = time.perf_counter()
+            async with session.get(URL, timeout=15) as resp:
+                text = await resp.text()
+            soup = BeautifulSoup(text, &quot;html.parser&quot;)
+            _ = soup.title.string if soup.title else None
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+    return times
+
+# 3. httpx + selectolax (sync)
+def bench_httpx_selectolax():
+    times = []
+    with httpx.Client() as client:
+        for _ in range(N):
+            t0 = time.perf_counter()
+            resp = client.get(URL, timeout=15)
+            tree = LexborHTMLParser(resp.text)
+            node = tree.css_first(&quot;title&quot;)
+            _ = node.text() if node else None
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+    return times
+
+# 4. Playwright headless chromium (async, browser reused, 10 page loads)
+async def bench_playwright():
+    times = []
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
+        page = await context.new_page()
+        for _ in range(N):
+            t0 = time.perf_counter()
+            await page.goto(URL, wait_until=&quot;domcontentloaded&quot;)
+            _ = await page.title()
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+        await browser.close()
+    return times
+
+# 5. Scrapy via CrawlerRunner (10 requests in one reactor run)
+scrapy_times = []
+
+class TimingSpider:
+    name = &quot;timing&quot;
+    custom_settings = {
+        &quot;ROBOTSTXT_OBEY&quot;: False,
+        &quot;DOWNLOAD_TIMEOUT&quot;: 15,
+        &quot;LOG_LEVEL&quot;: &quot;W</pre><pre>저장함: benchmark.py (6362자)</pre></details><details><summary>[9] shell cd ~/ws &amp;&amp; python3 benchmark.py</summary><pre></pre><pre>[종료코드 1]
+[done] requests+BeautifulSoup: mean=63.94 ms std=3.39 ms
+[done] aiohttp+BeautifulSoup: mean=27.79 ms std=9.82 ms
+[done] httpx+selectolax: mean=27.26 ms std=11.81 ms
+[done] Playwright: mean=53.17 ms std=33.30 ms
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/benchmark.py&quot;, line 181, in &lt;module&gt;
+    asyncio.run(main())
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/runners.py&quot;, line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/runners.py&quot;, line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/base_events.py&quot;, line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File &quot;/home/runner/ws/benchmark.py&quot;, line 140, in main
+    bench_scrapy()
+  File &quot;/home/runner/ws/benchmark.py&quot;, line 113, in bench_scrapy
+    d = runner.crawl(TimingSpider)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/scrapy/crawler.py&quot;, line 552, in crawl
+    crawler = self.create_crawler(crawler_or_spidercls)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/scrapy/crawler.py&quot;, line 479, in create_crawler
+    return self._create_crawler(crawler_or_spidercls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/scrapy/crawler.py&quot;, line 484, in _create_crawler
+    return Crawler(spidercls, self.settings)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/scrapy/crawler.py&quot;, line 131, in __init__
+    self.spidercls.update_settings(self.settings)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object &#x27;TimingSpider&#x27; has no attribute &#x27;update_settings&#x27;
+</pre></details><details><summary>[10] write ~/ws/benchmark.py</summary><pre>import time
+import statistics
+import asyncio
+import csv
+import os
+import logging
+
+import requests
+from bs4 import BeautifulSoup
+import aiohttp
+import httpx
+from selectolax.lexbor import LexborHTMLParser
+from playwright.async_api import async_playwright
+
+# Scrapy (Twisted/asyncioreactor)
+from scrapy.crawler import CrawlerRunner
+from scrapy.http import Request
+from scrapy.spiders import Spider
+from scrapy.utils.log import configure_logging
+from twisted.internet import asyncioreactor
+
+asyncioreactor.install()
+from twisted.internet import reactor  # noqa: E402
+
+logging.getLogger(&#x27;scrapy&#x27;).setLevel(logging.WARNING)
+configure_logging({&#x27;LOG_LEVEL&#x27;: &#x27;WARNING&#x27;})
+
+URL = &quot;https://example.com&quot;
+N = 10
+OUT_DIR = os.path.expanduser(&quot;~/ws/out&quot;)
+os.makedirs(OUT_DIR, exist_ok=True)
+
+results = []  # (library, mode, browser, mean_ms, std_ms, raw_times)
+
+# 1. requests + BeautifulSoup (sync)
+def bench_requests_bs4():
+    times = []
+    for _ in range(N):
+        t0 = time.perf_counter()
+        resp = requests.get(URL, timeout=15)
+        soup = BeautifulSoup(resp.text, &quot;html.parser&quot;)
+        _ = soup.title.string if soup.title else None
+        t1 = time.perf_counter()
+        times.append((t1 - t0) * 1000.0)
+    return times
+
+# 2. aiohttp + asyncio + BeautifulSoup (async)
+async def bench_aiohttp_bs4():
+    times = []
+    async with aiohttp.ClientSession() as session:
+        for _ in range(N):
+            t0 = time.perf_counter()
+            async with session.get(URL, timeout=15) as resp:
+                text = await resp.text()
+            soup = BeautifulSoup(text, &quot;html.parser&quot;)
+            _ = soup.title.string if soup.title else None
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+    return times
+
+# 3. httpx + selectolax (sync)
+def bench_httpx_selectolax():
+    times = []
+    with httpx.Client() as client:
+        for _ in range(N):
+            t0 = time.perf_counter()
+            resp = client.get(URL, timeout=15)
+            tree = LexborHTMLParser(resp.text)
+            node = tree.css_first(&quot;title&quot;)
+            _ = node.text() if node else None
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+    return times
+
+# 4. Playwright headless chromium (async, browser reused, 10 page loads)
+async def bench_playwright():
+    times = []
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
+        page = await context.new_page()
+        for _ in range(N):
+            t0 = time.perf_counter()
+            await page.goto(URL, wait_until=&quot;domcontentloaded&quot;)
+            _ = await page.title()
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+        await browser.close()
+    return times
+
+# 5. Scrapy via CrawlerRunner (10 requests in one reactor run)
+scrapy_times = []
+
+class TimingSpider(Spider):
+    name = &quot;timing&quot;
+    custom_settings = {
+        &quot;ROBOTSTXT_OBEY&quot;: False,
+        &quot;DOWN</pre><pre>저장함: benchmark.py (6404자)</pre></details><details><summary>[11] shell cd ~/ws &amp;&amp; python3 benchmark.py</summary><pre></pre><pre>[종료코드 1]
+[done] requests+BeautifulSoup: mean=66.40 ms std=4.64 ms
+[done] aiohttp+BeautifulSoup: mean=28.29 ms std=9.19 ms
+[done] httpx+selectolax: mean=29.97 ms std=14.04 ms
+[done] Playwright: mean=54.66 ms std=25.71 ms
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/benchmark.py&quot;, line 182, in &lt;module&gt;
+    asyncio.run(main())
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/runners.py&quot;, line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/runners.py&quot;, line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/base_events.py&quot;, line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File &quot;/home/runner/ws/benchmark.py&quot;, line 141, in main
+    bench_scrapy()
+  File &quot;/home/runner/ws/benchmark.py&quot;, line 116, in bench_scrapy
+    reactor.run()
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/twisted/internet/asyncioreactor.py&quot;, line 257, in run
+    self._asyncioEventloop.run_forever()
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/base_events.py&quot;, line 634, in run_forever
+    self._check_running()
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/base_events.py&quot;, line 628, in _check_running
+    raise RuntimeError(
+RuntimeError: Cannot run the event loop while another loop is running
+</pre></details><details><summary>[12] write ~/ws/benchmark.py</summary><pre>import time
+import statistics
+import asyncio
+import csv
+import os
+import logging
+
+import requests
+from bs4 import BeautifulSoup
+import aiohttp
+import httpx
+from selectolax.lexbor import LexborHTMLParser
+from playwright.async_api import async_playwright
+
+# Scrapy (Twisted/asyncioreactor)
+from scrapy.crawler import CrawlerRunner
+from scrapy.http import Request
+from scrapy.spiders import Spider
+from scrapy.utils.log import configure_logging
+from twisted.internet import asyncioreactor
+
+asyncioreactor.install()
+from twisted.internet import reactor  # noqa: E402
+
+logging.getLogger(&#x27;scrapy&#x27;).setLevel(logging.WARNING)
+configure_logging({&#x27;LOG_LEVEL&#x27;: &#x27;WARNING&#x27;})
+
+URL = &quot;https://example.com&quot;
+N = 10
+OUT_DIR = os.path.expanduser(&quot;~/ws/out&quot;)
+os.makedirs(OUT_DIR, exist_ok=True)
+
+results = []  # (library, mode, browser, mean_ms, std_ms, raw_times)
+
+# 1. requests + BeautifulSoup (sync)
+def bench_requests_bs4():
+    times = []
+    for _ in range(N):
+        t0 = time.perf_counter()
+        resp = requests.get(URL, timeout=15)
+        soup = BeautifulSoup(resp.text, &quot;html.parser&quot;)
+        _ = soup.title.string if soup.title else None
+        t1 = time.perf_counter()
+        times.append((t1 - t0) * 1000.0)
+    return times
+
+# 2. aiohttp + asyncio + BeautifulSoup (async)
+async def bench_aiohttp_bs4():
+    times = []
+    async with aiohttp.ClientSession() as session:
+        for _ in range(N):
+            t0 = time.perf_counter()
+            async with session.get(URL, timeout=15) as resp:
+                text = await resp.text()
+            soup = BeautifulSoup(text, &quot;html.parser&quot;)
+            _ = soup.title.string if soup.title else None
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+    return times
+
+# 3. httpx + selectolax (sync)
+def bench_httpx_selectolax():
+    times = []
+    with httpx.Client() as client:
+        for _ in range(N):
+            t0 = time.perf_counter()
+            resp = client.get(URL, timeout=15)
+            tree = LexborHTMLParser(resp.text)
+            node = tree.css_first(&quot;title&quot;)
+            _ = node.text() if node else None
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+    return times
+
+# 4. Playwright headless chromium (async, browser reused, 10 page loads)
+async def bench_playwright():
+    times = []
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
+        page = await context.new_page()
+        for _ in range(N):
+            t0 = time.perf_counter()
+            await page.goto(URL, wait_until=&quot;domcontentloaded&quot;)
+            _ = await page.title()
+            t1 = time.perf_counter()
+            times.append((t1 - t0) * 1000.0)
+        await browser.close()
+    return times
+
+# 5. Scrapy via CrawlerRunner (10 requests in one reactor run)
+scrapy_times = []
+
+class TimingSpider(Spider):
+    name = &quot;timing&quot;
+    custom_settings = {
+        &quot;ROBOTSTXT_OBEY&quot;: False,
+        &quot;DOWN</pre><pre>저장함: benchmark.py (6441자)</pre></details><details><summary>[13] shell cd ~/ws &amp;&amp; python3 benchmark.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/benchmark.py&quot;, line 178, in &lt;module&gt;
+    results.append((&quot;Scrapy (CrawlerRunner)&quot;, &quot;async (Twisted)&quot;, &quot;No&quot;, statistics.mean(r), statistics.stdev(r), r))
+                                                                       ^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/statistics.py&quot;, line 486, in mean
+    raise StatisticsError(&#x27;mean requires at least one data point&#x27;)
+statistics.StatisticsError: mean requires at least one data point
+</pre></details><details><summary>[14] shell cd ~/ws &amp;&amp; python3 -c &quot;</summary><pre></pre><pre>[종료코드 2]
+bash: -c: line 1: unexpected EOF while looking for matching `&quot;&#x27;
+</pre></details><details><summary>[15] write ~/ws/test_scrapy.py</summary><pre>from scrapy.crawler import CrawlerRunner
+from scrapy.http import Request
+from scrapy.spiders import Spider
+from scrapy.utils.log import configure_logging
+from twisted.internet import asyncioreactor
+asyncioreactor.install()
+from twisted.internet import reactor
+import logging, time
+logging.getLogger(&#x27;scrapy&#x27;).setLevel(logging.WARNING)
+configure_logging({&#x27;LOG_LEVEL&#x27;: &#x27;WARNING&#x27;})
+URL=&#x27;https://example.com&#x27;
+N=3
+times=[]
+class TimingSpider(Spider):
+    name=&#x27;timing&#x27;
+    custom_settings={&#x27;ROBOTSTXT_OBEY&#x27;:False,&#x27;DOWNLOAD_TIMEOUT&#x27;:15,&#x27;LOG_LEVEL&#x27;:&#x27;WARNING&#x27;}
+    def start_requests(self):
+        for _ in range(N):
+            yield Request(URL, meta={&#x27;t0&#x27;:time.perf_counter()}, callback=self.parse)
+    def parse(self, response):
+        t0=response.meta[&#x27;t0&#x27;]; t1=time.perf_counter()
+        times.append((t1-t0)*1000.0)
+        print(&#x27;PARSED&#x27;, response.url, response.css(&#x27;title::text&#x27;).get())
+runner=CrawlerRunner()
+d=runner.crawl(TimingSpider)
+d.addBoth(lambda _: reactor.stop())
+reactor.run()
+print(&#x27;times&#x27;, times)
+</pre><pre>저장함: test_scrapy.py (1015자)</pre></details><details><summary>[16] shell cd ~/ws &amp;&amp; python3 test_scrapy.py</summary><pre></pre><pre>[종료코드 0]
+times []
+</pre></details><details><summary>[17] write ~/ws/test_scrapy2.py</summary><pre>from scrapy.crawler import CrawlerRunner
+from scrapy.http import Request
+from scrapy.spiders import Spider
+from twisted.internet import asyncioreactor
+asyncioreactor.install()
+from twisted.internet import reactor
+import logging, time
+logging.getLogger(&#x27;scrapy&#x27;).setLevel(logging.DEBUG)
+URL=&#x27;https://example.com&#x27;
+N=3
+times=[]
+class TimingSpider(Spider):
+    name=&#x27;timing_test&#x27;
+    custom_settings={&#x27;ROBOTSTXT_OBEY&#x27;:False,&#x27;DOWNLOAD_TIMEOUT&#x27;:15,&#x27;LOG_LEVEL&#x27;:&#x27;DEBUG&#x27;}
+    def start_requests(self):
+        print(&#x27;START_REQUESTS CALLED&#x27;)
+        for _ in range(N):
+            yield Request(URL, meta={&#x27;t0&#x27;:time.perf_counter()}, callback=self.parse, errback=self.err)
+    def parse(self, response):
+        t0=response.meta[&#x27;t0&#x27;]; t1=time.perf_counter()
+        times.append((t1-t0)*1000.0)
+        print(&#x27;PARSED&#x27;, response.url, response.css(&#x27;title::text&#x27;).get())
+    def err(self, failure):
+        print(&#x27;ERRBACK&#x27;, failure.getErrorMessage())
+runner=CrawlerRunner()
+d=runner.crawl(TimingSpider)
+d.addBoth(lambda _: reactor.stop())
+reactor.run()
+print(&#x27;times&#x27;, times)
+</pre><pre>저장함: test_scrapy2.py (1062자)</pre></details><details><summary>[18] shell cd ~/ws &amp;&amp; python3 test_scrapy2.py 2&gt;&amp;1 | tail -30</summary><pre></pre><pre>[종료코드 0]
+times []
+</pre></details><details><summary>[19] write ~/ws/test_scrapy3.py</summary><pre>from scrapy.crawler import CrawlerProcess
+from scrapy.http import Request
+from scrapy.spiders import Spider
+import logging, time
+logging.getLogger(&#x27;scrapy&#x27;).setLevel(logging.DEBUG)
+URL=&#x27;https://example.com&#x27;
+N=3
+times=[]
+class TimingSpider(Spider):
+    name=&#x27;timing_test3&#x27;
+    custom_settings={&#x27;ROBOTSTXT_OBEY&#x27;:False,&#x27;DOWNLOAD_TIMEOUT&#x27;:15,&#x27;LOG_LEVEL&#x27;:&#x27;DEBUG&#x27;}
+    def start_requests(self):
+        print(&#x27;START_REQUESTS CALLED&#x27;)
+        for _ in range(N):
+            yield Request(URL, meta={&#x27;t0&#x27;:time.perf_counter()}, callback=self.parse, errback=self.err)
+    def parse(self, response):
+        t0=response.meta[&#x27;t0&#x27;]; t1=time.perf_counter()
+        times.append((t1-t0)*1000.0)
+        print(&#x27;PARSED&#x27;, response.url, response.css(&#x27;title::text&#x27;).get())
+    def err(self, failure):
+        print(&#x27;ERRBACK&#x27;, failure.getErrorMessage())
+process=CrawlerProcess(settings={&#x27;LOG_LEVEL&#x27;:&#x27;DEBUG&#x27;})
+process.crawl(TimingSpider)
+process.start()
+print(&#x27;times&#x27;, times)
+</pre><pre>저장함: test_scrapy3.py (955자)</pre></details><details><summary>[20] shell cd ~/ws &amp;&amp; python3 test_scrapy3.py 2&gt;&amp;1 | tail -40</summary><pre></pre><pre>[종료코드 0]
+{&#x27;DOWNLOAD_TIMEOUT&#x27;: 15}
+2026-10-30 15:29:40 [scrapy.middleware] INFO: Enabled downloader middlewares:
+[&#x27;scrapy.downloadermiddlewares.offsite.OffsiteMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.useragent.UserAgentMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.retry.RetryMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.redirect.RedirectMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.cookies.CookiesMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.stats.DownloaderStats&#x27;]
+2026-10-30 15:29:40 [scrapy.middleware] INFO: Enabled spider middlewares:
+[&#x27;scrapy.spidermiddlewares.start.StartSpiderMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.httperror.HttpErrorMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.referer.RefererMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.urllength.UrlLengthMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.depth.DepthMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.metacopy.MetaCopyDetectionMiddleware&#x27;]
+2026-10-30 15:29:40 [scrapy.middleware] INFO: Enabled item pipelines:
+[]
+2026-10-30 15:29:40 [scrapy.core.engine] INFO: Spider opened
+2026-10-30 15:29:40 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2026-10-30 15:29:40 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2026-10-30 15:29:40 [scrapy.extensions.remote_control] INFO: Remote control HTTP server listening on port 35581 (job 2651-125c18a0844b45aab4c13bed437a67c7)
+2026-10-30 15:29:40 [scrapy.core.engine] INFO: Closing spider (finished)
+2026-10-30 15:29:40 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{&#x27;elapsed_time_seconds&#x27;: 0.00214403500001481,
+ &#x27;finish_reason&#x27;: &#x27;finished&#x27;,
+ &#x27;finish_time&#x27;: datetime.datetime(2026, 10, 30, 15, 29, 40, 996076, tzinfo=datetime.timezone.utc),
+ &#x27;items_per_minute&#x27;: None,
+ &#x27;log_count/INFO&#x27;: 4,
+ &#x27;memusage/max&#x27;: 82833408,
+ &#x27;memusage/startup&#x27;: 82833408,
+ &#x27;responses_per_minute&#x27;: None,
+ &#x27;start_time&#x27;: datetime.datetime(2026, 10, 30, 15, 29, 40, 993930, tzinfo=datetime.timezone.utc)}
+2026-10-30 15:29:40 [scrapy.core.engine] INFO: Spider closed (finished)
+times []
+</pre></details><details><summary>[21] shell cd ~/ws &amp;&amp; scrapy shell &quot;https://example.com&quot; -s LOG_LEVEL=ERROR 2&gt;&amp;1 &lt;&lt;&#x27;EOF&#x27;</summary><pre></pre><pre>[종료코드 0]
+bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted `EOF&#x27;)
+[s] Available Scrapy objects:
+[s]   scrapy     scrapy module (contains scrapy.Request, scrapy.Selector, etc)
+[s]   crawler    &lt;scrapy.crawler.Crawler object at 0x7fa09352e1e0&gt;
+[s]   item       {}
+[s]   request    &lt;GET https://example.com&gt;
+[s]   response   &lt;200 https://example.com&gt;
+[s]   settings   &lt;scrapy.settings.Settings object at 0x7fa093154bf0&gt;
+[s]   spider     &lt;DefaultSpider &#x27;default&#x27; at 0x7fa092505820&gt;
+[s] Useful shortcuts:
+[s]   fetch(url[, redirect=True]) Fetch URL and update local objects (by default, redirects are followed)
+[s]   fetch(req)                  Fetch a scrapy.Request and update local objects 
+[s]   shelp()           Shell help (print this help)
+[s]   view(response)    View response in a browser
+
+&gt;&gt;&gt; 
+now exiting InteractiveConsole...
+</pre></details><details><summary>[22] write ~/ws/test_scrapy4.py</summary><pre>from scrapy.crawler import CrawlerProcess
+from scrapy.http import Request
+from scrapy.spiders import Spider
+import logging, time
+logging.getLogger(&#x27;scrapy&#x27;).setLevel(logging.DEBUG)
+URL=&#x27;https://example.com&#x27;
+N=3
+times=[]
+class TimingSpider(Spider):
+    name=&#x27;timing_test4&#x27;
+    custom_settings={&#x27;ROBOTSTXT_OBEY&#x27;:False,&#x27;DOWNLOAD_TIMEOUT&#x27;:15,&#x27;LOG_LEVEL&#x27;:&#x27;DEBUG&#x27;}
+    def start_requests(self):
+        print(&#x27;START_REQUESTS CALLED&#x27;, flush=True)
+        for i in range(N):
+            print(f&#x27;YIELDING {i}&#x27;, flush=True)
+            yield Request(URL, meta={&#x27;t0&#x27;:time.perf_counter()}, callback=self.parse, errback=self.err, dont_filter=True)
+    def parse(self, response):
+        t0=response.meta[&#x27;t0&#x27;]; t1=time.perf_counter()
+        times.append((t1-t0)*1000.0)
+        print(&#x27;PARSED&#x27;, response.url, response.css(&#x27;title::text&#x27;).get(), flush=True)
+    def err(self, failure):
+        print(&#x27;ERRBACK&#x27;, failure.getErrorMessage(), flush=True)
+process=CrawlerProcess(settings={&#x27;LOG_LEVEL&#x27;:&#x27;DEBUG&#x27;})
+process.crawl(TimingSpider)
+process.start(stop_after_crawl=True)
+print(&#x27;times&#x27;, times, flush=True)
+</pre><pre>저장함: test_scrapy4.py (1089자)</pre></details><details><summary>[23] shell cd ~/ws &amp;&amp; python3 test_scrapy4.py 2&gt;&amp;1 | tail -40</summary><pre></pre><pre>[종료코드 0]
+{&#x27;DOWNLOAD_TIMEOUT&#x27;: 15}
+2026-10-30 15:29:56 [scrapy.middleware] INFO: Enabled downloader middlewares:
+[&#x27;scrapy.downloadermiddlewares.offsite.OffsiteMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.useragent.UserAgentMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.retry.RetryMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.redirect.RedirectMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.cookies.CookiesMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware&#x27;,
+ &#x27;scrapy.downloadermiddlewares.stats.DownloaderStats&#x27;]
+2026-10-30 15:29:56 [scrapy.middleware] INFO: Enabled spider middlewares:
+[&#x27;scrapy.spidermiddlewares.start.StartSpiderMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.httperror.HttpErrorMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.referer.RefererMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.urllength.UrlLengthMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.depth.DepthMiddleware&#x27;,
+ &#x27;scrapy.spidermiddlewares.metacopy.MetaCopyDetectionMiddleware&#x27;]
+2026-10-30 15:29:56 [scrapy.middleware] INFO: Enabled item pipelines:
+[]
+2026-10-30 15:29:56 [scrapy.core.engine] INFO: Spider opened
+2026-10-30 15:29:56 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2026-10-30 15:29:56 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2026-10-30 15:29:56 [scrapy.extensions.remote_control] INFO: Remote control HTTP server listening on port 34883 (job 2663-148da1d68c0b4dc197fbf2a9b6f9ef6d)
+2026-10-30 15:29:56 [scrapy.core.engine] INFO: Closing spider (finished)
+2026-10-30 15:29:56 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{&#x27;elapsed_time_seconds&#x27;: 0.0021319989999710742,
+ &#x27;finish_reason&#x27;: &#x27;finished&#x27;,
+ &#x27;finish_time&#x27;: datetime.datetime(2026, 10, 30, 15, 29, 56, 881852, tzinfo=datetime.timezone.utc),
+ &#x27;items_per_minute&#x27;: None,
+ &#x27;log_count/INFO&#x27;: 4,
+ &#x27;memusage/max&#x27;: 82952192,
+ &#x27;memusage/startup&#x27;: 82952192,
+ &#x27;responses_per_minute&#x27;: None,
+ &#x27;start_time&#x27;: datetime.datetime(2026, 10, 30, 15, 29, 56, 879718, tzinfo=datetime.timezone.utc)}
+2026-10-30 15:29:56 [scrapy.core.engine] INFO: Spider closed (finished)
+times []
+</pre></details><details><summary>[24] write ~/ws/timing_spider.py</summary><pre>import scrapy
+import time
+
+
+class TimingSpider(scrapy.Spider):
+    name = &quot;timing&quot;
+
+    custom_settings = {
+        &quot;ROBOTSTXT_OBEY&quot;: False,
+        &quot;DOWNLOAD_TIMEOUT&quot;: 15,
+        &quot;LOG_LEVEL&quot;: &quot;ERROR&quot;,
+    }
+
+    def start_requests(self):
+        url = &quot;https://example.com&quot;
+        for _ in range(10):
+            yield scrapy.Request(
+                url,
+                meta={&quot;t0&quot;: time.perf_counter()},
+                callback=self.parse,
+                dont_filter=True,
+            )
+
+    def parse(self, response):
+        t0 = response.meta[&quot;t0&quot;]
+        t1 = time.perf_counter()
+        print(f&quot;{(t1 - t0) * 1000.0:.4f}&quot;)
+</pre><pre>저장함: timing_spider.py (635자)</pre></details><details><summary>[26] shell cd ~/ws &amp;&amp; scrapy runspider timing_spider.py -s LOG_LEVEL=ERROR 2&gt;&amp;1</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[27] shell cd ~/ws &amp;&amp; scrapy runspider timing_spider.py 2&gt;&amp;1 | head -50</summary><pre></pre><pre>[종료코드 0]
+2026-10-30 15:34:02 [scrapy.utils.log] INFO: Scrapy 2.19.0 started (bot: scrapybot)
+2026-10-30 15:34:02 [scrapy.utils.log] INFO: Versions:
+{&#x27;lxml&#x27;: &#x27;6.1.3&#x27;,
+ &#x27;libxml2&#x27;: &#x27;2.14.6&#x27;,
+ &#x27;cssselect&#x27;: &#x27;1.6.0&#x27;,
+ &#x27;parsel&#x27;: &#x27;1.12.1&#x27;,
+ &#x27;w3lib&#x27;: &#x27;2.5.0&#x27;,
+ &#x27;Twisted&#x27;: &#x27;26.10.0&#x27;,
+ &#x27;Python&#x27;: &#x27;3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]&#x27;,
+ &#x27;pyOpenSSL&#x27;: &#x27;26.4.0 (OpenSSL 4.0.3 29 Sep 2026)&#x27;,
+ &#x27;cryptography&#x27;: &#x27;50.0.2&#x27;,
+ &#x27;Platform&#x27;: &#x27;Linux-7.0.0-1017-azure-x86_64-with-glibc2.39&#x27;}
+2026-10-30 15:34:02 [scrapy.crawler] DEBUG: Using AsyncCrawlerProcess
+2026-10-30 15:34:02 [asyncio] DEBUG: Using selector: EpollSelector
+</pre></details><details><summary>[28] shell cd ~/ws &amp;&amp; pip list 2&gt;/dev/null | grep -iE &quot;scrapy|aiohttp|httpx|selectolax|beautifulsoup|pyppeteer|</summary><pre></pre><pre>[종료코드 0]
+aiohttp            3.14.5
+beautifulsoup4     4.15.0
+httpx              0.28.1
+lxml               6.1.3
+playwright         1.64.1
+requests           2.34.2
+requests-file      3.0.1
+Scrapy             2.19.0
+selectolax         1.0.2
+Python 3.12.15
+Linux runnervm48cm3 7.0.0-1017-azure #17~24.04.1-Ubuntu SMP PREEMPT Thu Sep 24 18:46:57 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+4
+</pre></details><details><summary>[29] write ~/ws/timing_spider.py</summary><pre>import scrapy
+import time
+import sys
+
+
+class TimingSpider(scrapy.Spider):
+    name = &quot;timing&quot;
+
+    custom_settings = {
+        &quot;ROBOTSTXT_OBEY&quot;: False,
+        &quot;DOWNLOAD_TIMEOUT&quot;: 15,
+        &quot;LOG_LEVEL&quot;: &quot;ERROR&quot;,
+    }
+
+    def start_requests(self):
+        url = &quot;https://example.com&quot;
+        for _ in range(10):
+            yield scrapy.Request(
+                url,
+                meta={&quot;t0&quot;: time.perf_counter()},
+                callback=self.parse,
+                dont_filter=True,
+            )
+
+    def parse(self, response):
+        t0 = response.meta[&quot;t0&quot;]
+        t1 = time.perf_counter()
+        sys.stdout.write(f&quot;{(t1 - t0) * 1000.0:.4f}\n&quot;)
+        sys.stdout.flush()
+</pre><pre>저장함: timing_spider.py (686자)</pre></details><details><summary>[30] shell cd ~/ws &amp;&amp; scrapy runspider timing_spider.py -s LOG_LEVEL=ERROR 2&gt;&amp;1</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[31] write ~/ws/timing_spider.py</summary><pre>import scrapy
+import time
+
+
+class TimingSpider(scrapy.Spider):
+    name = &quot;timing&quot;
+
+    custom_settings = {
+        &quot;ROBOTSTXT_OBEY&quot;: False,
+        &quot;DOWNLOAD_TIMEOUT&quot;: 15,
+        &quot;LOG_LEVEL&quot;: &quot;ERROR&quot;,
+        &quot;LOG_ENABLED&quot;: False,
+    }
+
+    def start_requests(self):
+        url = &quot;https://example.com&quot;
+        for _ in range(10):
+            yield scrapy.Request(
+                url,
+                meta={&quot;t0&quot;: time.perf_counter()},
+                callback=self.parse,
+                errback=self.errback,
+                dont_filter=True,
+            )
+
+    def parse(self, response):
+        t0 = response.meta[&quot;t0&quot;]
+        t1 = time.perf_counter()
+        with open(&quot;/tmp/scrapy_times.txt&quot;, &quot;a&quot;) as f:
+            f.write(f&quot;{(t1 - t0) * 1000.0:.4f}\n&quot;)
+
+    def errback(self, failure):
+        with open(&quot;/tmp/scrapy_times.txt&quot;, &quot;a&quot;) as f:
+            f.write(&quot;ERROR\n&quot;)
+</pre><pre>저장함: timing_spider.py (883자)</pre></details><details><summary>[32] shell cd ~/ws &amp;&amp; rm -f /tmp/scrapy_times.txt &amp;&amp; scrapy runspider timing_spider.py -s LOG_LEVEL=ERROR 2&gt;&amp;1;</summary><pre></pre><pre>[종료코드 1]
+cat: /tmp/scrapy_times.txt: No such file or directory
+</pre></details><details><summary>[33] write ~/ws/test_requests_bs4.py</summary><pre>import time
+import statistics
+import requests
+from bs4 import BeautifulSoup
+
+URL = &quot;https://example.com&quot;
+N = 10
+times = []
+
+for _ in range(N):
+    t0 = time.perf_counter()
+    resp = requests.get(URL, timeout=15)
+    html = resp.text
+    soup = BeautifulSoup(html, &quot;html.parser&quot;)
+    title = soup.title.string if soup.title else None
+    t1 = time.perf_counter()
+    times.append((t1 - t0) * 1000.0)
+
+print(&quot;title:&quot;, title)
+print(&quot;times_ms:&quot;, [f&quot;{t:.4f}&quot; for t in times])
+print(&quot;mean_ms:&quot;, f&quot;{statistics.mean(times):.4f}&quot;)
+print(&quot;stdev_ms:&quot;, f&quot;{statistics.stdev(times):.4f}&quot;)
+</pre><pre>저장함: test_requests_bs4.py (576자)</pre></details><details><summary>[34] shell cd ~/ws &amp;&amp; python3 test_requests_bs4.py</summary><pre></pre><pre>[종료코드 0]
+title: Example Domain
+times_ms: [&#x27;86.6853&#x27;, &#x27;76.2565&#x27;, &#x27;74.6931&#x27;, &#x27;66.6931&#x27;, &#x27;61.8565&#x27;, &#x27;67.9697&#x27;, &#x27;66.2688&#x27;, &#x27;59.8858&#x27;, &#x27;77.4735&#x27;, &#x27;61.4111&#x27;]
+mean_ms: 69.9193
+stdev_ms: 8.6070
+</pre></details><details><summary>[35] write ~/ws/test_aiohttp_bs4.py</summary><pre>import asyncio
+import time
+import statistics
+import aiohttp
+from bs4 import BeautifulSoup
+
+URL = &quot;https://example.com&quot;
+N = 10
+
+async def fetch(session):
+    t0 = time.perf_counter()
+    async with session.get(URL, timeout=15) as resp:
+        html = await resp.text()
+    soup = BeautifulSoup(html, &quot;html.parser&quot;)
+    title = soup.title.string if soup.title else None
+    t1 = time.perf_counter()
+    return (t1 - t0) * 1000.0, title
+
+async def main():
+    times = []
+    title = None
+    async with aiohttp.ClientSession() as session:
+        for _ in range(N):
+            t, title = await fetch(session)
+            times.append(t)
+    print(&quot;title:&quot;, title)
+    print(&quot;times_ms:&quot;, [f&quot;{t:.4f}&quot; for t in times])
+    print(&quot;mean_ms:&quot;, f&quot;{statistics.mean(times):.4f}&quot;)
+    print(&quot;stdev_ms:&quot;, f&quot;{statistics.stdev(times):.4f}&quot;)
+
+asyncio.run(main())
+</pre><pre>저장함: test_aiohttp_bs4.py (847자)</pre></details><details><summary>[36] shell cd ~/ws &amp;&amp; python3 test_aiohttp_bs4.py</summary><pre></pre><pre>[종료코드 0]
+title: Example Domain
+times_ms: [&#x27;63.9875&#x27;, &#x27;20.9235&#x27;, &#x27;25.0113&#x27;, &#x27;31.5559&#x27;, &#x27;28.2399&#x27;, &#x27;35.5624&#x27;, &#x27;28.2805&#x27;, &#x27;24.1133&#x27;, &#x27;37.2181&#x27;, &#x27;40.2538&#x27;]
+mean_ms: 33.5146
+stdev_ms: 12.3388
+</pre></details><details><summary>[37] write ~/ws/test_httpx_selectolax.py</summary><pre>import time
+import statistics
+import httpx
+from selectolax.parser import HTMLParser
+
+URL = &quot;https://example.com&quot;
+N = 10
+times = []
+
+with httpx.Client(timeout=15) as client:
+    for _ in range(N):
+        t0 = time.perf_counter()
+        resp = client.get(URL)
+        tree = HTMLParser(resp.text)
+        title = tree.css_first(&quot;title&quot;).text() if tree.css_first(&quot;title&quot;) else None
+        t1 = time.perf_counter()
+        times.append((t1 - t0) * 1000.0)
+
+print(&quot;title:&quot;, title)
+print(&quot;times_ms:&quot;, [f&quot;{t:.4f}&quot; for t in times])
+print(&quot;mean_ms:&quot;, f&quot;{statistics.mean(times):.4f}&quot;)
+print(&quot;stdev_ms:&quot;, f&quot;{statistics.stdev(times):.4f}&quot;)
+</pre><pre>저장함: test_httpx_selectolax.py (631자)</pre></details><details><summary>[38] shell cd ~/ws &amp;&amp; python3 test_httpx_selectolax.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/test_httpx_selectolax.py&quot;, line 4, in &lt;module&gt;
+    from selectolax.parser import HTMLParser
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/selectolax/parser.py&quot;, line 13, in &lt;module&gt;
+    raise ImportError(DEPRECATION_MESSAGE)
+ImportError: Modest backend is deprecated since selectolax 1.0. The engine has not been updated since 2021, while lexbor has been available since 2021 and is actively developed. Modest is outdated, not maintained, contains bugs and does not follow modern HTML5 standards. Please use lexbor backend instead: `from selectolax.lexbor import LexborHTMLParser`. The APIs are nearly identical, so in most projects swapping the import is all that&#x27;s needed.
+</pre></details><details><summary>[39] write ~/ws/test_httpx_selectolax.py</summary><pre>import time
+import statistics
+import httpx
+from selectolax.lexbor import LexborHTMLParser
+
+URL = &quot;https://example.com&quot;
+N = 10
+times = []
+
+with httpx.Client(timeout=15) as client:
+    for _ in range(N):
+        t0 = time.perf_counter()
+        resp = client.get(URL)
+        tree = LexborHTMLParser(resp.text)
+        title = tree.css_first(&quot;title&quot;).text() if tree.css_first(&quot;title&quot;) else None
+        t1 = time.perf_counter()
+        times.append((t1 - t0) * 1000.0)
+
+print(&quot;title:&quot;, title)
+print(&quot;times_ms:&quot;, [f&quot;{t:.4f}&quot; for t in times])
+print(&quot;mean_ms:&quot;, f&quot;{statistics.mean(times):.4f}&quot;)
+print(&quot;stdev_ms:&quot;, f&quot;{statistics.stdev(times):.4f}&quot;)
+</pre><pre>저장함: test_httpx_selectolax.py (643자)</pre></details><details><summary>[40] shell cd ~/ws &amp;&amp; python3 test_httpx_selectolax.py</summary><pre></pre><pre>[종료코드 0]
+title: Example Domain
+times_ms: [&#x27;56.3292&#x27;, &#x27;33.0732&#x27;, &#x27;28.2801&#x27;, &#x27;26.2315&#x27;, &#x27;25.4526&#x27;, &#x27;32.2700&#x27;, &#x27;23.4093&#x27;, &#x27;26.1908&#x27;, &#x27;25.1214&#x27;, &#x27;24.6497&#x27;]
+mean_ms: 30.1008
+stdev_ms: 9.7521
+</pre></details></html>
