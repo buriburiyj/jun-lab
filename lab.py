@@ -184,7 +184,7 @@ def main():
     d = pathlib.Path("docs", rid)
     (d / "out").mkdir(parents=True, exist_ok=True)
     (WS / "out").mkdir(parents=True, exist_ok=True)
-    tg("🔬 연구 시작: " + TASK[:300])
+    tg("🔬 연구 시작: " + TASK.split(".")[0][:60])
     msgs = [{"role": "system", "content": SYS},
             {"role": "user", "content": "주제: " + TASK + "\n필요하면 먼저 검색해서 알아본 다음, 직접 실행하며 연구해. 첫 행동을 해."}]
     steps, title, summary, status, bad, start = [], "연구", "", "fail", 0, time.time()
