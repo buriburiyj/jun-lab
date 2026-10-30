@@ -234,6 +234,16 @@ def main():
             total += f.stat().st_size
     (d / "index.html").write_text(page(title, status, summary, steps, files), encoding="utf-8")
     (d / "meta.json").write_text(json.dumps({"id": rid, "title": title, "ok": status == "ok", "task": TASK}, ensure_ascii=False), encoding="utf-8")
+    if status == "ok":
+        try:
+            les = ask([{"role": "user", "content": f"연구: {title}\n{summary[:3000]}\n\n앞으로 코드를 짤 때 쓸 교훈을 한국어 한 줄로 써 줘. 언제 무엇을 쓰면 좋은지와 숫자를 넣어. 교훈이 없으면 없음이라고만 써."}], 4000).strip().splitlines()
+            les = les[0].strip(" -*") if les else ""
+            if les and not les.startswith("없음"):
+                lp = pathlib.Path("docs/LESSONS.md")
+                cur = lp.read_text(encoding="utf-8") if lp.exists() else "# 배운 점 노트 (연구소)\n"
+                lp.write_text(cur.rstrip() + f"\n- {les} ({title})\n", encoding="utf-8")
+        except Exception as e:
+            print("교훈 실패", e, flush=True)
     index()
     link = SITE + rid + "/"
     if status == "ok":
