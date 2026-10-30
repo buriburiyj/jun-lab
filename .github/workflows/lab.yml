@@ -2,6 +2,8 @@ name: lab
 on:
   repository_dispatch:
     types: [research]
+  schedule:
+    - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       task:

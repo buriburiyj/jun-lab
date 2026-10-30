@@ -247,7 +247,9 @@ def main():
     index()
     link = SITE + rid + "/"
     if status == "ok":
-        tg(f"✅ 연구 완료: {title}\n\n{summary[:1500]}\n\n보고서(1~2분 뒤 열림): {link}")
+        short = ask([{"role": "user", "content": f"{summary[:3000]}\n\n이 연구 결과를 핵심 숫자 위주로 한국어 한 문장으로만 써."}], 2000).strip().splitlines()
+        short = short[0] if short else summary[:200]
+        tg(f"✅ {title}\n{short}\n{link}")
     elif status == "ask":
         tg(f"❓ 질문이 있어요: {summary[:1000]}\n\n답을 넣어서 다시 시켜 주세요.\n기록: {link}")
     else:
