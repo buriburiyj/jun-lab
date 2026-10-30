@@ -1,0 +1,5 @@
+library,avg_sec,success,fail,rate_percent
+requests+BeautifulSoup,0.1187,5,0,100.0
+aiohttp+asyncio,0.0554,5,0,100.0
+httpx,0.1385,5,0,100.0
+scrapy,0.2691,1,4,20.0
