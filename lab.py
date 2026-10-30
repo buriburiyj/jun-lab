@@ -9,7 +9,7 @@ MODEL = os.environ.get("LAB_MODEL", "nvidia/nemotron-3.5-super-vl-120b-a12b")
 REPO = os.environ.get("GITHUB_REPOSITORY", "buriburiyj/jun-lab")
 OWNER, NAME = REPO.split("/")
 SITE = f"https://{OWNER.lower()}.github.io/{NAME}/"
-MAX_STEPS = int(os.environ.get("MAX_STEPS", "40"))
+MAX_STEPS = int(os.environ.get("MAX_STEPS", "60"))
 LIMIT = 70 * 60
 WS = pathlib.Path.home() / "ws"
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36"
@@ -33,7 +33,8 @@ write: ARG에 파일 경로(작업 폴더 기준), BODY에 파일 전체 내용.
 done: ARG에 연구 제목(한국어, 짧게), BODY에 한국어 정리(무엇을 했는지, 결과 숫자, 알게 된 점, 다음에 해 볼 것). 마크다운 기호 없이 평문.
 ask: 여러 번 고쳐도 막히거나 사용자 정보가 꼭 필요할 때만. ARG에 사용자에게 할 질문.
 규칙: 결과를 직접 실행해서 확인한 뒤에만 done 한다. 그림과 결과 파일은 ~/ws/out 폴더에 저장한다(그래프는 png, matplotlib Agg, 그래프 글자는 영어).
-input()이나 끝나지 않는 서버를 실행하지 않는다(필요하면 timeout 명령 사용). 다른 컴퓨터를 공격하거나 스캔하지 않는다. 키나 비밀번호를 찾으려 하지 않는다."""
+input()이나 끝나지 않는 서버를 실행하지 않는다(필요하면 timeout 명령 사용). 다른 컴퓨터를 공격하거나 스캔하지 않는다. 키나 비밀번호를 찾으려 하지 않는다.
+한 항목이 3번 실패하면 더 고치지 말고 건너뛴 뒤 보고서에 실패라고 적고 다음으로 넘어간다. 완벽하지 않아도 모은 결과로 done 하는 것이 끝내지 못하는 것보다 낫다."""
 
 def tg(msg):
     if not (TG and CHAT):
@@ -219,7 +220,7 @@ def main():
             obs = f"오류: {e}"
         obs = clip(obs)
         steps.append({"n": n, "act": act, "arg": arg, "body": body, "obs": obs})
-        note = "\n(남은 행동이 얼마 없어. 곧 마무리하고 done 해.)" if n >= MAX_STEPS - 3 else ""
+        note = f"\n(남은 행동 {MAX_STEPS - n}번. 새 일은 그만하고, 지금까지 결과로 표를 정리해서 done 해.)" if n >= MAX_STEPS - 6 else ""
         msgs += [{"role": "assistant", "content": t}, {"role": "user", "content": "결과:\n" + obs + note}]
     if not summary:
         log = "\n".join(f"[{s['n']}] {s['act']} {s['arg'] or s['body'][:200]}\n{s['obs'][:500]}" for s in steps[-15:])
@@ -253,7 +254,8 @@ def main():
     elif status == "ask":
         tg(f"❓ 질문이 있어요: {summary[:1000]}\n\n답을 넣어서 다시 시켜 주세요.\n기록: {link}")
     else:
-        tg(f"⚠️ 행동 {len(steps)}번 했지만 끝내지 못했어요.\n{summary[:1200]}\n\n기록: {link}")
+        short = ask([{"role": "user", "content": f"{summary[:3000]}\n\n지금까지 나온 결과를 핵심 숫자 위주로 한국어 한 문장으로만 써."}], 2000).strip().splitlines()
+        tg(f"⚠️ 일부만 완료: {short[0] if short else ''}\n{link}")
 
 if __name__ == "__main__":
     main()
