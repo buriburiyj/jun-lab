@@ -1,0 +1,238 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>인터넷 공개 API로 고양이 상식 수집 및 길이 분포 분석</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>인터넷 공개 API로 고양이 상식 수집 및 길이 분포 분석</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 12번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 인증이 필요 없는 공개 API를 찾아 catfact.ninja를 선택하고 직접 실험했다. API에서 고양이 상식 50개를 수집하여 평균 길이 160.3자, 최대 387자, 최소 38자, 평균 단어 수 29.1단어로 분석했다. 결과를 ~/ws/out/cat_facts.json에 저장하고, 글자 수 분포 히스토그램을 ~/ws/out/cat_fact_lengths.png로 저장했다. 처음에는 urllib 기본 요청이 403 오류로 실패했으나 User-Agent 헤더를 추가해 해결했고, 초기 스크립트에서 홈 디렉터리 약어 tilde가 경로로 인식되지 않아 os.path.expanduser로 수정해 정상 동작시켰다. 다음에는 여러 공개 API를 비교하거나 수집 데이터를 자연어 처리해 키워드 빈도를 분석해 볼 수 있다.</p><img src="out/cat_fact_lengths.png">
+<h2>결과 파일</h2><ul><li><a href="out/cat_fact_lengths.png">cat_fact_lengths.png</a></li><li><a href="out/cat_facts.json">cat_facts.json</a></li></ul><h2>작업 기록</h2><details><summary>[1] search free public API no authentication interesting data json example</summary><pre></pre><pre>1. Big List of Free and Open Public APIs (No Auth Needed)
+https://mixedanalytics.com/blog/list-actually-free-open-no-auth-needed-apis/
+It is also useful for web developers looking to access a sample data set for testing. Big List of Free Open APIs The APIs below can be accessed using any method: your web browser (just click on the sample URLs to load them) any modern coding language cURL for the command line no -code API clients like Swagger, Postman, or Insomnia
+
+2. 10 Free Public APIs for Practice (No Auth Required)
+https://www.aitechworlds.com/category/web-development/apis-databases/free-public-apis-for-practice/
+Discover 10 completely free public APIs requiring no authentication — perfect for practicing API calls, building portfolio projects, and learning REST fundamentals.
+
+3. REST API Examples: 20+ Free APIs with Working Code (2026)
+https://publicapis.io/rest-api-examples
+Working REST API examples with code snippets in JavaScript, Python, and cURL. Copy-paste examples using free public APIs - no API key required for instant testing.
+
+4. 30+ Free REST APIs You Can Call Without an API Key in 2026 (No Credit ...
+https://dev.to/canpolat_kaya_220016375c2/30-free-rest-apis-you-can-call-without-an-api-key-in-2026-no-credit-card-zero-auth-1h15
+To solve this friction, I put together a tested list of completely free , zero- authentication (Zero-Auth) REST APIs . You do not need an API key, an account, or a payment method.
+
+5. 15 Best Free APIs That Require No API Key in 2025
+https://apitestingfree.com/blog/best-free-apis-no-key.html
+A free API for testing without a key is a public web service that you can call directly from your code, browser, or tool without any form of authentication . You simply make an HTTP GET request to the URL and receive a JSON response — instantly.
+
+6. Hundreds of Free APIs, No API Key — public-apis Repo + 5 Live Examples ...
+https://deployu.ai/blog/free-apis-no-key/
+One GitHub repo lists hundreds of free public APIs across 50+ categories. Five that need no key or signup, with the exact curl commands you can run right now.
+
+7. GitHub - alexandresanlim/public-apis-no-auth-only: A fork from a ...
+https://github.com/alexandresanlim/public-apis-no-auth-only
+A collective list of free APIs for use in software and web development
+
+8. 847 free APIs that need no API key (all link-checked in October 2026)
+https://dev.to/freetierkits/847-free-apis-that-need-no-api-key-all-link-checked-in-october-2026-o60
+I took the open-source public-apis list (MIT), added developer and AI free tiers, and checked every documentation URL on 17 October 2026. Out of 2,230 APIs , 1,944 answered. 847 are live, served over HTTPS, and need no API key at all, which makes them perfect for prototypes, hackathons, bots and AI agents.</pre></details><details><summary>[2] shell mkdir -p ~/ws/out &amp;&amp; curl -s --max-time 10 https://catfact.ninja/fact | head -c 500; echo</summary><pre></pre><pre>[종료코드 0]
+{&quot;fact&quot;:&quot;Cat families usually play best in even numbers. Cats and kittens should be aquired in pairs whenever possible.&quot;,&quot;length&quot;:110}
+</pre></details><details><summary>[3] shell curl -s --max-time 15 &quot;https://catfact.ninja/facts?limit=10&quot; | head -c 2000; echo</summary><pre></pre><pre>[종료코드 0]
+{&quot;current_page&quot;:1,&quot;data&quot;:[{&quot;fact&quot;:&quot;Unlike dogs, cats do not have a sweet tooth. Scientists believe this is due to a mutation in a key taste receptor.&quot;,&quot;length&quot;:114},{&quot;fact&quot;:&quot;When a cat chases its prey, it keeps its head level. Dogs and humans bob their heads up and down.&quot;,&quot;length&quot;:97},{&quot;fact&quot;:&quot;The technical term for a cat\u2019s hairball is a \u201cbezoar.\u201d&quot;,&quot;length&quot;:54},{&quot;fact&quot;:&quot;A group of cats is called a \u201cclowder.\u201d&quot;,&quot;length&quot;:38},{&quot;fact&quot;:&quot;A cat can\u2019t climb head first down a tree because every claw on a cat\u2019s paw points the same way. To get down from a tree, a cat must back down.&quot;,&quot;length&quot;:142},{&quot;fact&quot;:&quot;Cats make about 100 different sounds. Dogs make only about 10.&quot;,&quot;length&quot;:62},{&quot;fact&quot;:&quot;Every year, nearly four million cats are eaten in Asia.&quot;,&quot;length&quot;:55},{&quot;fact&quot;:&quot;There are more than 500 million domestic cats in the world, with approximately 40 recognized breeds.&quot;,&quot;length&quot;:100},{&quot;fact&quot;:&quot;Approximately 24 cat skins can make a coat.&quot;,&quot;length&quot;:43},{&quot;fact&quot;:&quot;While it is commonly thought that the ancient Egyptians were the first to domesticate cats, the oldest known pet cat was recently found in a 9,500-year-old grave on the Mediterranean island of Cyprus. This grave predates early Egyptian art depicting cats by 4,000 years or more.&quot;,&quot;length&quot;:278}],&quot;first_page_url&quot;:&quot;https:\/\/catfact.ninja\/facts?page=1&quot;,&quot;from&quot;:1,&quot;last_page&quot;:34,&quot;last_page_url&quot;:&quot;https:\/\/catfact.ninja\/facts?page=34&quot;,&quot;links&quot;:[{&quot;url&quot;:null,&quot;label&quot;:&quot;Previous&quot;,&quot;page&quot;:null,&quot;active&quot;:false},{&quot;url&quot;:&quot;https:\/\/catfact.ninja\/facts?page=1&quot;,&quot;label&quot;:&quot;1&quot;,&quot;page&quot;:1,&quot;active&quot;:true},{&quot;url&quot;:&quot;https:\/\/catfact.ninja\/facts?page=2&quot;,&quot;label&quot;:&quot;2&quot;,&quot;page&quot;:2,&quot;active&quot;:false},{&quot;url&quot;:&quot;https:\/\/catfact.ninja\/facts?page=3&quot;,&quot;label&quot;:&quot;3&quot;,&quot;page&quot;:3,&quot;active&quot;:false},{&quot;url&quot;:&quot;https:\/\/catfact.ninja\/facts?page=4&quot;,&quot;label&quot;:&quot;4&quot;,&quot;page&quot;:4,&quot;active&quot;:false},{&quot;url&quot;:&quot;https:\/\/catfact.ninja\/facts?page=5&quot;,&quot;label&quot;:&quot;5&quot;,&quot;page&quot;:5,&quot;active&quot;:false},{&quot;url&quot;:&quot;https:\/\/catfact.ninja\/facts?page=6&quot;,&quot;label&quot;:&quot;6&quot;,&quot;page&quot;:6,&quot;active&quot;:false},{&quot;
+</pre></details><details><summary>[4] write ~/ws/analyze_cats.py</summary><pre>import json
+import urllib.request
+import statistics
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+BASE = &quot;https://catfact.ninja/facts?limit=10&amp;page=&quot;
+facts = []
+for page in range(1, 6):
+    url = BASE + str(page)
+    try:
+        with urllib.request.urlopen(url, timeout=15) as r:
+            data = json.loads(r.read().decode(&quot;utf-8&quot;))
+        for item in data.get(&quot;data&quot;, []):
+            facts.append(item[&quot;fact&quot;])
+    except Exception as e:
+        print(&quot;page&quot;, page, &quot;error&quot;, e)
+
+lengths = [len(f) for f in facts]
+words = [len(f.split()) for f in facts]
+
+print(&quot;collected facts:&quot;, len(facts))
+print(&quot;avg length:&quot;, round(statistics.mean(lengths), 1))
+print(&quot;max length:&quot;, max(lengths))
+print(&quot;min length:&quot;, min(lengths))
+print(&quot;avg words:&quot;, round(statistics.mean(words), 1))
+
+with open(&quot;~/ws/out/cat_facts.json&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    json.dump(facts, f, ensure_ascii=False, indent=2)
+
+plt.figure(figsize=(8, 5))
+plt.hist(lengths, bins=10, color=&quot;#4c72b0&quot;, edgecolor=&quot;black&quot;)
+plt.title(&quot;Cat Fact Character Length Distribution&quot;)
+plt.xlabel(&quot;Characters per fact&quot;)
+plt.ylabel(&quot;Number of facts&quot;)
+plt.grid(axis=&quot;y&quot;, alpha=0.3)
+plt.tight_layout()
+plt.savefig(&quot;~/ws/out/cat_fact_lengths.png&quot;, dpi=150)
+plt.close()
+print(&quot;saved graph and json&quot;)
+</pre><pre>저장함: analyze_cats.py (1280자)</pre></details><details><summary>[5] shell cd ~/ws &amp;&amp; python3 analyze_cats.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/analyze_cats.py&quot;, line 4, in &lt;module&gt;
+    import matplotlib
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[6] shell pip install matplotlib --quiet &amp;&amp; echo INSTALLED</summary><pre></pre><pre>[종료코드 0]
+INSTALLED
+</pre></details><details><summary>[7] shell cd ~/ws &amp;&amp; python3 analyze_cats.py</summary><pre></pre><pre>[종료코드 1]
+page 1 error HTTP Error 403: Forbidden
+page 2 error HTTP Error 403: Forbidden
+page 3 error HTTP Error 403: Forbidden
+page 4 error HTTP Error 403: Forbidden
+page 5 error HTTP Error 403: Forbidden
+collected facts: 0
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/analyze_cats.py&quot;, line 24, in &lt;module&gt;
+    print(&quot;avg length:&quot;, round(statistics.mean(lengths), 1))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/statistics.py&quot;, line 486, in mean
+    raise StatisticsError(&#x27;mean requires at least one data point&#x27;)
+statistics.StatisticsError: mean requires at least one data point
+</pre></details><details><summary>[8] write ~/ws/analyze_cats.py</summary><pre>import json
+import urllib.request
+import statistics
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+BASE = &quot;https://catfact.ninja/facts?limit=10&amp;page=&quot;
+facts = []
+headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (research; contact@example.com)&quot;}
+for page in range(1, 6):
+    url = BASE + str(page)
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=15) as r:
+            data = json.loads(r.read().decode(&quot;utf-8&quot;))
+        for item in data.get(&quot;data&quot;, []):
+            facts.append(item[&quot;fact&quot;])
+        print(&quot;page&quot;, page, &quot;ok, total&quot;, len(facts))
+    except Exception as e:
+        print(&quot;page&quot;, page, &quot;error&quot;, e)
+
+if facts:
+    lengths = [len(f) for f in facts]
+    words = [len(f.split()) for f in facts]
+    print(&quot;collected facts:&quot;, len(facts))
+    print(&quot;avg length:&quot;, round(statistics.mean(lengths), 1))
+    print(&quot;max length:&quot;, max(lengths))
+    print(&quot;min length:&quot;, min(lengths))
+    print(&quot;avg words:&quot;, round(statistics.mean(words), 1))
+
+    with open(&quot;~/ws/out/cat_facts.json&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+        json.dump(facts, f, ensure_ascii=False, indent=2)
+
+    plt.figure(figsize=(8, 5))
+    plt.hist(lengths, bins=10, color=&quot;#4c72b0&quot;, edgecolor=&quot;black&quot;)
+    plt.title(&quot;Cat Fact Character Length Distribution&quot;)
+    plt.xlabel(&quot;Characters per fact&quot;)
+    plt.ylabel(&quot;Number of facts&quot;)
+    plt.grid(axis=&quot;y&quot;, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(&quot;~/ws/out/cat_fact_lengths.png&quot;, dpi=150)
+    plt.close()
+    print(&quot;saved graph and json&quot;)
+else:
+    print(&quot;no facts collected&quot;)
+</pre><pre>저장함: analyze_cats.py (1587자)</pre></details><details><summary>[9] shell cd ~/ws &amp;&amp; python3 analyze_cats.py</summary><pre></pre><pre>[종료코드 1]
+page 1 ok, total 10
+page 2 ok, total 20
+page 3 ok, total 30
+page 4 ok, total 40
+page 5 ok, total 50
+collected facts: 50
+avg length: 160.3
+max length: 387
+min length: 38
+avg words: 29.1
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/analyze_cats.py&quot;, line 32, in &lt;module&gt;
+    with open(&quot;~/ws/out/cat_facts.json&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: &#x27;~/ws/out/cat_facts.json&#x27;
+</pre></details><details><summary>[10] write ~/ws/analyze_cats.py</summary><pre>import json
+import urllib.request
+import statistics
+import os
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+OUTDIR = os.path.expanduser(&quot;~/ws/out&quot;)
+os.makedirs(OUTDIR, exist_ok=True)
+
+BASE = &quot;https://catfact.ninja/facts?limit=10&amp;page=&quot;
+facts = []
+headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (research; contact@example.com)&quot;}
+for page in range(1, 6):
+    url = BASE + str(page)
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=15) as r:
+            data = json.loads(r.read().decode(&quot;utf-8&quot;))
+        for item in data.get(&quot;data&quot;, []):
+            facts.append(item[&quot;fact&quot;])
+        print(&quot;page&quot;, page, &quot;ok, total&quot;, len(facts))
+    except Exception as e:
+        print(&quot;page&quot;, page, &quot;error&quot;, e)
+
+if facts:
+    lengths = [len(f) for f in facts]
+    words = [len(f.split()) for f in facts]
+    print(&quot;collected facts:&quot;, len(facts))
+    print(&quot;avg length:&quot;, round(statistics.mean(lengths), 1))
+    print(&quot;max length:&quot;, max(lengths))
+    print(&quot;min length:&quot;, min(lengths))
+    print(&quot;avg words:&quot;, round(statistics.mean(words), 1))
+
+    with open(os.path.join(OUTDIR, &quot;cat_facts.json&quot;), &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+        json.dump(facts, f, ensure_ascii=False, indent=2)
+
+    plt.figure(figsize=(8, 5))
+    plt.hist(lengths, bins=10, color=&quot;#4c72b0&quot;, edgecolor=&quot;black&quot;)
+    plt.title(&quot;Cat Fact Character Length Distribution&quot;)
+    plt.xlabel(&quot;Characters per fact&quot;)
+    plt.ylabel(&quot;Number of facts&quot;)
+    plt.grid(axis=&quot;y&quot;, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(os.path.join(OUTDIR, &quot;cat_fact_lengths.png&quot;), dpi=150)
+    plt.close()
+    print(&quot;saved graph and json&quot;)
+else:
+    print(&quot;no facts collected&quot;)
+</pre><pre>저장함: analyze_cats.py (1699자)</pre></details><details><summary>[11] shell cd ~/ws &amp;&amp; python3 analyze_cats.py</summary><pre></pre><pre>[종료코드 0]
+page 1 ok, total 10
+page 2 ok, total 20
+page 3 ok, total 30
+page 4 ok, total 40
+page 5 ok, total 50
+collected facts: 50
+avg length: 160.3
+max length: 387
+min length: 38
+avg words: 29.1
+saved graph and json
+</pre></details><details><summary>[12] shell ls -l ~/ws/out &amp;&amp; head -c 300 ~/ws/out/cat_facts.json; echo</summary><pre></pre><pre>[종료코드 0]
+total 44
+-rw-r--r-- 1 runner runner 29963 Oct 31 11:39 cat_fact_lengths.png
+-rw-r--r-- 1 runner runner  8420 Oct 31 11:39 cat_facts.json
+[
+  &quot;Unlike dogs, cats do not have a sweet tooth. Scientists believe this is due to a mutation in a key taste receptor.&quot;,
+  &quot;When a cat chases its prey, it keeps its head level. Dogs and humans bob their heads up and down.&quot;,
+  &quot;The technical term for a cat’s hairball is a “bezoar.”&quot;,
+  &quot;A grou
+</pre></details></html>
