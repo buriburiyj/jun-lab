@@ -1,0 +1,341 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>인터넷 공개 API로 포켓몬 능력치 분석 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>인터넷 공개 API로 포켓몬 능력치 분석 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 14번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 흥미로운 주제로 공개 API를 이용한 데이터 분석을 선택하고 PokeAPI로 실험했습니다. requests, pandas, matplotlib를 설치하고 10마리 포켓몬(pikachu, charizard, bulbasaur, squirtle, jigglypuff, mewtwo, snorlax, dragonite, gengar, eevee)의 능력치 데이터를 수집했습니다. 수집 결과는 pokemon_stats.csv에 저장했고, 전체 능력치 막대 그래프와 몸무게 대 HP 산점도를 out 폴더에 PNG 파일로 저장했습니다. 분석 결과 mewtwo가 전체 능력치 합계로 가장 높았고, snorlax가 몸무게가 가장 무겁고 HP도 높았습니다. 인터넷 공개 API를 직접 호출해 데이터를 가져와 분석하고 시각화까지 완료한 점이 주요 성과입니다. 다음에는 더 많은 포켓몬 데이터를 수집하거나 세대별 능력치 비교, 타입별 분석을 추가해 볼 수 있습니다.</p><img src="out/pokemon_total_stats.png"><img src="out/pokemon_weight_hp.png">
+<h2>결과 파일</h2><ul><li><a href="out/pokemon_total_stats.png">pokemon_total_stats.png</a></li><li><a href="out/pokemon_weight_hp.png">pokemon_weight_hp.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting public API dataset python project ubuntu beginner</summary><pre></pre><pre>1. Best Free Public Datasets to Use in Python - 365 Data Science
+https://365datascience.com/tutorials/python-tutorials/free-public-datasets-python/
+Are you interested in pursuing a career in data science, but struggling to find interesting projects ? Or perhaps you&#x27;ve started on a Python project and are now scouring the web for hours on end for the perfect dataset to analyze on a budget? In this article, we&#x27;ve prepared a list of free datasets to download and practice on as you make your way into data science. Not only are they publicly ...
+
+2. Free Datasets for Python Data Engineering
+https://pythondataengineering.net/datasets
+Explore 128+ free datasets for Python data engineering. Access data through APIs or download datasets covering government data, finance, health, ML, and more.
+
+3. ankithajv/API-projects-using-python. - GitHub
+https://github.com/ankithajv/API-projects-using-python.
+🌐 API -Based Beginner -Friendly Python Projects This repository contains a collection of Python projects that make use of different APIs to fetch, process, and display real-world data. Each project is in its own folder, making it easy to explore and learn.
+
+4. GitHub - b5119/python-api-projects: A comprehensive collection of real ...
+https://github.com/b5119/python-api-projects
+A comprehensive collection of real-world API integration projects demonstrating REST API consumption, authentication methods, data handling, and practical applications.
+
+5. Top 40 Open Data APIs For Developers - Public APIs
+https://publicapis.dev/category/open-data
+A community-made collection of public APIs about open data. Find these and many other great resources for your projects .
+
+6. Best Free Public Datasets To Use In Python - 24x7 Offshoring
+https://24x7offshoring.com/best-free-public-datasets-to-use-in-python/
+Best Free Public Datasets to Use in Python Are you interested in pursuing a career in data science, but struggling to find interesting projects ? Or perhaps you&#x27;ve started on a Python project and are now scouring the web for hours on end for the perfect dataset to analyze on a budget?
+
+7. 32 Best Free Datasets for Projects (2026) - Dataquest
+https://www.dataquest.io/blog/free-datasets-for-projects/
+Find 32 best free datasets for projects in 2026—data sources for machine learning, data analysis, visualization, and portfolio building.
+
+8. API playground: Free APIs for personal data projects - dltHub
+https://dlthub.com/blog/practice-api-sources
+For a detailed guide on creating a pipeline using the Rest API source, please read the Rest API source documentation here. Example projects Here are some examples from dlt users and working students: A pipeline that pulls data from an API and produces a dashboard in the dbt blog. A streaming pipeline on GCP that replaces expensive tools such as Segment/5tran with a setup 50-100x cheaper ...</pre></details><details><summary>[2] shell check python and internet</summary><pre>cd ~/ws &amp;&amp; python3 --version &amp;&amp; pip list 2&gt;/dev/null | grep -iE &quot;requests|pandas|matplotlib&quot; &amp;&amp; curl -s https://pokeapi.co/api/v2/pokemon/pikachu | head -c 300</pre><pre>[종료코드 1]
+Python 3.12.15
+</pre></details><details><summary>[3] shell check python packages and internet connectivity</summary><pre>cd ~/ws &amp;&amp; python3 --version &amp;&amp; python3 -c &quot;import requests; print(&#x27;requests ok&#x27;)&quot; 2&gt;&amp;1; curl -s -m 10 https://pokeapi.co/api/v2/pokemon/pikachu -o /tmp/test.json &amp;&amp; head -c 300 /tmp/test.json</pre><pre>[종료코드 0]
+Python 3.12.15
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;requests&#x27;
+{&quot;id&quot;:25,&quot;name&quot;:&quot;pikachu&quot;,&quot;base_experience&quot;:112,&quot;height&quot;:4,&quot;is_default&quot;:true,&quot;order&quot;:35,&quot;weight&quot;:60,&quot;abilities&quot;:[{&quot;is_hidden&quot;:false,&quot;slot&quot;:1,&quot;ability&quot;:{&quot;name&quot;:&quot;static&quot;,&quot;url&quot;:&quot;https://pokeapi.co/api/v2/ability/9/&quot;}},{&quot;is_hidden&quot;:true,&quot;slot&quot;:3,&quot;ability&quot;:{&quot;name&quot;:&quot;lightning-rod&quot;,&quot;url&quot;:&quot;https://pokeapi.c</pre></details><details><summary>[4] shell check matplotlib availability</summary><pre>cd ~/ws &amp;&amp; python3 -c &quot;import matplotlib; print(&#x27;matplotlib&#x27;, matplotlib.__version__)&quot; 2&gt;&amp;1; python3 -c &quot;import pandas; print(&#x27;pandas ok&#x27;)&quot; 2&gt;&amp;1</pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;pandas&#x27;
+</pre></details><details><summary>[5] shell install required python packages</summary><pre>cd ~/ws &amp;&amp; pip install requests pandas matplotlib 2&gt;&amp;1 | tail -20</pre><pre>[종료코드 0]
+Downloading matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 122.4 MB/s  0:00:00
+Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (383 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 31.0 MB/s  0:00:00
+Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 149.8 MB/s  0:00:00
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 53.2 MB/s  0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 146.0 MB/s  0:00:00
+Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: urllib3, tzdata, pyparsing, pillow, packaging, numpy, kiwisolver, idna, fonttools, cycler, charset_normalizer, certifi, requests, python-dateutil, contourpy, pandas, matplotlib
+
+Successfully installed certifi-2026.10.23 charset_normalizer-3.5.2 contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 idna-3.20 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pandas-3.1.0 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 requests-2.34.2 tzdata-2026.6 urllib3-2.8.0
+</pre></details><details><summary>[6] write ws/poke_analysis.py</summary><pre>import requests
+import pandas as pd
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+pokemon_names = [
+    &#x27;pikachu&#x27;, &#x27;charizard&#x27;, &#x27;bulbasaur&#x27;, &#x27;squirtle&#x27;, &#x27;jigglypuff&#x27;,
+    &#x27;mewtwo&#x27;, &#x27;snorlax&#x27;, &#x27;dragonite&#x27;, &#x27;gengar&#x27;, &#x27;eevee&#x27;
+]
+
+data = []
+for name in pokemon_names:
+    url = f&#x27;https://pokeapi.co/api/v2/pokemon/{name}&#x27;
+    resp = requests.get(url, timeout=10)
+    if resp.status_code == 200:
+        j = resp.json()
+        stats = {s[&#x27;stat&#x27;][&#x27;name&#x27;]: s[&#x27;base_stat&#x27;] for s in j[&#x27;stats&#x27;]}
+        data.append({
+            &#x27;name&#x27;: j[&#x27;name&#x27;],
+            &#x27;height&#x27;: j[&#x27;height&#x27;],
+            &#x27;weight&#x27;: j[&#x27;weight&#x27;],
+            &#x27;base_experience&#x27;: j[&#x27;base_experience&#x27;],
+            &#x27;hp&#x27;: stats.get(&#x27;hp&#x27;, 0),
+            &#x27;attack&#x27;: stats.get(&#x27;attack&#x27;, 0),
+            &#x27;defense&#x27;: stats.get(&#x27;defense&#x27;, 0),
+            &#x27;special-attack&#x27;: stats.get(&#x27;special-attack&#x27;, 0),
+            &#x27;special-defense&#x27;: stats.get(&#x27;special-defense&#x27;, 0),
+            &#x27;speed&#x27;: stats.get(&#x27;speed&#x27;, 0),
+        })
+    else:
+        print(f&#x27;failed: {name} status {resp.status_code}&#x27;)
+
+df = pd.DataFrame(data)
+df.to_csv(&#x27;pokemon_stats.csv&#x27;, index=False)
+print(df)
+
+total_stats = df[[&#x27;hp&#x27;,&#x27;attack&#x27;,&#x27;defense&#x27;,&#x27;special-attack&#x27;,&#x27;special-defense&#x27;,&#x27;speed&#x27;]].sum(axis=1)
+df[&#x27;total&#x27;] = total_stats
+
+plt.figure(figsize=(10,6))
+plt.bar(df[&#x27;name&#x27;], df[&#x27;total&#x27;], color=&#x27;skyblue&#x27;)
+plt.title(&#x27;Total Base Stats by Pokemon&#x27;)
+plt.xlabel(&#x27;Pokemon&#x27;)
+plt.ylabel(&#x27;Total Base Stat&#x27;)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig(&#x27;out/pokemon_total_stats.png&#x27;)
+print(&#x27;saved out/pokemon_total_stats.png&#x27;)
+
+plt.figure(figsize=(10,6))
+plt.scatter(df[&#x27;weight&#x27;], df[&#x27;hp&#x27;], s=100, alpha=0.7)
+for i, row in df.iterrows():
+    plt.annotate(row[&#x27;name&#x27;], (row[&#x27;weight&#x27;], row[&#x27;hp&#x27;]), fontsize=8)
+plt.title(&#x27;Weight vs HP&#x27;)
+plt.xlabel(&#x27;Weight (hg)&#x27;)
+plt.ylabel(&#x27;HP&#x27;)
+plt.tight_layout()
+plt.savefig(&#x27;out/pokemon_weight_hp.png&#x27;)
+print(&#x27;saved out/pokemon_weight_hp.png&#x27;)
+
+print(&#x27;done&#x27;)</pre><pre>저장함: ws/poke_analysis.py (1941자)</pre></details><details><summary>[7] shell run pokemon analysis script</summary><pre>cd ~/ws &amp;&amp; mkdir -p out &amp;&amp; python3 poke_analysis.py</pre><pre>[종료코드 2]
+python3: can&#x27;t open file &#x27;/home/runner/ws/poke_analysis.py&#x27;: [Errno 2] No such file or directory
+</pre></details><details><summary>[8] shell check working directory and files</summary><pre>pwd &amp;&amp; ls -la &amp;&amp; find . -name &quot;poke*&quot; 2&gt;/dev/null</pre><pre>[종료코드 0]
+/home/runner/ws
+total 16
+drwxr-xr-x  4 runner runner 4096 Nov  2 04:15 .
+drwxr-x--- 13 runner runner 4096 Nov  2 04:15 ..
+drwxr-xr-x  2 runner runner 4096 Nov  2 04:14 out
+drwxr-xr-x  2 runner runner 4096 Nov  2 04:15 ws
+./ws/poke_analysis.py
+</pre></details><details><summary>[9] shell run pokemon analysis script from correct directory</summary><pre>cd ~/ws/ws &amp;&amp; python3 poke_analysis.py</pre><pre>[종료코드 1]
+         name  height  weight  ...  special-attack  special-defense  speed
+0     pikachu       4      60  ...              50               50     90
+1   charizard      17     905  ...             109               85    100
+2   bulbasaur       7      69  ...              65               65     45
+3    squirtle       5      90  ...              50               64     43
+4  jigglypuff       5      55  ...              45               25     20
+5      mewtwo      20    1220  ...             154               90    130
+6     snorlax      21    4600  ...              65              110     30
+7   dragonite      22    2100  ...             100              100     80
+8      gengar      15     405  ...             130               75    110
+9       eevee       3      65  ...              45               65     55
+
+[10 rows x 10 columns]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/ws/poke_analysis.py&quot;, line 48, in &lt;module&gt;
+    plt.savefig(&#x27;out/pokemon_total_stats.png&#x27;)
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/matplotlib/pyplot.py&quot;, line 1346, in savefig
+    res = fig.savefig(fname, **kwargs)  # type: ignore[func-returns-value]
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/matplotlib/figure.py&quot;, line 3515, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/matplotlib/backend_bases.py&quot;, line 2289, in print_figure
+    result = print_method(
+             ^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/matplotlib/backend_bases.py&quot;, line 2146, in &lt;lambda&gt;
+    print_method = functools.wraps(meth)(lambda *args, **kwargs: meth(
+                                                                 ^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/matplotlib/backends/backend_agg.py&quot;, line 537, in print_png
+    self._print_pil(filename_or_obj, &quot;png&quot;, pil_kwargs, metadata)
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/matplotlib/backends/backend_agg.py&quot;, line 486, in _print_pil
+    mpl.image.imsave(
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/matplotlib/image.py&quot;, line 1729, in imsave
+    image.save(fname, **pil_kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/PIL/Image.py&quot;, line 2707, in save
+    fp = builtins.open(filename, &quot;w+b&quot;)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: &#x27;out/pokemon_total_stats.png&#x27;
+</pre></details><details><summary>[10] write ws/ws/poke_analysis.py</summary><pre>import os
+import requests
+import pandas as pd
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+
+pokemon_names = [
+    &#x27;pikachu&#x27;, &#x27;charizard&#x27;, &#x27;bulbasaur&#x27;, &#x27;squirtle&#x27;, &#x27;jigglypuff&#x27;,
+    &#x27;mewtwo&#x27;, &#x27;snorlax&#x27;, &#x27;dragonite&#x27;, &#x27;gengar&#x27;, &#x27;eevee&#x27;
+]
+
+data = []
+for name in pokemon_names:
+    url = f&#x27;https://pokeapi.co/api/v2/pokemon/{name}&#x27;
+    resp = requests.get(url, timeout=10)
+    if resp.status_code == 200:
+        j = resp.json()
+        stats = {s[&#x27;stat&#x27;][&#x27;name&#x27;]: s[&#x27;base_stat&#x27;] for s in j[&#x27;stats&#x27;]}
+        data.append({
+            &#x27;name&#x27;: j[&#x27;name&#x27;],
+            &#x27;height&#x27;: j[&#x27;height&#x27;],
+            &#x27;weight&#x27;: j[&#x27;weight&#x27;],
+            &#x27;base_experience&#x27;: j[&#x27;base_experience&#x27;],
+            &#x27;hp&#x27;: stats.get(&#x27;hp&#x27;, 0),
+            &#x27;attack&#x27;: stats.get(&#x27;attack&#x27;, 0),
+            &#x27;defense&#x27;: stats.get(&#x27;defense&#x27;, 0),
+            &#x27;special-attack&#x27;: stats.get(&#x27;special-attack&#x27;, 0),
+            &#x27;special-defense&#x27;: stats.get(&#x27;special-defense&#x27;, 0),
+            &#x27;speed&#x27;: stats.get(&#x27;speed&#x27;, 0),
+        })
+    else:
+        print(f&#x27;failed: {name} status {resp.status_code}&#x27;)
+
+df = pd.DataFrame(data)
+df.to_csv(&#x27;pokemon_stats.csv&#x27;, index=False)
+print(df)
+
+total_stats = df[[&#x27;hp&#x27;,&#x27;attack&#x27;,&#x27;defense&#x27;,&#x27;special-attack&#x27;,&#x27;special-defense&#x27;,&#x27;speed&#x27;]].sum(axis=1)
+df[&#x27;total&#x27;] = total_stats
+
+plt.figure(figsize=(10,6))
+plt.bar(df[&#x27;name&#x27;], df[&#x27;total&#x27;], color=&#x27;skyblue&#x27;)
+plt.title(&#x27;Total Base Stats by Pokemon&#x27;)
+plt.xlabel(&#x27;Pokemon&#x27;)
+plt.ylabel(&#x27;Total Base Stat&#x27;)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig(&#x27;out/pokemon_total_stats.png&#x27;)
+print(&#x27;saved out/pokemon_total_stats.png&#x27;)
+
+plt.figure(figsize=(10,6))
+plt.scatter(df[&#x27;weight&#x27;], df[&#x27;hp&#x27;], s=100, alpha=0.7)
+for i, row in df.iterrows():
+    plt.annotate(row[&#x27;name&#x27;], (row[&#x27;weight&#x27;], row[&#x27;hp&#x27;]), fontsize=8)
+plt.title(&#x27;Weight vs HP&#x27;)
+plt.xlabel(&#x27;Weight (hg)&#x27;)
+plt.ylabel(&#x27;HP&#x27;)
+plt.tight_layout()
+plt.savefig(&#x27;out/pokemon_weight_hp.png&#x27;)
+print(&#x27;saved out/pokemon_weight_hp.png&#x27;)
+
+print(&#x27;done&#x27;)</pre><pre>저장함: ws/ws/poke_analysis.py (1986자)</pre></details><details><summary>[11] write ws/poke_analysis.py</summary><pre>import os
+import requests
+import pandas as pd
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+
+pokemon_names = [
+    &#x27;pikachu&#x27;, &#x27;charizard&#x27;, &#x27;bulbasaur&#x27;, &#x27;squirtle&#x27;, &#x27;jigglypuff&#x27;,
+    &#x27;mewtwo&#x27;, &#x27;snorlax&#x27;, &#x27;dragonite&#x27;, &#x27;gengar&#x27;, &#x27;eevee&#x27;
+]
+
+data = []
+for name in pokemon_names:
+    url = f&#x27;https://pokeapi.co/api/v2/pokemon/{name}&#x27;
+    resp = requests.get(url, timeout=10)
+    if resp.status_code == 200:
+        j = resp.json()
+        stats = {s[&#x27;stat&#x27;][&#x27;name&#x27;]: s[&#x27;base_stat&#x27;] for s in j[&#x27;stats&#x27;]}
+        data.append({
+            &#x27;name&#x27;: j[&#x27;name&#x27;],
+            &#x27;height&#x27;: j[&#x27;height&#x27;],
+            &#x27;weight&#x27;: j[&#x27;weight&#x27;],
+            &#x27;base_experience&#x27;: j[&#x27;base_experience&#x27;],
+            &#x27;hp&#x27;: stats.get(&#x27;hp&#x27;, 0),
+            &#x27;attack&#x27;: stats.get(&#x27;attack&#x27;, 0),
+            &#x27;defense&#x27;: stats.get(&#x27;defense&#x27;, 0),
+            &#x27;special-attack&#x27;: stats.get(&#x27;special-attack&#x27;, 0),
+            &#x27;special-defense&#x27;: stats.get(&#x27;special-defense&#x27;, 0),
+            &#x27;speed&#x27;: stats.get(&#x27;speed&#x27;, 0),
+        })
+    else:
+        print(f&#x27;failed: {name} status {resp.status_code}&#x27;)
+
+df = pd.DataFrame(data)
+df.to_csv(&#x27;pokemon_stats.csv&#x27;, index=False)
+print(df)
+
+total_stats = df[[&#x27;hp&#x27;,&#x27;attack&#x27;,&#x27;defense&#x27;,&#x27;special-attack&#x27;,&#x27;special-defense&#x27;,&#x27;speed&#x27;]].sum(axis=1)
+df[&#x27;total&#x27;] = total_stats
+
+plt.figure(figsize=(10,6))
+plt.bar(df[&#x27;name&#x27;], df[&#x27;total&#x27;], color=&#x27;skyblue&#x27;)
+plt.title(&#x27;Total Base Stats by Pokemon&#x27;)
+plt.xlabel(&#x27;Pokemon&#x27;)
+plt.ylabel(&#x27;Total Base Stat&#x27;)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig(&#x27;out/pokemon_total_stats.png&#x27;)
+print(&#x27;saved out/pokemon_total_stats.png&#x27;)
+
+plt.figure(figsize=(10,6))
+plt.scatter(df[&#x27;weight&#x27;], df[&#x27;hp&#x27;], s=100, alpha=0.7)
+for i, row in df.iterrows():
+    plt.annotate(row[&#x27;name&#x27;], (row[&#x27;weight&#x27;], row[&#x27;hp&#x27;]), fontsize=8)
+plt.title(&#x27;Weight vs HP&#x27;)
+plt.xlabel(&#x27;Weight (hg)&#x27;)
+plt.ylabel(&#x27;HP&#x27;)
+plt.tight_layout()
+plt.savefig(&#x27;out/pokemon_weight_hp.png&#x27;)
+print(&#x27;saved out/pokemon_weight_hp.png&#x27;)
+
+print(&#x27;done&#x27;)</pre><pre>저장함: ws/poke_analysis.py (1986자)</pre></details><details><summary>[12] shell run pokemon analysis script</summary><pre>cd ~/ws &amp;&amp; python3 poke_analysis.py &amp;&amp; ls -la out/</pre><pre>[종료코드 2]
+python3: can&#x27;t open file &#x27;/home/runner/ws/poke_analysis.py&#x27;: [Errno 2] No such file or directory
+</pre></details><details><summary>[13] shell run pokemon analysis script from correct path</summary><pre>cd ~/ws &amp;&amp; python3 ws/poke_analysis.py &amp;&amp; ls -la ws/out/</pre><pre>[종료코드 2]
+         name  height  weight  ...  special-attack  special-defense  speed
+0     pikachu       4      60  ...              50               50     90
+1   charizard      17     905  ...             109               85    100
+2   bulbasaur       7      69  ...              65               65     45
+3    squirtle       5      90  ...              50               64     43
+4  jigglypuff       5      55  ...              45               25     20
+5      mewtwo      20    1220  ...             154               90    130
+6     snorlax      21    4600  ...              65              110     30
+7   dragonite      22    2100  ...             100              100     80
+8      gengar      15     405  ...             130               75    110
+9       eevee       3      65  ...              45               65     55
+
+[10 rows x 10 columns]
+saved out/pokemon_total_stats.png
+saved out/pokemon_weight_hp.png
+done
+ls: cannot access &#x27;ws/out/&#x27;: No such file or directory
+</pre></details><details><summary>[14] shell verify output files location</summary><pre>cd ~/ws &amp;&amp; ls -la out/ 2&gt;/dev/null || ls -la ws/out/ 2&gt;/dev/null; find . -name &quot;*.png&quot; -o -name &quot;*.csv&quot; 2&gt;/dev/null</pre><pre>[종료코드 0]
+total 72
+drwxr-xr-x 2 runner runner  4096 Nov  2 04:15 .
+drwxr-xr-x 4 runner runner  4096 Nov  2 04:15 ..
+-rw-r--r-- 1 runner runner 30558 Nov  2 04:15 pokemon_total_stats.png
+-rw-r--r-- 1 runner runner 28902 Nov  2 04:15 pokemon_weight_hp.png
+./ws/pokemon_stats.csv
+./pokemon_stats.csv
+./out/pokemon_weight_hp.png
+./out/pokemon_total_stats.png
+</pre></details></html>
