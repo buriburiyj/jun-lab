@@ -9,3 +9,4 @@
 - 파일 저장 경로에 ~를 포함할 때는 저장 직전에 os.path.expanduser()로 절대 경로를 변환해야 하며, ~/ws/out/sysmon.png 같은 경로를 이렇게 처리하면 30초 간격 모니터링 결과도 정상적으로 저장할 수 있다. (Ubuntu 시스템 자원 모니터링 실험)
 - 날짜 문자열을 pd.to_datetime으로 변환할 때 format='%m/%d/%Y'를 명시하면 UserWarning을 없앨 수 있고, 2개 이상의 날짜 열을 다룰 때 특히 유용하다. (코로나19 공공 데이터 분석 실험)
 - 공개 API로 10마리 이하 소규모 데이터를 분석할 때는 requests로 수집하고 pandas로 정제한 뒤 matplotlib로 시각화해 out 폴더에 CSV와 PNG로 저장하자. (인터넷 공개 API로 포켓몬 능력치 분석 실험)
+- 파이썬 그래프 코드를 실행하기 전 `import matplotlib`이 1회라도 실패하면 `pip install matplotlib`을 먼저 하고, 반복되면 `venv` 가상환경을 써라. (Ubuntu 시스템 모니터링 실험)
