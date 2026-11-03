@@ -1,0 +1,862 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>서울 날씨 데이터 수집 및 시각화 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>서울 날씨 데이터 수집 및 시각화 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 33번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>오픈메테오 API를 이용해 서울의 향후 24시간 날씨 데이터를 수집하고 시각화하는 실험을 수행했습니다. 기온, 습도, 풍속 데이터를 JSON으로 받아 matplotlib로 이중 축 선 그래프를 그렸고, ~/ws/out/weather_plot.png에 PNG 파일로 저장했습니다. 터미널에는 텍스트 기반 막대 그래프도 출력했습니다.<br><br>결과 숫자: 최저 기온 6.8도, 최고 기온 17.2도, 최저 습도 39퍼센트, 최고 습도 97퍼센트, 최대 풍속 5.4킬로미터/시간. 기온은 낮 12시부터 15시 사이가 가장 높았고, 밤새 서서히 하강하는 패턴을 보였습니다.<br><br>알게 된 점: plotext 6.x 버전은 API가 자주 바뀌어 터미널 내 그래프 출력이 어렵지만, matplotlib Agg 백엔드를 사용하면 서버 환경에서도 PNG 이미지 저장과 간단한 텍스트 시각화가 안정적으로 작동합니다. 오픈메테오 API는 인증 키 없이 위경도 기반 날씨 예보를 쉽게 가져올 수 있어 개인 연구에 적합합니다.<br><br>다음에 해 볼 것: 여러 도시를 비교하는 다중 도시 날씨 대시보드를 만들거나, 과거 기상 데이터를 수집해 기온 변화 추세를 분석해 볼 수 있습니다.</p><img src="out/weather_plot.png">
+<h2>결과 파일</h2><ul><li><a href="out/weather_plot.png">weather_plot.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting internet experiment ubuntu linux terminal python visualization</summary><pre></pre><pre>1. Visualizing Data in the Terminal: A Simple Guide to Building a ...
+https://dev.to/timilehin-olusegun/visualizing-data-in-the-terminal-a-simple-guide-to-building-a-customized-data-visualization-tool-47lb
+Whether you&#x27;re tracking user growth or analyzing sales data, a terminal -based visualization tool can help you streamline your analysis and make sense of complex data. In this article, we have demonstrated how to build a Python program to visualize data directly on the terminal .
+
+2. Draw Graphs in Linux Terminal with Termgraph [Guide]
+https://computingforgeeks.com/draw-graphs-terminal-linux/
+Install and use termgraph to draw bar graphs, stacked charts, and multi-variable comparisons in the Linux terminal . Covers all chart types, colors, and options.
+
+3. How to Create Stunning Graphs in the Terminal with Python
+https://medium.com/@SrvZ/how-to-create-stunning-graphs-in-the-terminal-with-python-2adf9d012131
+Whether we&#x27;re working remotely, on a server, or just need to share a quick visualization with a colleague, the ability to plot graphs in the terminal can be incredibly useful.
+
+4. data visualization with YouPlot, Bashplotlib, and Plotext.
+https://converter.brightcoding.dev/blog/terminal-data-visualization-revolution-how-to-create-stunning-plots-directly-in-your-cli-2025-guide
+The Hidden Superpower of Modern Developers: Why Terminal Plotting is Exploding in 2025 In an era where remote servers, containerized environments, and headless systems dominate development workflows, a quiet revolution is unfolding in the terminal . Data visualization once the exclusive domain of bulky GUI applications is now happening instantly in command-line interfaces, transforming how ...
+
+5. GitHub - glamp/bashplotlib: plotting in the terminal
+https://github.com/glamp/bashplotlib
+bashplotlib is a python package and command line tool for making basic plots in the terminal . It&#x27;s a quick way to visualize data when you don&#x27;t have a GUI. It&#x27;s written in pure python and can quickly be installed anywhere using pip.
+
+6. python - How to plot a chart in the terminal - Stack Overflow
+https://stackoverflow.com/questions/37288421/how-to-plot-a-chart-in-the-terminal
+It is possible to plot raster images in terminals and terminal emulators: ... This particular example uses matplotlib-sixel, a library that uses Xterm emulating a Sixel compatible terminal and ImageTrick. Similar technology could be implemented in the Linux terminal (through the Framebuffer) or emulators (kitty or iTerm2).
+
+7. Self-Hosted Terminal Data Visualization Tools: termgraph vs gnuplot vs ...
+https://www.pistack.xyz/posts/2026-06-17-terminal-data-visualization/
+Why Self-Host Your Terminal Visualization Tools? Running visualization tools locally or on your own infrastructure gives you complete control over your data pipeline.
+
+8. Interactive Data Visualizations in Python: All in One View
+https://carpentries-incubator.github.io/python-interactive-data-visualizations/aio.html
+Visualization is often one of the first and most vital steps of exploratory data analysis. People benefit from visual representation of data to see patterns, and plotting data is also an important part of a researcher&#x27;s communication toolbox. Interactive visualizations can be used both during the initial exploratory phase and the final publication and communication phase of a research project.</pre></details><details><summary>[2] shell ls ~/ws &amp;&amp; which python3 pip3 &amp;&amp; python3 --version</summary><pre></pre><pre>[종료코드 0]
+out
+/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3
+/opt/hostedtoolcache/Python/3.12.15/x64/bin/pip3
+Python 3.12.15
+</pre></details><details><summary>[3] shell pip3 install plotext matplotlib 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pillow-13.0.0 plotext-6.1.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[4] shell curl -s &quot;https://api.open-meteo.com/v1/forecast?latitude=37.5665&amp;longitude=126.9780&amp;hourly=temperatu</summary><pre></pre><pre>[종료코드 0]
+{&quot;latitude&quot;:37.55,&quot;longitude&quot;:127.0,&quot;generationtime_ms&quot;:0.0680685043334961,&quot;utc_offset_seconds&quot;:32400,&quot;timezone&quot;:&quot;Asia/Seoul&quot;,&quot;timezone_abbreviation&quot;:&quot;GMT+9&quot;,&quot;elevation&quot;:34.0,&quot;hourly_units&quot;:{&quot;time&quot;:&quot;iso8601&quot;,&quot;temperature_2m&quot;:&quot;°C&quot;,&quot;relativehumidity_2m&quot;:&quot;%&quot;,&quot;windspeed_10m&quot;:&quot;km/h&quot;},&quot;hourly&quot;:{&quot;time&quot;:[&quot;2026-11-04T07:00&quot;,&quot;2026-11-04T08:00&quot;,&quot;2026-11-04T09:00&quot;,&quot;2026-11-04T10:00&quot;,&quot;2026-11-04T11:00&quot;,&quot;2026-11-04T12:00&quot;,&quot;2026-11-04T13:00&quot;,&quot;2026-11-04T14:00&quot;,&quot;2026-11-04T15:00&quot;,&quot;2026-11-04T16:00&quot;,&quot;2026-11-04</pre></details><details><summary>[5] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext
+plt.clf()
+plt.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+plt.xlabel(&quot;Time&quot;)
+plt.ylabel(&quot;Temperature (°C) / Humidity (%)&quot;)
+plt.plot(labels, temps, label=&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+plt.plot(labels, hums, label=&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+plt.plotsize(80, 25)
+plt.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig.tight_layout()
+fig.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1675자)</pre></details><details><summary>[6] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 19, in &lt;module&gt;
+    plt.clf()
+    ^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;clf&#x27;
+</pre></details><details><summary>[7] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext
+plt.clear()
+plt.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+plt.xlabel(&quot;Time&quot;)
+plt.ylabel(&quot;Temperature (°C) / Humidity (%)&quot;)
+plt.plot(labels, temps, label=&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+plt.plot(labels, hums, label=&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+plt.plotsize(80, 25)
+plt.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig.tight_layout()
+fig.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1677자)</pre></details><details><summary>[8] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 19, in &lt;module&gt;
+    plt.clear()
+    ^^^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;clear&#x27;
+</pre></details><details><summary>[9] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext
+plt.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+plt.xlabel(&quot;Time&quot;)
+plt.ylabel(&quot;Temperature (°C) / Humidity (%)&quot;)
+plt.plot(labels, temps, label=&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+plt.plot(labels, hums, label=&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+plt.plotsize(80, 25)
+plt.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig.tight_layout()
+fig.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1665자)</pre></details><details><summary>[10] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 19, in &lt;module&gt;
+    plt.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+    ^^^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;title&#x27;. Did you mean: &#x27;file&#x27;?
+</pre></details><details><summary>[11] shell python3 -c &quot;import plotext as plt; print([x for x in dir(plt) if not x.startswith(&#x27;_&#x27;)])&quot;</summary><pre></pre><pre>[종료코드 0]
+[&#x27;add_theme&#x27;, &#x27;colorize&#x27;, &#x27;colors&#x27;, &#x27;doc&#x27;, &#x27;effect&#x27;, &#x27;figure&#x27;, &#x27;file&#x27;, &#x27;gif&#x27;, &#x27;image&#x27;, &#x27;line&#x27;, &#x27;line_styles&#x27;, &#x27;marker&#x27;, &#x27;markers&#x27;, &#x27;matplotlib&#x27;, &#x27;matrix&#x27;, &#x27;noise&#x27;, &#x27;pixel&#x27;, &#x27;platform&#x27;, &#x27;prettydoc&#x27;, &#x27;sample&#x27;, &#x27;sin&#x27;, &#x27;sleep&#x27;, &#x27;square&#x27;, &#x27;styles&#x27;, &#x27;terminal&#x27;, &#x27;test&#x27;, &#x27;themes&#x27;, &#x27;uncolorize&#x27;, &#x27;version&#x27;, &#x27;video&#x27;]
+</pre></details><details><summary>[12] search plotext 6.x API example plot show title</summary><pre></pre><pre>1. API Documentation — plotext 6.1.0 documentation
+https://plotext.readthedocs.io/en/latest/api.html
+API Documentation plotext The plotext module is the main package: it holds the functions listed below, the primitive classes and the prettydoc module, each described in its own section of this page, and four attributes: the master figure plotext .figure, the plotext .terminal object, the plotext .doc documentation container and the plotext .file toolkit. Two module-level constants are also ...
+
+2. User Guide — plotext 6.1.0 documentation
+https://plotext.readthedocs.io/
+Plot settings: the size, the title and labels, the rulers and their ticks, the axes, the canvas and its legend, twelve themes and your own. Subplots: a grid of plots , each panel holding a grid of its own, to any number of levels, and each with its own size, theme and settings.
+
+3. plotext · PyPI
+https://pypi.org/project/plotext/
+plotext draws its plots inside the terminal, as colored text, and its installation needs nothing beside itself; only pictures and videos ask for the optional extras. Basic plots : scatter, line and stem, each returning a signal you configure and then draw. Bars: simple, labeled, floating, multiple and stacked, with histograms and box plots .
+
+4. GitHub - piccolomo/plotext: plotting on terminal
+https://github.com/piccolomo/plotext
+Here is the link of the main documentation: plotext .readthedocs.io. This project is under active development. AI helped speed up the writing and polishing, particularly of the repetitive parts of the code, the documentation and the issue replies, in the last months of version 6.
+
+5. GitHub - Textualize/textual-plotext: A Textual widget wrapper library ...
+https://github.com/Textualize/textual-plotext/
+A Textual widget wrapper for the Plotext plotting library. Also, currently, there is no support for GIF plots or playing videos; one or both could follow at some point in the future. Plotext has a system of themes. The themes provided by Plotext are supported by PlotextPlot. However, some of those ...
+
+6. Tutorial 09 - plotext Backend — maxplotlib documentation
+https://max-models.github.io/maxplotlib/tutorials/tutorial_09_plotext.html
+The plotext backend renders a maxplotlib canvas directly in the terminal. That makes it a good fit for SSH sessions, CLI workflows, quick diagnostics, and situations where you want the same Canvas API without a GUI browser or desktop window.
+
+7. Tuesday Tooling: Visualise Data in the Terminal
+https://bigl.es/tuesday-tooling-plotext/
+Installation I created a virtual environment and installed plotext using pip3. pip3 install plotext Usage Lets get to grips with this library by creating a simple bar plot which will show the sales for a fictitious bakery. On the horizontal (x) axis we have the items purchased, on the vertical (y) axis are the sales figures. First we import the plotext library, renaming it to plt. import ...
+
+8. Plot Class API | Textualize/textual-plotext | DeepWiki
+https://deepwiki.com/Textualize/textual-plotext/4.1-plot-class-api
+Plot Class API Relevant source files This document provides comprehensive reference documentation for the Plot class and related utilities in textual- plotext . The Plot class serves as the core plotting interface that wraps plotext functionality while removing global state dependencies and providing Textual-friendly behavior.</pre></details><details><summary>[13] fetch https://plotext.readthedocs.io/en/latest/api.html</summary><pre></pre><pre>API Documentation — plotext 6.1.0 documentation plotext Getting Started Installation Basic Plots Signal Plot Types Shapes and Text Bar Plots Specialized Plots Date Plots Media Streaming Plots Plot Settings Size Labels Rulers Axes Canvas Themes Clear Interactive Mode Subplots Plot Utilities Plot Inspection Terminal Colored Primitives Pixel Colored Text Matrix Marker General Tools Test Data File Toolkit Command Line Pretty Docstrings Other Packages Project API Documentation plotext sin() square() noise() sample() uncolorize() colors() styles() markers() line_styles() themes() add_theme() effect() sleep() image() gif() video() matplotlib() test() pixel pixel pixel.clear() pixel.foreground() pixel.background() pixel.copy() pixel.clone() pixel.html() colorize colorize colorize.fill() colorize.write() colorize.upper() colorize.lower() colorize.title() colorize.length() colorize.pixel() colorize.matrix() colorize.string() colorize.print() colorize.copy() colorize.hstack() colorize.vstack() colorize.clone() matrix matrix matrix.clear() matrix.width() matrix.height() matrix.size() matrix.get() matrix.insert() matrix.hstack() matrix.vstack() matrix.copy() matrix.clone() matrix.transpose() matrix.string() matrix.html() matrix.save() matrix.print() matrix.fill() marker marker marker.fill() marker.pixel() marker.copy() line line signal signal_class signal_class.clear() signal_class.label() signal_class.lines() signal_class.line() signal_class.fillx() signal_class.filly() signal_class.density() signal_class.fill() signal_class.get() signal_class.length() signal_class.copy() signal_class.clone() signal_class.log() point point point.x() point.y() point.marker() figure plot_class plot_class.subplots() plot_class.signal() plot_class.ruler() plot_class.date() plot_class.title() plot_class.label() plot_class.axes() plot_class.canvas() plot_class.legend() plot_class.theme() plot_class.time() plot_class.show() plot_class.build() plot_class.bar() plot_class.box() plot_class.candlestick() 
+...(중략)...
+plotext.version : the installed plotext version string, the same as plotext.__version__ . plotext.platform : &quot;unix&quot; or &quot;windows&quot; , detected when the package is imported and used internally for the differences in terminal handling. plotext. sin ( periods = 2 , length = 200 , amplitude = 1 , phase = 0 , decay = 0 , offset = 0 ) [source]  Generates a sinusoidal signal, useful for example to test plotting routines. Source: plotext These are its parameters: periods: number of sinusoidal cycles. type: a numeric value default: 2 length: total number of sample points. type: an integer default: 200 amplitude: half the peak-to-peak amplitude of the sine wave. type: a numeric value default: 1 phase: phase shift in units of pi (half cycle): 0.5 turns the sine into a cosine, 1 into its negative. type: a numeric value default: 0 decay: exponential decay over the signal length; the final amplitude shrinks by a factor exp(-decay). type: a numeric value default: 0 offset: additional vertical offset. type: a numeric value default: 0 Returns: list of floats representing the generated signal. type: a list of numeric values plotext. square ( periods = 2 , length = 200 , amplitude = 1 ) [source]  Generates a square wave signal alternating between +amplitude and -amplitude, useful for example to test plotting routines. Source: plotext These are its parameters: periods: number of complete square-wave cycles. type: a numeric value default: 2 length: total number of sample points. type: an integer default: 200 amplitude: half the peak-to-peak value of the square wave. type: a numeric value default: 1 Returns: list of floats representing the generated signal. type: a list of numeric values plotext. noise ( length = 200 , amplitude = 1 , offset = 0 , seed = None ) [source]  Generates Gaussian noise samples, useful for example to test histogram rendering. Source: plotext These are its parameters: length: total number of sample points. type: an integer default: 200 amplitude: standard deviati</pre></details><details><summary>[14] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext 6.x API
+fig = plt.figure()
+fig.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+fig.xlabel(&quot;Time&quot;)
+fig.ylabel(&quot;Temperature (°C) / Humidity (%)&quot;)
+fig.plot(labels, temps, label=&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+fig.plot(labels, hums, label=&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+fig.plotsize(80, 25)
+fig.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig_mpl, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig_mpl.tight_layout()
+fig_mpl.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1704자)</pre></details><details><summary>[15] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 19, in &lt;module&gt;
+    fig = plt.figure()
+          ^^^^^^^^^^^^
+TypeError: &#x27;plot_class&#x27; object is not callable
+</pre></details><details><summary>[16] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext 6.x API - plt.figure is the master figure object
+fig = plt.figure
+fig.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+fig.xlabel(&quot;Time&quot;)
+fig.ylabel(&quot;Temperature (°C) / Humidity (%)&quot;)
+fig.plot(labels, temps, label=&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+fig.plot(labels, hums, label=&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+fig.plotsize(80, 25)
+fig.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig_mpl, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig_mpl.tight_layout()
+fig_mpl.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1743자)</pre></details><details><summary>[17] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 21, in &lt;module&gt;
+    fig.xlabel(&quot;Time&quot;)
+    ^^^^^^^^^^
+AttributeError: &#x27;plot_class&#x27; object has no attribute &#x27;xlabel&#x27;. Did you mean: &#x27;label&#x27;?
+</pre></details><details><summary>[18] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext 6.x API - plt.figure is the master figure object
+fig = plt.figure
+fig.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+fig.label(&quot;Time&quot;, &quot;Temperature (°C) / Humidity (%)&quot;)
+fig.plot(labels, temps, label=&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+fig.plot(labels, hums, label=&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+fig.plotsize(80, 25)
+fig.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig_mpl, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig_mpl.tight_layout()
+fig_mpl.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1731자)</pre></details><details><summary>[19] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 22, in &lt;module&gt;
+    fig.plot(labels, temps, label=&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+    ^^^^^^^^
+AttributeError: &#x27;plot_class&#x27; object has no attribute &#x27;plot&#x27;. Did you mean: &#x27;_plot&#x27;?
+</pre></details><details><summary>[20] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext 6.x API
+fig = plt.figure
+fig.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+fig.label(&quot;Time&quot;, &quot;Temperature (°C) / Humidity (%)&quot;)
+sig1 = fig.signal()
+sig1.line(labels, temps)
+sig1.label(&quot;Temperature (°C)&quot;)
+sig1.color(&quot;red&quot;)
+sig2 = fig.signal()
+sig2.line(labels, hums)
+sig2.label(&quot;Humidity (%)&quot;)
+sig2.color(&quot;blue&quot;)
+fig.plotsize(80, 25)
+fig.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig_mpl, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig_mpl.tight_layout()
+fig_mpl.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1752자)</pre></details><details><summary>[21] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 23, in &lt;module&gt;
+    sig1.line(labels, temps)
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/plotext/_signal/signal.py&quot;, line 49, in line
+    if 0 &lt;= index &lt; self.length():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: &#x27;&lt;=&#x27; not supported between instances of &#x27;int&#x27; and &#x27;list&#x27;
+</pre></details><details><summary>[22] fetch https://plotext.readthedocs.io/en/latest/api.html#plotext.plot_class.signal</summary><pre></pre><pre>API Documentation — plotext 6.1.0 documentation plotext Getting Started Installation Basic Plots Signal Plot Types Shapes and Text Bar Plots Specialized Plots Date Plots Media Streaming Plots Plot Settings Size Labels Rulers Axes Canvas Themes Clear Interactive Mode Subplots Plot Utilities Plot Inspection Terminal Colored Primitives Pixel Colored Text Matrix Marker General Tools Test Data File Toolkit Command Line Pretty Docstrings Other Packages Project API Documentation plotext sin() square() noise() sample() uncolorize() colors() styles() markers() line_styles() themes() add_theme() effect() sleep() image() gif() video() matplotlib() test() pixel pixel pixel.clear() pixel.foreground() pixel.background() pixel.copy() pixel.clone() pixel.html() colorize colorize colorize.fill() colorize.write() colorize.upper() colorize.lower() colorize.title() colorize.length() colorize.pixel() colorize.matrix() colorize.string() colorize.print() colorize.copy() colorize.hstack() colorize.vstack() colorize.clone() matrix matrix matrix.clear() matrix.width() matrix.height() matrix.size() matrix.get() matrix.insert() matrix.hstack() matrix.vstack() matrix.copy() matrix.clone() matrix.transpose() matrix.string() matrix.html() matrix.save() matrix.print() matrix.fill() marker marker marker.fill() marker.pixel() marker.copy() line line signal signal_class signal_class.clear() signal_class.label() signal_class.lines() signal_class.line() signal_class.fillx() signal_class.filly() signal_class.density() signal_class.fill() signal_class.get() signal_class.length() signal_class.copy() signal_class.clone() signal_class.log() point point point.x() point.y() point.marker() figure plot_class plot_class.subplots() plot_class.signal() plot_class.ruler() plot_class.date() plot_class.title() plot_class.label() plot_class.axes() plot_class.canvas() plot_class.legend() plot_class.theme() plot_class.time() plot_class.show() plot_class.build() plot_class.bar() plot_class.box() plot_class.candlestick() 
+...(중략)...
+plotext.version : the installed plotext version string, the same as plotext.__version__ . plotext.platform : &quot;unix&quot; or &quot;windows&quot; , detected when the package is imported and used internally for the differences in terminal handling. plotext. sin ( periods = 2 , length = 200 , amplitude = 1 , phase = 0 , decay = 0 , offset = 0 ) [source]  Generates a sinusoidal signal, useful for example to test plotting routines. Source: plotext These are its parameters: periods: number of sinusoidal cycles. type: a numeric value default: 2 length: total number of sample points. type: an integer default: 200 amplitude: half the peak-to-peak amplitude of the sine wave. type: a numeric value default: 1 phase: phase shift in units of pi (half cycle): 0.5 turns the sine into a cosine, 1 into its negative. type: a numeric value default: 0 decay: exponential decay over the signal length; the final amplitude shrinks by a factor exp(-decay). type: a numeric value default: 0 offset: additional vertical offset. type: a numeric value default: 0 Returns: list of floats representing the generated signal. type: a list of numeric values plotext. square ( periods = 2 , length = 200 , amplitude = 1 ) [source]  Generates a square wave signal alternating between +amplitude and -amplitude, useful for example to test plotting routines. Source: plotext These are its parameters: periods: number of complete square-wave cycles. type: a numeric value default: 2 length: total number of sample points. type: an integer default: 200 amplitude: half the peak-to-peak value of the square wave. type: a numeric value default: 1 Returns: list of floats representing the generated signal. type: a list of numeric values plotext. noise ( length = 200 , amplitude = 1 , offset = 0 , seed = None ) [source]  Generates Gaussian noise samples, useful for example to test histogram rendering. Source: plotext These are its parameters: length: total number of sample points. type: an integer default: 200 amplitude: standard deviati</pre></details><details><summary>[23] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext - try simple plot() function
+plt.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+plt.xlabel(&quot;Time&quot;)
+plt.ylabel(&quot;Temperature (°C) / Humidity (%)&quot;)
+plt.plot(labels, temps, label=&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+plt.plot(labels, hums, label=&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+plt.plotsize(80, 25)
+plt.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig_mpl, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig_mpl.tight_layout()
+fig_mpl.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1706자)</pre></details><details><summary>[24] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext 6.x API
+fig = plt.figure
+fig.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+fig.label(&quot;Hour&quot;, &quot;Temperature (°C) / Humidity (%)&quot;)
+
+sig1 = fig.signal()
+sig1.line(temps)
+sig1.label(&quot;Temperature (°C)&quot;)
+sig1.color(&quot;red&quot;)
+
+sig2 = fig.signal()
+sig2.line(hums)
+sig2.label(&quot;Humidity (%)&quot;)
+sig2.color(&quot;blue&quot;)
+
+fig.plotsize(80, 25)
+fig.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig_mpl, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig_mpl.tight_layout()
+fig_mpl.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1739자)</pre></details><details><summary>[25] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 24, in &lt;module&gt;
+    sig1.line(temps)
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/plotext/_signal/signal.py&quot;, line 49, in line
+    if 0 &lt;= index &lt; self.length():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: &#x27;&lt;=&#x27; not supported between instances of &#x27;int&#x27; and &#x27;list&#x27;
+</pre></details><details><summary>[26] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext 6.x API
+fig = plt.figure
+fig.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+fig.label(&quot;Hour&quot;, &quot;Temperature (°C) / Humidity (%)&quot;)
+
+sig1 = fig.signal()
+sig1.lines(list(range(len(temps))), temps)
+sig1.label(&quot;Temperature (°C)&quot;)
+sig1.color(&quot;red&quot;)
+
+sig2 = fig.signal()
+sig2.lines(list(range(len(hums))), hums)
+sig2.label(&quot;Humidity (%)&quot;)
+sig2.color(&quot;blue&quot;)
+
+fig.plotsize(80, 25)
+fig.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig_mpl, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig_mpl.tight_layout()
+fig_mpl.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1790자)</pre></details><details><summary>[27] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 24, in &lt;module&gt;
+    sig1.lines(list(range(len(temps))), temps)
+TypeError: signal_class.lines() takes from 1 to 2 positional arguments but 3 were given
+</pre></details><details><summary>[28] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext 6.x API
+fig = plt.figure
+fig.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+fig.label(&quot;Hour&quot;, &quot;Temperature (°C) / Humidity (%)&quot;)
+
+sig1 = fig.signal()
+sig1.line(temps)
+sig1.label(&quot;Temperature (°C)&quot;)
+sig1.color(&quot;red&quot;)
+
+sig2 = fig.signal()
+sig2.line(hums)
+sig2.label(&quot;Humidity (%)&quot;)
+sig2.color(&quot;blue&quot;)
+
+fig.plotsize(80, 25)
+fig.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig_mpl, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig_mpl.tight_layout()
+fig_mpl.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1739자)</pre></details><details><summary>[29] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 24, in &lt;module&gt;
+    sig1.line(temps)
+  File &quot;/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/plotext/_signal/signal.py&quot;, line 49, in line
+    if 0 &lt;= index &lt; self.length():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: &#x27;&lt;=&#x27; not supported between instances of &#x27;int&#x27; and &#x27;list&#x27;
+</pre></details><details><summary>[30] write ~/ws/plot_weather.py</summary><pre>import json
+import plotext as plt
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt_mpl
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+# Terminal plot with plotext - use top-level plot function
+plt.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+plt.xlabel(&quot;Hour&quot;)
+plt.ylabel(&quot;Temperature (°C) / Humidity (%)&quot;)
+plt.plot(temps, label=&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+plt.plot(hums, label=&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+plt.plotsize(80, 25)
+plt.show()
+
+# PNG plot with matplotlib
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig_mpl, ax1 = plt_mpl.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig_mpl.tight_layout()
+fig_mpl.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)</pre><pre>저장함: plot_weather.py (1691자)</pre></details><details><summary>[31] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot_weather.py&quot;, line 19, in &lt;module&gt;
+    plt.title(&quot;Seoul Weather - Next 24 Hours&quot;)
+    ^^^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;title&#x27;. Did you mean: &#x27;file&#x27;?
+</pre></details><details><summary>[32] write ~/ws/plot_weather.py</summary><pre>import json
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import os
+
+with open(os.path.expanduser(&quot;~/ws/weather.json&quot;), &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    data = json.load(f)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+hums = data[&quot;hourly&quot;][&quot;relativehumidity_2m&quot;]
+winds = data[&quot;hourly&quot;][&quot;windspeed_10m&quot;]
+
+labels = [t.split(&quot;T&quot;)[1][:5] for t in times]
+
+os.makedirs(os.path.expanduser(&quot;~/ws/out&quot;), exist_ok=True)
+
+fig, ax1 = plt.subplots(figsize=(10, 4))
+ax1.plot(labels, temps, &quot;r-&quot;, label=&quot;Temperature (°C)&quot;)
+ax1.set_ylabel(&quot;Temperature (°C)&quot;, color=&quot;red&quot;)
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;red&quot;)
+ax1.set_xticks(range(0, len(labels), 3))
+ax1.set_xticklabels([labels[i] for i in range(0, len(labels), 3)], rotation=45)
+ax1.set_title(&quot;Seoul Weather - Next 24 Hours&quot;)
+
+ax2 = ax1.twinx()
+ax2.plot(labels, hums, &quot;b-&quot;, label=&quot;Humidity (%)&quot;)
+ax2.set_ylabel(&quot;Humidity (%)&quot;, color=&quot;blue&quot;)
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+
+fig.tight_layout()
+fig.savefig(os.path.expanduser(&quot;~/ws/out/weather_plot.png&quot;), dpi=150)
+print(&quot;Saved PNG to ~/ws/out/weather_plot.png&quot;)
+
+print(&quot;\nSummary stats:&quot;)
+print(f&quot;  Min temp: {min(temps)}°C, Max temp: {max(temps)}°C&quot;)
+print(f&quot;  Min humidity: {min(hums)}%, Max humidity: {max(hums)}%&quot;)
+print(f&quot;  Max wind: {max(winds)} km/h&quot;)
+
+# Simple text-based terminal plot
+print(&quot;\nText plot (Temperature):&quot;)
+width = 60
+t_min, t_max = min(temps), max(temps)
+for i in range(0, len(temps), max(1, len(temps)//width)):
+    bar_len = int((temps[i] - t_min) / max(1, (t_max - t_min)) * 40)
+    print(f&quot;  {labels[i]:&gt;5} |{&#x27;#&#x27; * bar_len} {temps[i]}°C&quot;)</pre><pre>저장함: plot_weather.py (1624자)</pre></details><details><summary>[33] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 0]
+Saved PNG to ~/ws/out/weather_plot.png
+
+Summary stats:
+  Min temp: 6.8°C, Max temp: 17.2°C
+  Min humidity: 39%, Max humidity: 97%
+  Max wind: 5.4 km/h
+
+Text plot (Temperature):
+  07:00 | 6.8°C
+  08:00 |# 7.2°C
+  09:00 |###### 8.4°C
+  10:00 |############# 10.3°C
+  11:00 |##################### 12.3°C
+  12:00 |############################ 14.3°C
+  13:00 |################################### 16.0°C
+  14:00 |###################################### 16.9°C
+  15:00 |######################################## 17.2°C
+  16:00 |###################################### 16.9°C
+  17:00 |################################# 15.6°C
+  18:00 |########################## 13.7°C
+  19:00 |####################### 12.9°C
+  20:00 |#################### 12.0°C
+  21:00 |################# 11.4°C
+  22:00 |############### 10.7°C
+  23:00 |############# 10.4°C
+  00:00 |############# 10.4°C
+  01:00 |############# 10.2°C
+  02:00 |############ 10.1°C
+  03:00 |############# 10.3°C
+  04:00 |############# 10.2°C
+  05:00 |############# 10.3°C
+  06:00 |########### 9.7°C
+</pre></details></html>
