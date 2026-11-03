@@ -10,3 +10,4 @@
 - 날짜 문자열을 pd.to_datetime으로 변환할 때 format='%m/%d/%Y'를 명시하면 UserWarning을 없앨 수 있고, 2개 이상의 날짜 열을 다룰 때 특히 유용하다. (코로나19 공공 데이터 분석 실험)
 - 공개 API로 10마리 이하 소규모 데이터를 분석할 때는 requests로 수집하고 pandas로 정제한 뒤 matplotlib로 시각화해 out 폴더에 CSV와 PNG로 저장하자. (인터넷 공개 API로 포켓몬 능력치 분석 실험)
 - 파이썬 그래프 코드를 실행하기 전 `import matplotlib`이 1회라도 실패하면 `pip install matplotlib`을 먼저 하고, 반복되면 `venv` 가상환경을 써라. (Ubuntu 시스템 모니터링 실험)
+- 성능이 중요한 코드는 sysbench로 CPU(소수 20000개 약 1994건/초), 메모리(쓰기 약 7599MiB/초), 디스크(읽기 233MiB/초, 쓰기 156MiB/초)를 먼저 측정하고, 스레드 수를 1·2·4·8로 바꿔가며 병목을 찾은 뒤 matplotlib로 ~/ws/out에 그래프를 저장하라. (Ubuntu 시스템 벤치마크 실험)
