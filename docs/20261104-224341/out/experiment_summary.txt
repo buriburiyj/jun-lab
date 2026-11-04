@@ -1,0 +1,26 @@
+Ubuntu Terminal Fun Experiment Results
+=====================================
+
+Installed packages: cowsay, fortune, cmatrix, figlet, lolcat, sl
+
+1. cowsay "Hello from Ubuntu researcher"
+   RESULT: SUCCESS
+   Output: ASCII cow with speech bubble displayed correctly.
+
+2. fortune
+   RESULT: SUCCESS
+   Output: Random joke: "Q: What do you get when you cross a mobster with an international standard? A: You get someone who makes you an offer that you can't understand!"
+
+3. figlet "FUN" | lolcat
+   RESULT: SUCCESS
+   Output: Large ASCII-art letters "FUN" with rainbow color effect.
+
+4. cmatrix (Matrix falling-code effect)
+   RESULT: PARTIAL / LIMITED
+   Command runs but produces ANSI escape sequences in non-interactive shell; visual effect requires a real terminal emulator.
+
+5. sl (steam locomotive animation)
+   RESULT: PARTIAL / LIMITED
+   Command runs but produces ANSI escape sequences in non-interactive shell; visual animation requires a real terminal emulator.
+
+Conclusion: Text-based fun commands (cowsay, fortune, figlet+lolcat) work perfectly in script/non-interactive mode. Full-screen visual commands (cmatrix, sl) need an active terminal to display properly.

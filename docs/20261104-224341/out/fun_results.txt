@@ -1,0 +1,27 @@
+=== 1. cowsay ===
+ ______________________________
+< Hello from Ubuntu researcher >
+ ------------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+=== 2. fortune ===
+Q:	What do you get when you cross a mobster with an international standard?
+A:	You get someone who makes you an offer that you can't understand!
+
+=== 3. figlet | lolcat ===
+ _____ _   _ _   _ 
+|  ___| | | | \ | |
+| |_  | | | |  \| |
+|  _| | |_| | |\  |
+|_|    \___/|_| \_|
+                   
+
+=== 4. cmatrix (5 seconds) ===
+Error opening terminal: unknown.
+
+=== 5. sl (3 seconds) ===
+Error opening terminal: unknown.
