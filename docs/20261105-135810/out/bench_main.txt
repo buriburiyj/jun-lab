@@ -1,0 +1,7 @@
+=== zstd ===
+=== lz4 ===
+=== lz4hc ===
+=== gzip ===
+=== libdeflate ===
+=== bzip2 ===
+=== xz ===
