@@ -1,0 +1,146 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>갭마인더 데이터로 소득과 기대수명 관계 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>갭마인더 데이터로 소득과 기대수명 관계 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 4번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 흥미로운 주제로 갭마인더(Gapminder) 데이터를 선택하고, 국가별 GDP 1인당과 기대수명의 관계를 직접 실험했습니다. plotly 공개 데이터셋을 다운로드해 pandas로 읽고, 2007년 최신 연도 데이터를 대륙별로 색상 구분해 산점도를 그렸으며, 점 크기는 인구 비례로 설정했습니다. matplotlib Agg 백엔드로 ~/ws/out/gapminder_scatter.png 파일을 저장했습니다. 분석 결과, GDP 1인당이 높을수록 기대수명도 대체로 높은 양상을 보였고, 노르웨이와 쿠웨이트 등이 GDP 1인당 상위, 일본과 홍콩 등이 기대수명 상위에 올랐습니다. 대륙별로 색을 다르게 하고 로그 스케일 X축을 사용해 시각적 패턴을 명확히 확인할 수 있었습니다. 다음에는 시간에 따른 국가별 변화를 애니메이션이나 선 그래프로 확장해 볼 수 있습니다.</p><img src="out/gapminder_scatter.png">
+<h2>결과 파일</h2><ul><li><a href="out/gapminder_scatter.png">gapminder_scatter.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting data analysis project ubuntu linux terminal matplotlib</summary><pre></pre><pre>1. Top 5 Matplotlib Projects in Python to Practice for Analysis
+https://datamites.com/blog/top-5-matplotlib-projects-in-python-to-practice-for-analysis/
+Explore the top 5 Matplotlib projects in Python to practice for analysis . Perfect for aspiring data analysts, these beginner Python projects help build hands-on skills in data visualization, charting, and actionable insights for real-world analytics.
+
+2. Data Analysis Terminal - GitHub
+https://github.com/omshete96/Data-Analysis-Terminal
+This Python-based terminal project analyzes CSV/Excel files, generating statistical summaries and visualizations like histograms, correlation heatmaps, and pair plots. It provides clear insights into datasets using Pandas, Matplotlib , and Seaborn. - omshete96/ Data - Analysis - Terminal
+
+3. Top 5 Matplotlib Projects in Python for Practice
+https://www.projectpro.io/article/matplotlib-projects-in-python/752
+Top 5 Matplotlib Projects in Python for Practice This article contains five data visualization projects in python that rely on the Python&#x27;s matplotlib library for plotting various graphs. 1. House Price Analysis The prices of a residential property depend on several factors such as location, transportation connectivity, area, number of rooms, etc. In this project , you will work with a ...
+
+4. teenapunna/Python-Data-Analytics-Projects - GitHub
+https://github.com/teenapunna/Python-Data-Analytics-Projects
+This repository showcases various Data Analytics projects using Python to explore, analyze, and visualize data . Each project applies data cleaning, exploratory data analysis (EDA), and insights generation using real-world datasets.
+
+5. Matplotlib Projects - Real-world Projects
+https://labex.io/projects/category/matplotlib
+matplotlib Projects Matplotlib projects offer a thorough introduction to Python data visualization. Our curriculum is tailored for beginners, providing hands - on experience with various chart types and customization options. Through real - world projects and online exercises, you&#x27;ll learn to create informative and visually appealing plots.
+
+6. Top 23 Python Matplotlib Projects | LibHunt
+https://www.libhunt.com/l/python/topic/matplotlib
+Which are the best open-source Matplotlib projects in Python? This list will help you: 30-Days-Of-Python, data -science-ipython-notebooks, matplotlib , pygwalker, prettymaps, seaborn, and scientific-visualization-book.
+
+7. How to Install Matplotlib in Python
+https://pythonguides.com/how-to-install-matplotlib-python/
+Learn how to install Matplotlib in Python on Windows, Mac &amp; Linux using pip, conda, or venv. Fix common errors and run your first plot in minutes.
+
+8. Creating a Comprehensive Step-by-Step Guide for Developing a Data ...
+https://moldstud.com/articles/p-creating-a-comprehensive-step-by-step-guide-for-developing-a-data-analysis-project-using-numpy-on-ubuntu
+Learn to create impressive subplots in Matplotlib on Ubuntu with this detailed step-by-step guide, featuring tips and examples to enhance your data visualization skills.</pre></details><details><summary>[2] shell 환경 확인 및 작업 폴더 준비</summary><pre>mkdir -p ~/ws/out
+cd ~/ws
+python3 --version
+pip3 list 2&gt;/dev/null | grep -Ei &quot;matplotlib|pandas|numpy|requests&quot; || true
+ls -la</pre><pre>[종료코드 0]
+Python 3.12.16
+total 12
+drwxr-xr-x  3 runner runner 4096 Nov  6 22:41 .
+drwxr-x--- 12 runner runner 4096 Nov  6 22:41 ..
+drwxr-xr-x  2 runner runner 4096 Nov  6 22:41 out
+</pre></details><details><summary>[3] shell 필요한 파이썬 패키지 설치</summary><pre>pip3 install --quiet matplotlib pandas numpy requests 2&gt;&amp;1 | tail -5
+python3 -c &quot;import matplotlib, pandas, numpy, requests; print(&#x27;ok&#x27;, matplotlib.__version__, pandas.__version__, numpy.__version__)&quot;</pre><pre>[종료코드 0]
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+ok 3.11.2 3.1.1 2.5.4
+</pre></details><details><summary>[4] shell 갭마인더 데이터 다운로드 및 분석 시각화 실행</summary><pre>cd ~/ws
+curl -sL -o gapminder.csv &quot;https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv&quot;
+head -5 gapminder.csv
+wc -l gapminder.csv
+cat &gt; analyze_gapminder.py &lt;&lt; &#x27;EOF&#x27;
+import pandas as pd
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+df = pd.read_csv(&#x27;gapminder.csv&#x27;)
+latest_year = df[&#x27;year&#x27;].max()
+latest = df[df[&#x27;year&#x27;] == latest_year].copy()
+
+continent_colors = {
+    &#x27;Asia&#x27;: &#x27;#1f77b4&#x27;,
+    &#x27;Europe&#x27;: &#x27;#ff7f0e&#x27;,
+    &#x27;Africa&#x27;: &#x27;#2ca02c&#x27;,
+    &#x27;Americas&#x27;: &#x27;#d62728&#x27;,
+    &#x27;Oceania&#x27;: &#x27;#9467bd&#x27;,
+}
+
+plt.figure(figsize=(10, 6))
+for cont in latest[&#x27;continent&#x27;].unique():
+    sub = latest[latest[&#x27;continent&#x27;] == cont]
+    pop_ratio = sub[&#x27;pop&#x27;] / latest[&#x27;pop&#x27;].max()
+    sizes = pop_ratio * 2000 + 100
+    plt.scatter(
+        sub[&#x27;gdpPercap&#x27;], sub[&#x27;lifeExp&#x27;],
+        s=sizes, label=cont, alpha=0.75,
+        edgecolors=&#x27;white&#x27;, linewidth=0.5,
+        color=continent_colors.get(cont, &#x27;#7f7f7f&#x27;)
+    )
+
+plt.xscale(&#x27;log&#x27;)
+plt.xlabel(&#x27;GDP per capita (log scale)&#x27;)
+plt.ylabel(&#x27;Life Expectancy (years)&#x27;)
+plt.title(f&#x27;Gapminder: GDP per Capita vs Life Expectancy ({latest_year})&#x27;)
+plt.legend(title=&#x27;Continent&#x27;)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(&#x27;out/gapminder_scatter.png&#x27;, dpi=150)
+print(&#x27;saved out/gapminder_scatter.png&#x27;)
+
+print(&#x27;\nTop 10 by GDP per capita:&#x27;)
+print(latest[[&#x27;country&#x27;,&#x27;continent&#x27;,&#x27;pop&#x27;,&#x27;gdpPercap&#x27;,&#x27;lifeExp&#x27;,&#x27;year&#x27;]]
+      .sort_values(&#x27;gdpPercap&#x27;, ascending=False).head(10).to_string(index=False))
+
+print(&#x27;\nTop 10 by Life Expectancy:&#x27;)
+print(latest[[&#x27;country&#x27;,&#x27;continent&#x27;,&#x27;pop&#x27;,&#x27;gdpPercap&#x27;,&#x27;lifeExp&#x27;,&#x27;year&#x27;]]
+      .sort_values(&#x27;lifeExp&#x27;, ascending=False).head(10).to_string(index=False))
+EOF
+python3 analyze_gapminder.py
+ls -la out/</pre><pre>[종료코드 0]
+country,year,pop,continent,lifeExp,gdpPercap
+Afghanistan,1952,8425333,Asia,28.801,779.4453145
+Afghanistan,1957,9240934,Asia,30.332,820.8530296
+Afghanistan,1962,10267083,Asia,31.997,853.10071
+Afghanistan,1967,11537966,Asia,34.02,836.1971382
+1705 gapminder.csv
+saved out/gapminder_scatter.png
+
+Top 10 by GDP per capita:
+         country continent         pop   gdpPercap  lifeExp  year
+          Norway    Europe   4627926.0 49357.19017   80.196  2007
+          Kuwait      Asia   2505559.0 47306.98978   77.588  2007
+       Singapore      Asia   4553009.0 47143.17964   79.972  2007
+   United States  Americas 301139947.0 42951.65309   78.242  2007
+         Ireland    Europe   4109086.0 40675.99635   78.885  2007
+Hong Kong, China      Asia   6980412.0 39724.97867   82.208  2007
+     Switzerland    Europe   7554661.0 37506.41907   81.701  2007
+     Netherlands    Europe  16570613.0 36797.93332   79.762  2007
+          Canada  Americas  33390141.0 36319.23501   80.653  2007
+         Iceland    Europe    301931.0 36180.78919   81.757  2007
+
+Top 10 by Life Expectancy:
+         country continent         pop   gdpPercap  lifeExp  year
+           Japan      Asia 127467972.0 31656.06806   82.603  2007
+Hong Kong, China      Asia   6980412.0 39724.97867   82.208  2007
+         Iceland    Europe    301931.0 36180.78919   81.757  2007
+     Switzerland    Europe   7554661.0 37506.41907   81.701  2007
+       Australia   Oceania  20434176.0 34435.36744   81.235  2007
+           Spain    Europe  40448191.0 28821.06370   80.941  2007
+          Sweden    Europe   9031088.0 33859.74835   80.884  2007
+          Israel      Asia   6426679.0 25523.27710   80.745  2007
+          France    Europe  61083916.0 30470.01670   80.657  2007
+          Canada  Americas  33390141.0 36319.23501   80.653  2007
+total 152
+drwxr-xr-x 2 runner runner   4096 Nov  6 22:41 .
+drwxr-xr-x 3 runner runner   4096 Nov  6 22:41 ..
+-rw-r--r-- 1 runner runner 144491 Nov  6 22:41 gapminder_scatter.png
+</pre></details></html>
