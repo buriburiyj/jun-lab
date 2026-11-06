@@ -1,0 +1,374 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>우주인 수와 ISS 이동 경로 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>우주인 수와 ISS 이동 경로 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 11번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 공개 API를 찾아 파이썬으로 직접 실험했다. Open Notify API를 이용해 우주에 있는 우주비행사 수와 ISS 실시간 위치를 가져와 시각화했다. 결과는 다음과 같다. 우주에 있는 사람 수는 12명으로 ISS에 9명, 톈궁 우주정에 3명이었다. ISS 위치는 10초 간격으로 6개 포인트를 수집했으며 경도는 약 61도에서 66도로, 위도는 약 -42도에서 -44도로 이동했다. 그래프 두 개를 하나의 이미지로 저장했다. 네트워크 타임아웃이 간헐적으로 발생했지만 재시도 로직으로 대부분 복구했고, 홈 디렉터리 경로 확장을 위해 os.path.expanduser를 사용해야 하는 점을 알게 됐다. 다음에는 더 긴 시간 간격으로 ISS 궤적을 추적하거나 다른 공개 기후 데이터를 시각화해 볼 수 있다.</p><img src="out/iss_result.png">
+<h2>결과 파일</h2><ul><li><a href="out/iss_result.png">iss_result.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting public API data visualization python project ubuntu</summary><pre></pre><pre>1. API-INTEGRATION-AND-DATA-VISUALIZATION - GitHub
+https://github.com/DEV4002/API-INTEGRATION-AND-DATA-VISUALIZATION
+This project demonstrates how to integrate with a public API and create dynamic data visualizations using Python . It combines data fetching, processing, and visualization to present meaningful insi...
+
+2. Top 23 Python Data Visualization Projects - LibHunt
+https://www.libhunt.com/l/python/topic/data-visualization
+Which are the best open-source Data Visualization projects in Python ? This list will help you: superset, streamlit, gradio, diagrams, dash, pandas-ai, and best-of-ml- python .
+
+3. 25-Python-Data-Visualization-Projects - GitHub
+https://github.com/kelvintechnical/25-Python-Data-Visualization-Projects
+A collection of 25 Python data visualization projects to practice and showcase skills in creating engaging and meaningful visualizations . These projects explore a variety of techniques using libraries like Matplotlib, Seaborn, Plotly, and more.
+
+4. Top 23 Python Visualization Projects | LibHunt
+https://www.libhunt.com/l/python/topic/visualization
+Which are the best open-source Visualization projects in Python ? This list will help you: redash, plotly.py, pygwalker, fiftyone, vaex, tensorboardX, and umap.
+
+5. API Integration and Data Visualization | Cayman theme
+https://kau0713.github.io/API-Integration-and-Data-Visualization/
+The combination of API integration and data visualization demonstrates the power of connecting real-world data sources with effective visual representation. Python was used throughout, with requests for API interaction, Matplotlib for creating static plots, and Seaborn for producing statistical visualizations .
+
+6. 10 Most Popular Python Data Visualization Libraries in 2026
+https://www.index.dev/blog/python-data-visualization-library
+Python&#x27;s top data visualization libraries split into two camps. For static, publication-ready charts use Matplotlib and Seaborn. For interactive, web-ready charts and dashboards use Plotly, Bokeh, Altair, or Dash. For fast drag-and-drop exploration in Jupyter, use PyGWalker. The right pick depends on whether you need static or interactive output, a notebook or a web app, and how big your data is.
+
+7. Python Data Visualization Libraries - Awesome Python
+https://awesome-python.com/categories/data-visualization/
+Charts for print come from Matplotlib, and interactive web ones from Plotly. Put either Python data visualization library in a Streamlit script for a dashboard.
+
+8. 5 Best Ways to Visualize API Results with Python - Finxter
+https://blog.finxter.com/5-best-ways-to-visualize-api-results-with-python/
+For instance, if an API returns financial data points, we want to visualize the data in graph form to comprehend market trends easily. Method 1: Using Matplotlib for Basic Graphs This method involves using matplotlib, a widely-used Python library for creating static, interactive, and animated plots in Python .</pre></details><details><summary>[2] shell mkdir -p ~/ws/out &amp;&amp; python3 --version &amp;&amp; pip list 2&gt;/dev/null | grep -Ei &quot;requests|matplotlib|panda</summary><pre></pre><pre>[종료코드 1]
+Python 3.12.16
+</pre></details><details><summary>[3] shell pip install requests matplotlib pandas 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+
+Successfully installed certifi-2026.10.23 charset_normalizer-3.5.2 contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 idna-3.20 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pandas-3.1.1 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 requests-2.34.2 tzdata-2026.6 urllib3-2.8.0
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[4] shell curl -s http://api.open-notify.org/iss-now.json &amp;&amp; echo &amp;&amp; curl -s http://api.open-notify.org/astros</summary><pre></pre><pre>[종료코드 0]
+{&quot;timestamp&quot;: 1793941078, &quot;iss_position&quot;: {&quot;longitude&quot;: &quot;52.3251&quot;, &quot;latitude&quot;: &quot;-37.1782&quot;}, &quot;message&quot;: &quot;success&quot;}
+{&quot;people&quot;: [{&quot;craft&quot;: &quot;ISS&quot;, &quot;name&quot;: &quot;Oleg Kononenko&quot;}, {&quot;craft&quot;: &quot;ISS&quot;, &quot;name&quot;: &quot;Nikolai Chub&quot;}, {&quot;craft&quot;: &quot;ISS&quot;, &quot;name&quot;: &quot;Tracy Caldwell Dyson&quot;}, {&quot;craft&quot;: &quot;ISS&quot;, &quot;name&quot;: &quot;Matthew Dominick&quot;}, {&quot;craft&quot;: &quot;ISS&quot;, &quot;name&quot;: &quot;Michael Barratt&quot;}, {&quot;craft&quot;: &quot;ISS&quot;, &quot;name&quot;: &quot;Jeanette Epps&quot;}, {&quot;craft&quot;: &quot;ISS&quot;, &quot;name&quot;: &quot;Alexander Grebenkin&quot;}, {&quot;craft&quot;: &quot;ISS&quot;, &quot;name&quot;: &quot;Butch Wilmore&quot;}, {&quot;craft&quot;: &quot;ISS&quot;, &quot;name&quot;: &quot;Sunita Williams&quot;}, {&quot;craft&quot;: &quot;Tiangong&quot;, &quot;name&quot;: &quot;Li Guangsu&quot;}, {&quot;craft&quot;: &quot;Tiangong&quot;, &quot;name&quot;: &quot;Li Cong&quot;}, {&quot;craft&quot;: &quot;Tiangong&quot;, &quot;name&quot;: &quot;Ye Guangfu&quot;}], &quot;number&quot;: 12, &quot;message&quot;: &quot;success&quot;}</pre></details><details><summary>[5] write ~/ws/iss_experiment.py</summary><pre>import requests
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import time
+from datetime import datetime
+
+# 1. 현재 우주에 있는 우주비행사 정보 가져오기
+resp = requests.get(&quot;http://api.open-notify.org/astros.json&quot;, timeout=10)
+data = resp.json()
+people = data[&quot;people&quot;]
+
+# 우주선별 인원수 집계
+craft_count = {}
+for p in people:
+    craft = p[&quot;craft&quot;]
+    craft_count[craft] = craft_count.get(craft, 0) + 1
+
+print(&quot;우주에 있는 사람 수:&quot;, data[&quot;number&quot;])
+print(&quot;우주선별 인원:&quot;, craft_count)
+
+# 2. 우주선별 인원수 막대그래프
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+axes[0].bar(list(craft_count.keys()), list(craft_count.values()), color=[&quot;#1f77b4&quot;, &quot;#ff7f0e&quot;])
+axes[0].set_title(&quot;People in Space by Spacecraft&quot;)
+axes[0].set_xlabel(&quot;Spacecraft&quot;)
+axes[0].set_ylabel(&quot;Count&quot;)
+for i, v in enumerate(craft_count.values()):
+    axes[0].text(i, v + 0.1, str(v), ha=&quot;center&quot;)
+
+# 3. ISS 위치 여러 번 수집하여 이동 경로 시각화
+lons = []
+lats = []
+times = []
+print(&quot;\nISS 위치 수집 중...&quot;)
+for i in range(6):
+    r = requests.get(&quot;http://api.open-notify.org/iss-now.json&quot;, timeout=10)
+    pos = r.json()[&quot;iss_position&quot;]
+    lon = float(pos[&quot;longitude&quot;])
+    lat = float(pos[&quot;latitude&quot;])
+    lons.append(lon)
+    lats.append(lat)
+    times.append(datetime.now().strftime(&quot;%H:%M:%S&quot;))
+    print(f&quot;{i+1}. {times[-1]}  lon={lon:.2f} lat={lat:.2f}&quot;)
+    if i &lt; 5:
+        time.sleep(10)
+
+axes[1].plot(lons, lats, marker=&quot;o&quot;, color=&quot;#2ca02c&quot;, linewidth=2, markersize=6)
+axes[1].scatter([lons[0]], [lats[0]], color=&quot;green&quot;, s=100, label=&quot;Start&quot;, zorder=5)
+axes[1].scatter([lons[-1]], [lats[-1]], color=&quot;red&quot;, s=100, label=&quot;End&quot;, zorder=5)
+axes[1].set_title(&quot;ISS Movement Track (6 points, 10s apart)&quot;)
+axes[1].set_xlabel(&quot;Longitude&quot;)
+axes[1].set_ylabel(&quot;Latitude&quot;)
+axes[1].legend()
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig(&quot;~/ws/out/iss_result.png&quot;, dpi=150)
+print(&quot;\n그래프 저장 완료: ~/ws/out/iss_result.png&quot;)</pre><pre>저장함: iss_experiment.py (1864자)</pre></details><details><summary>[6] shell cd ~/ws &amp;&amp; python3 iss_experiment.py</summary><pre></pre><pre>[종료코드 1]
+우주에 있는 사람 수: 12
+우주선별 인원: {&#x27;ISS&#x27;: 9, &#x27;Tiangong&#x27;: 3}
+
+ISS 위치 수집 중...
+1. 04:58:26  lon=54.01 lat=-38.30
+2. 04:58:42  lon=54.93 lat=-38.89
+Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py&quot;, line 239, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/connection.py&quot;, line 85, in create_connection
+    raise err
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/connection.py&quot;, line 73, in create_connection
+    sock.connect(sa)
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connectionpool.py&quot;, line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connectionpool.py&quot;, line 499, in _make_request
+    conn.request(
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py&quot;, line 567, in request
+    self.endheaders()
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/http/client.py&quot;, line 1381, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/http/client.py&quot;, line 1141, in _send_output
+    self.send(msg)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/http/client.py&quot;, line 1085, in send
+    self.connect()
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py&quot;, line 398, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3
+...(중략)...
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host=&#x27;api.open-notify.org&#x27;, port=80): Max retries exceeded with url: /iss-now.json (Caused by ConnectTimeoutError(&lt;HTTPConnection(host=&#x27;api.open-notify.org&#x27;, port=80) at 0x7f02dc423530&gt;, &#x27;Connection to api.open-notify.org timed out. (connect timeout=10)&#x27;))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/iss_experiment.py&quot;, line 38, in &lt;module&gt;
+    r = requests.get(&quot;http://api.open-notify.org/iss-now.json&quot;, timeout=10)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/requests/api.py&quot;, line 87, in get
+    return request(&quot;get&quot;, url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/requests/api.py&quot;, line 71, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/requests/sessions.py&quot;, line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/requests/sessions.py&quot;, line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/requests/adapters.py&quot;, line 717, in send
+    raise ConnectTimeout(e, request=request)
+requests.exceptions.ConnectTimeout: HTTPConnectionPool(host=&#x27;api.open-notify.org&#x27;, port=80): Max retries exceeded with url: /iss-now.json (Caused by ConnectTimeoutError(&lt;HTTPConnection(host=&#x27;api.open-notify.org&#x27;, port=80) at 0x7f02dc423530&gt;, &#x27;Connection to api.open-notify.org timed out. (connect timeout=10)&#x27;))
+</pre></details><details><summary>[7] write ~/ws/iss_experiment.py</summary><pre>import requests
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import time
+from datetime import datetime
+
+# 1. 현재 우주에 있는 우주비행사 정보 가져오기
+resp = requests.get(&quot;http://api.open-notify.org/astros.json&quot;, timeout=10)
+data = resp.json()
+people = data[&quot;people&quot;]
+
+craft_count = {}
+for p in people:
+    craft = p[&quot;craft&quot;]
+    craft_count[craft] = craft_count.get(craft, 0) + 1
+
+print(&quot;우주에 있는 사람 수:&quot;, data[&quot;number&quot;])
+print(&quot;우주선별 인원:&quot;, craft_count)
+
+# 2. ISS 위치 여러 번 수집하여 이동 경로 시각화 (재시도 로직 포함)
+lons = []
+lats = []
+times = []
+print(&quot;\nISS 위치 수집 중...&quot;)
+for i in range(6):
+    success = False
+    for attempt in range(3):
+        try:
+            r = requests.get(&quot;http://api.open-notify.org/iss-now.json&quot;, timeout=8)
+            pos = r.json()[&quot;iss_position&quot;]
+            lon = float(pos[&quot;longitude&quot;])
+            lat = float(pos[&quot;latitude&quot;])
+            lons.append(lon)
+            lats.append(lat)
+            times.append(datetime.now().strftime(&quot;%H:%M:%S&quot;))
+            print(f&quot;{i+1}. {times[-1]}  lon={lon:.2f} lat={lat:.2f}&quot;)
+            success = True
+            break
+        except Exception as e:
+            print(f&quot;  시도 {attempt+1} 실패: {e}&quot;)
+            time.sleep(2)
+    if not success:
+        print(f&quot;  지점 {i+1} 수집 실패, 건너뜀&quot;)
+    if i &lt; 5 and success:
+        time.sleep(10)
+
+# 3. 그래프 생성
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+axes[0].bar(list(craft_count.keys()), list(craft_count.values()), color=[&quot;#1f77b4&quot;, &quot;#ff7f0e&quot;])
+axes[0].set_title(&quot;People in Space by Spacecraft&quot;)
+axes[0].set_xlabel(&quot;Spacecraft&quot;)
+axes[0].set_ylabel(&quot;Count&quot;)
+for i, v in enumerate(craft_count.values()):
+    axes[0].text(i, v + 0.1, str(v), ha=&quot;center&quot;)
+
+if len(lons) &gt;= 2:
+    axes[1].plot(lons, lats, marker=&quot;o&quot;, color=&quot;#2ca02c&quot;, linewidth=2, markersize=6)
+    axes[1].scatter([lons[0]], [lats[0]], color=&quot;green&quot;, s=100, label=&quot;Start&quot;, zorder=5)
+    axes[1].scatter([lons[-1]], [lats[-1]], color=&quot;red&quot;, s=100, label=&quot;End&quot;, zorder=5)
+    axes[1].set_title(f&quot;ISS Movement Track ({len(lons)} points)&quot;)
+    axes[1].set_xlabel(&quot;Longitude&quot;)
+    axes[1].set_ylabel(&quot;Latitude&quot;)
+    axes[1].legend()
+    axes[1].grid(True, alpha=0.3)
+else:
+    axes[1].text(0.5, 0.5, &quot;Not enough data points&quot;, ha=&quot;center&quot;, va=&quot;center&quot;)
+    axes[1].set_title(&quot;ISS Movement Track&quot;)
+
+plt.tight_layout()
+plt.savefig(&quot;~/ws/out/iss_result.png&quot;, dpi=150)
+print(&quot;\n그래프 저장 완료: ~/ws/out/iss_result.png&quot;)
+print(f&quot;수집된 ISS 위치 포인트 수: {len(lons)}&quot;)</pre><pre>저장함: iss_experiment.py (2420자)</pre></details><details><summary>[8] shell cd ~/ws &amp;&amp; python3 iss_experiment.py</summary><pre></pre><pre>[종료코드 1]
+우주에 있는 사람 수: 12
+우주선별 인원: {&#x27;ISS&#x27;: 9, &#x27;Tiangong&#x27;: 3}
+
+ISS 위치 수집 중...
+1. 04:59:11  lon=56.76 lat=-40.00
+  시도 1 실패: HTTPConnectionPool(host=&#x27;api.open-notify.org&#x27;, port=80): Max retries exceeded with url: /iss-now.json (Caused by ConnectTimeoutError(&lt;HTTPConnection(host=&#x27;api.open-notify.org&#x27;, port=80) at 0x7f31d0d86960&gt;, &#x27;Connection to api.open-notify.org timed out. (connect timeout=8)&#x27;))
+2. 04:59:31  lon=58.06 lat=-40.75
+3. 04:59:41  lon=58.72 lat=-41.12
+4. 04:59:51  lon=59.42 lat=-41.50
+5. 05:00:01  lon=60.10 lat=-41.86
+6. 05:00:11  lon=60.79 lat=-42.22
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/iss_experiment.py&quot;, line 72, in &lt;module&gt;
+    plt.savefig(&quot;~/ws/out/iss_result.png&quot;, dpi=150)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/pyplot.py&quot;, line 1346, in savefig
+    res = fig.savefig(fname, **kwargs)  # type: ignore[func-returns-value]
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/figure.py&quot;, line 3515, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backend_bases.py&quot;, line 2289, in print_figure
+    result = print_method(
+             ^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backend_bases.py&quot;, line 2146, in &lt;lambda&gt;
+    print_method = functools.wraps(meth)(lambda *args, **kwargs: meth(
+                                                                 ^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backends/backend_agg.py&quot;, line 537, in print_png
+    self._print_pil(filename_or_obj, &quot;png&quot;, pil_kwargs, metadata)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backends/backend_agg.py&quot;, line 486, in _print_pil
+    mpl.image.imsave(
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/image.py&quot;, line 1729, in imsave
+    image.save(fname, **pil_kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/PIL/Image.py&quot;, line 2707, in save
+    fp = builtins.open(filename, &quot;w+b&quot;)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: &#x27;~/ws/out/iss_result.png&#x27;
+</pre></details><details><summary>[9] shell cd ~/ws &amp;&amp; sed -i &#x27;s|~/ws/out/iss_result.png|os.path.expanduser(&quot;~/ws/out/iss_result.png&quot;)|g&#x27; iss_ex</summary><pre></pre><pre>[종료코드 1]
+  File &quot;/home/runner/ws/iss_experiment.py&quot;, line 73
+    plt.savefig(&quot;os.path.expanduser(&quot;~/ws/out/iss_result.png&quot;)&quot;, dpi=150)
+                                     ^
+SyntaxError: invalid syntax
+</pre></details><details><summary>[10] write ~/ws/iss_experiment.py</summary><pre>import os
+import requests
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import time
+from datetime import datetime
+
+# 1. 현재 우주에 있는 우주비행사 정보 가져오기
+resp = requests.get(&quot;http://api.open-notify.org/astros.json&quot;, timeout=10)
+data = resp.json()
+people = data[&quot;people&quot;]
+
+craft_count = {}
+for p in people:
+    craft = p[&quot;craft&quot;]
+    craft_count[craft] = craft_count.get(craft, 0) + 1
+
+print(&quot;우주에 있는 사람 수:&quot;, data[&quot;number&quot;])
+print(&quot;우주선별 인원:&quot;, craft_count)
+
+# 2. ISS 위치 여러 번 수집하여 이동 경로 시각화 (재시도 로직 포함)
+lons = []
+lats = []
+times = []
+print(&quot;\nISS 위치 수집 중...&quot;)
+for i in range(6):
+    success = False
+    for attempt in range(3):
+        try:
+            r = requests.get(&quot;http://api.open-notify.org/iss-now.json&quot;, timeout=8)
+            pos = r.json()[&quot;iss_position&quot;]
+            lon = float(pos[&quot;longitude&quot;])
+            lat = float(pos[&quot;latitude&quot;])
+            lons.append(lon)
+            lats.append(lat)
+            times.append(datetime.now().strftime(&quot;%H:%M:%S&quot;))
+            print(f&quot;{i+1}. {times[-1]}  lon={lon:.2f} lat={lat:.2f}&quot;)
+            success = True
+            break
+        except Exception as e:
+            print(f&quot;  시도 {attempt+1} 실패: {e}&quot;)
+            time.sleep(2)
+    if not success:
+        print(f&quot;  지점 {i+1} 수집 실패, 건너뜀&quot;)
+    if i &lt; 5 and success:
+        time.sleep(10)
+
+# 3. 그래프 생성
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+axes[0].bar(list(craft_count.keys()), list(craft_count.values()), color=[&quot;#1f77b4&quot;, &quot;#ff7f0e&quot;])
+axes[0].set_title(&quot;People in Space by Spacecraft&quot;)
+axes[0].set_xlabel(&quot;Spacecraft&quot;)
+axes[0].set_ylabel(&quot;Count&quot;)
+for i, v in enumerate(craft_count.values()):
+    axes[0].text(i, v + 0.1, str(v), ha=&quot;center&quot;)
+
+if len(lons) &gt;= 2:
+    axes[1].plot(lons, lats, marker=&quot;o&quot;, color=&quot;#2ca02c&quot;, linewidth=2, markersize=6)
+    axes[1].scatter([lons[0]], [lats[0]], color=&quot;green&quot;, s=100, label=&quot;Start&quot;, zorder=5)
+    axes[1].scatter([lons[-1]], [lats[-1]], color=&quot;red&quot;, s=100, label=&quot;End&quot;, zorder=5)
+    axes[1].set_title(f&quot;ISS Movement Track ({len(lons)} points)&quot;)
+    axes[1].set_xlabel(&quot;Longitude&quot;)
+    axes[1].set_ylabel(&quot;Latitude&quot;)
+    axes[1].legend()
+    axes[1].grid(True, alpha=0.3)
+else:
+    axes[1].text(0.5, 0.5, &quot;Not enough data points&quot;, ha=&quot;center&quot;, va=&quot;center&quot;)
+    axes[1].set_title(&quot;ISS Movement Track&quot;)
+
+plt.tight_layout()
+out_path = os.path.expanduser(&quot;~/ws/out/iss_result.png&quot;)
+plt.savefig(out_path, dpi=150)
+print(&quot;\n그래프 저장 완료:&quot;, out_path)
+print(f&quot;수집된 ISS 위치 포인트 수: {len(lons)}&quot;)</pre><pre>저장함: iss_experiment.py (2456자)</pre></details><details><summary>[11] shell cd ~/ws &amp;&amp; python3 iss_experiment.py</summary><pre></pre><pre>[종료코드 0]
+우주에 있는 사람 수: 12
+우주선별 인원: {&#x27;ISS&#x27;: 9, &#x27;Tiangong&#x27;: 3}
+
+ISS 위치 수집 중...
+1. 05:00:21  lon=61.48 lat=-42.57
+2. 05:00:32  lon=62.26 lat=-42.95
+3. 05:00:42  lon=62.97 lat=-43.29
+  시도 1 실패: HTTPConnectionPool(host=&#x27;api.open-notify.org&#x27;, port=80): Max retries exceeded with url: /iss-now.json (Caused by ConnectTimeoutError(&lt;HTTPConnection(host=&#x27;api.open-notify.org&#x27;, port=80) at 0x7f4aab532ba0&gt;, &#x27;Connection to api.open-notify.org timed out. (connect timeout=8)&#x27;))
+4. 05:01:02  lon=64.42 lat=-43.95
+5. 05:01:13  lon=65.15 lat=-44.28
+6. 05:01:23  lon=65.94 lat=-44.61
+
+그래프 저장 완료: /home/runner/ws/out/iss_result.png
+수집된 ISS 위치 포인트 수: 6
+</pre></details></html>
