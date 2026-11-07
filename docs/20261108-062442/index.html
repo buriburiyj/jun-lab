@@ -1,0 +1,240 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>서울 기온 데이터 수집 및 시각화 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>서울 기온 데이터 수집 및 시각화 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 11번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 흥미로운 주제로 오픈 기상 API를 이용한 서울 기온 데이터 수집과 시각화 실험을 수행했습니다. 먼저 리눅스 데이터 시각화 도구를 검색했고, Python matplotlib과 pandas를 설치했습니다. open-meteo.com API에서 서울의 최근 7일간 시간별 기온 데이터를 가져와 pandas로 분석하고 matplotlib으로 4개 패널 그래프를 그렸습니다. 결과 파일은 ~/ws/out/seoul_weather.png에 저장했습니다. 분석 결과 분석 기간은 2026년 11월 1일부터 14일까지이며, 전체 최저 기온은 영하 0.2도, 최고 기온은 16.8도였습니다. 가장 일교차가 컸던 날은 11.0도 차이였고, 가장 더운 날은 11월 4일 16.8도, 가장 추운 날은 11월 7일 영하 0.2도였습니다. urllib로 SSL 핸드셰이크 타임아웃이 한 번 발생했으나 requests 라이브러리로 교체하여 성공했습니다. 다음에는 여러 도시를 비교하거나 강수량, 풍속 등 다른 기상 요소도 추가해 볼 수 있습니다.</p><img src="out/seoul_weather.png">
+<h2>결과 파일</h2><ul><li><a href="out/seoul_weather.png">seoul_weather.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting linux experiment data analysis visualization</summary><pre></pre><pre>1. Best Open Source Linux Data Visualization Software 2026
+https://sourceforge.net/directory/data-visualization/linux/
+Browse free open source Data Visualization software and projects for Linux below. Use the toggles on the left to filter open source Data Visualization software by OS, license, language, programming language, and project status.
+
+2. 27 Best Free and Open Source Linux Plotting Tools - LinuxLinks
+https://www.linuxlinks.com/excellent-free-plotting-tools/
+A plotting tool is software which helps to analyse and visualize data , often of a scientific nature. Here&#x27;s our open source recommendations.
+
+3. 10 Best Free and Open Source Linux Statistical Analysis Tools
+https://www.linuxlinks.com/StatisticalAnalysis/
+Linux is particularly strong in the field of open source statistical software. The purpose of this article is to identify software for performing statistical analysis . This type of software helps to summarize data in a shorter form, and helps scientists understand a concept or representation and make possible predictions based on this ...
+
+4. Best Open Source Linux Data Analytics Tools 2026 - SourceForge
+https://sourceforge.net/directory/data-analytics/linux/
+Browse free open source Data Analytics tools and projects for Linux below. Use the toggles on the left to filter open source Data Analytics tools by OS, license, language, programming language, and project status.
+
+5. Exploring Data Visualization Software on Linux
+https://www.flyriver.com/g/data-visualization-software-linux
+The ability to effectively visualize data is paramount in today&#x27;s information-rich world. Whether you are a data scientist analyzing complex datasets, a researcher presenting findings, or a business professional seeking to understand trends, the right visualization tools can unlock crucial insights. For users of the Linux operating system, a robust and diverse ecosystem of data visualization ...
+
+6. 26 Best Free and Open Source Linux Plotting Tools
+https://freedom251.com/26-best-free-and-open-source-linux-plotting-tools/
+Linux offers a rich ecosystem of free and open source plotting tools, from lightweight command-line utilities that generate charts in automated scripts to full-featured graphical applications for scientific analysis , publication-quality figures, and exploratory data visualization . The best choice depends on how you work: some users need quick plots from CSV files, others need interactive GUI ...
+
+7. A Simple Guide to Data Visualization on Ubuntu for Beginners
+https://www.linuxjournal.com/content/simple-guide-data-visualization-ubuntu-beginners
+Data visualization is not just an art form but a crucial tool in the modern data analyst&#x27;s arsenal, offering a compelling way to present, explore, and understand large datasets. In the context of Ubuntu, one of the most popular Linux distributions, leveraging the power of data visualization tools can transform complex data into insightful, understandable visual narratives. This guide delves ...
+
+8. Top 6 Free and Open-Source Data Analysis Tools for Linux
+https://linuxgenie.net/top-6-free-and-open-source-data-analysis-tools-for-linux/
+Waikato Environmental for Knowledge Analysis is a free and open-source data -analyzing tool that aids its users with data mining and prediction by providing them with a remarkable collection of tools and powerful features.</pre></details><details><summary>[2] shell python3 --version &amp;&amp; pip3 list 2&gt;/dev/null | grep -iE &quot;matplotlib|pandas|requests|numpy&quot; || echo &quot;ne</summary><pre></pre><pre>[종료코드 0]
+Python 3.12.16
+need install
+</pre></details><details><summary>[3] shell pip3 install --user matplotlib pandas 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pandas-3.1.1 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[4] shell mkdir -p ~/ws/out &amp;&amp; curl -s -o /tmp/test.html https://example.com &amp;&amp; head -c 200 /tmp/test.html</summary><pre></pre><pre>[종료코드 0]
+&lt;!doctype html&gt;&lt;html lang=en&gt;&lt;head&gt;&lt;meta charset=utf-8&gt;&lt;link rel=icon href=data:,&gt;&lt;meta name=viewport content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Example Domain&lt;/title&gt;&lt;style&gt;html{color-scheme</pre></details><details><summary>[5] shell curl -s &quot;https://api.open-meteo.com/v1/forecast?latitude=37.5665&amp;longitude=126.9780&amp;hourly=temperatu</summary><pre></pre><pre>[종료코드 0]
+{&quot;latitude&quot;:37.55,&quot;longitude&quot;:127.0,&quot;generationtime_ms&quot;:0.04792213439941406,&quot;utc_offset_seconds&quot;:32400,&quot;timezone&quot;:&quot;Asia/Seoul&quot;,&quot;timezone_abbreviation&quot;:&quot;GMT+9&quot;,&quot;elevation&quot;:34.0,&quot;hourly_units&quot;:{&quot;time&quot;:&quot;iso8601&quot;,&quot;temperature_2m&quot;:&quot;°C&quot;},&quot;hourly&quot;:{&quot;time&quot;:[&quot;2026-11-01T00:00&quot;,&quot;2026-11-01T01:00&quot;,&quot;2026-11-01T02:00&quot;,&quot;2026-11-01T03:00&quot;,&quot;2026-11-01T04:00&quot;,&quot;2026-11-01T05:00&quot;,&quot;2026-11-01T06:00&quot;,&quot;2026-11-01T07:00&quot;,&quot;2026-11-01T08:00&quot;,&quot;2026-11-01T09:00&quot;,&quot;2026-11-01T10:00&quot;,&quot;2026-11-01T11:00&quot;,&quot;2026-11-01T12:00&quot;,&quot;2</pre></details><details><summary>[6] write ~/ws/weather_exp.py</summary><pre>import urllib.request
+import json
+import pandas as pd
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+url = (&quot;https://api.open-meteo.com/v1/forecast?&quot;
+       &quot;latitude=37.5665&amp;longitude=126.9780&amp;&quot;
+       &quot;hourly=temperature_2m&amp;&quot;
+       &quot;timezone=Asia%2FSeoul&amp;past_days=7&quot;)
+
+with urllib.request.urlopen(url, timeout=20) as r:
+    data = json.load(r)
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+
+df = pd.DataFrame({&quot;time&quot;: pd.to_datetime(times), &quot;temp&quot;: temps})
+df[&quot;date&quot;] = df[&quot;time&quot;].dt.date
+df[&quot;hour&quot;] = df[&quot;time&quot;].dt.hour
+
+daily = df.groupby(&quot;date&quot;)[&quot;temp&quot;].agg([&quot;min&quot;, &quot;max&quot;, &quot;mean&quot;]).reset_index()
+daily[&quot;range&quot;] = daily[&quot;max&quot;] - daily[&quot;min&quot;]
+
+hourly = df.groupby(&quot;hour&quot;)[&quot;temp&quot;].mean()
+
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+
+axes[0, 0].plot(df[&quot;time&quot;], df[&quot;temp&quot;], color=&quot;tab:red&quot;, linewidth=1)
+axes[0, 0].set_title(&quot;Seoul Hourly Temperature (Past 7 Days)&quot;)
+axes[0, 0].set_xlabel(&quot;Time&quot;)
+axes[0, 0].set_ylabel(&quot;Temperature (°C)&quot;)
+axes[0, 0].tick_params(axis=&quot;x&quot;, rotation=45)
+
+axes[0, 1].bar(range(len(daily)), daily[&quot;range&quot;], color=&quot;tab:blue&quot;)
+axes[0, 1].set_xticks(range(len(daily)))
+axes[0, 1].set_xticklabels([str(d) for d in daily[&quot;date&quot;]], rotation=45)
+axes[0, 1].set_title(&quot;Daily Temperature Range&quot;)
+axes[0, 1].set_xlabel(&quot;Date&quot;)
+axes[0, 1].set_ylabel(&quot;Max - Min (°C)&quot;)
+
+axes[1, 0].plot(hourly.index, hourly.values, marker=&quot;o&quot;, color=&quot;tab:green&quot;)
+axes[1, 0].set_title(&quot;Average Temperature by Hour of Day&quot;)
+axes[1, 0].set_xlabel(&quot;Hour&quot;)
+axes[1, 0].set_ylabel(&quot;Avg Temperature (°C)&quot;)
+axes[1, 0].set_xticks(range(0, 24, 3))
+
+axes[1, 1].axis(&quot;off&quot;)
+summary = (
+    f&quot;Period: {daily[&#x27;date&#x27;].iloc[0]} to {daily[&#x27;date&#x27;].iloc[-1]}\n&quot;
+    f&quot;Overall Min: {daily[&#x27;min&#x27;].min():.1f} °C\n&quot;
+    f&quot;Overall Max: {daily[&#x27;max&#x27;].max():.1f} °C\n&quot;
+    f&quot;Largest Daily Range: {daily[&#x27;range&#x27;].max():.1f} °C\n&quot;
+    f&quot;Hottest Day: {daily.loc[daily[&#x27;max&#x27;].idxmax(), &#x27;date&#x27;]} &quot;
+    f&quot;({daily[&#x27;max&#x27;].max():.1f} °C)\n&quot;
+    f&quot;Coldest Day: {daily.loc[daily[&#x27;min&#x27;].idxmin(), &#x27;date&#x27;]} &quot;
+    f&quot;({daily[&#x27;min&#x27;].min():.1f} °C)&quot;
+)
+axes[1, 1].text(0.1, 0.5, summary, fontsize=11, va=&quot;center&quot;, family=&quot;monospace&quot;)
+
+plt.tight_layout()
+plt.savefig(&quot;~/ws/out/seoul_weather.png&quot;, dpi=150)
+print(&quot;Saved ~/ws/out/seoul_weather.png&quot;)
+print(summary)</pre><pre>저장함: weather_exp.py (2277자)</pre></details><details><summary>[7] shell cd ~/ws &amp;&amp; python3 weather_exp.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/urllib/request.py&quot;, line 1357, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/http/client.py&quot;, line 1386, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/http/client.py&quot;, line 1432, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/http/client.py&quot;, line 1381, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/http/client.py&quot;, line 1141, in _send_output
+    self.send(msg)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/http/client.py&quot;, line 1085, in send
+    self.connect()
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/http/client.py&quot;, line 1527, in connect
+    self.sock = self._context.wrap_socket(self.sock,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/ssl.py&quot;, line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/ssl.py&quot;, line 1054, in _create
+    self.do_handshake()
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/ssl.py&quot;, line 1332, in do_handshake
+    self._sslobj.do_handshake()
+TimeoutError: _ssl.c:994: The handshake operation timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/weather_exp.py&quot;, line 13, in &lt;module&gt;
+    with urllib.request.urlopen(url, timeout=20) as r:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/urllib/request.py&quot;, line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/urllib/request.py&quot;, line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/urllib/request.py&quot;, line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/urllib/request.py&quot;, line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/urllib/request.py&quot;, line 1405, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/urllib/request.py&quot;, line 1360, in do_open
+    raise URLError(err)
+urllib.error.URLError: &lt;urlopen error _ssl.c:994: The handshake operation timed out&gt;
+</pre></details><details><summary>[8] shell curl -s --max-time 15 &quot;https://api.open-meteo.com/v1/forecast?latitude=37.5665&amp;longitude=126.9780&amp;ho</summary><pre></pre><pre>[종료코드 0]
+{&quot;latitude&quot;:37.55,&quot;longitude&quot;:127.0,&quot;generationtime_ms&quot;:0.09167194366455078,&quot;utc_offset_seconds&quot;:32400,&quot;timezone&quot;:&quot;Asia/Seoul&quot;,&quot;timezone_abbreviation&quot;:&quot;GMT+9&quot;,&quot;elevation&quot;:34.0,&quot;hourly_units&quot;:{&quot;time&quot;:&quot;</pre></details><details><summary>[9] shell pip3 install --user requests 2&gt;&amp;1 | tail -2</summary><pre></pre><pre>[종료코드 0]
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[10] write ~/ws/weather_exp.py</summary><pre>import requests
+import pandas as pd
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+url = (&quot;https://api.open-meteo.com/v1/forecast?&quot;
+       &quot;latitude=37.5665&amp;longitude=126.9780&amp;&quot;
+       &quot;hourly=temperature_2m&amp;&quot;
+       &quot;timezone=Asia%2FSeoul&amp;past_days=7&quot;)
+
+r = requests.get(url, timeout=30)
+r.raise_for_status()
+data = r.json()
+
+times = data[&quot;hourly&quot;][&quot;time&quot;]
+temps = data[&quot;hourly&quot;][&quot;temperature_2m&quot;]
+
+df = pd.DataFrame({&quot;time&quot;: pd.to_datetime(times), &quot;temp&quot;: temps})
+df[&quot;date&quot;] = df[&quot;time&quot;].dt.date
+df[&quot;hour&quot;] = df[&quot;time&quot;].dt.hour
+
+daily = df.groupby(&quot;date&quot;)[&quot;temp&quot;].agg([&quot;min&quot;, &quot;max&quot;, &quot;mean&quot;]).reset_index()
+daily[&quot;range&quot;] = daily[&quot;max&quot;] - daily[&quot;min&quot;]
+
+hourly = df.groupby(&quot;hour&quot;)[&quot;temp&quot;].mean()
+
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+
+axes[0, 0].plot(df[&quot;time&quot;], df[&quot;temp&quot;], color=&quot;tab:red&quot;, linewidth=1)
+axes[0, 0].set_title(&quot;Seoul Hourly Temperature (Past 7 Days)&quot;)
+axes[0, 0].set_xlabel(&quot;Time&quot;)
+axes[0, 0].set_ylabel(&quot;Temperature (°C)&quot;)
+axes[0, 0].tick_params(axis=&quot;x&quot;, rotation=45)
+
+axes[0, 1].bar(range(len(daily)), daily[&quot;range&quot;], color=&quot;tab:blue&quot;)
+axes[0, 1].set_xticks(range(len(daily)))
+axes[0, 1].set_xticklabels([str(d) for d in daily[&quot;date&quot;]], rotation=45)
+axes[0, 1].set_title(&quot;Daily Temperature Range&quot;)
+axes[0, 1].set_xlabel(&quot;Date&quot;)
+axes[0, 1].set_ylabel(&quot;Max - Min (°C)&quot;)
+
+axes[1, 0].plot(hourly.index, hourly.values, marker=&quot;o&quot;, color=&quot;tab:green&quot;)
+axes[1, 0].set_title(&quot;Average Temperature by Hour of Day&quot;)
+axes[1, 0].set_xlabel(&quot;Hour&quot;)
+axes[1, 0].set_ylabel(&quot;Avg Temperature (°C)&quot;)
+axes[1, 0].set_xticks(range(0, 24, 3))
+
+axes[1, 1].axis(&quot;off&quot;)
+summary = (
+    f&quot;Period: {daily[&#x27;date&#x27;].iloc[0]} to {daily[&#x27;date&#x27;].iloc[-1]}\n&quot;
+    f&quot;Overall Min: {daily[&#x27;min&#x27;].min():.1f} °C\n&quot;
+    f&quot;Overall Max: {daily[&#x27;max&#x27;].max():.1f} °C\n&quot;
+    f&quot;Largest Daily Range: {daily[&#x27;range&#x27;].max():.1f} °C\n&quot;
+    f&quot;Hottest Day: {daily.loc[daily[&#x27;max&#x27;].idxmax(), &#x27;date&#x27;]} &quot;
+    f&quot;({daily[&#x27;max&#x27;].max():.1f} °C)\n&quot;
+    f&quot;Coldest Day: {daily.loc[daily[&#x27;min&#x27;].idxmin(), &#x27;date&#x27;]} &quot;
+    f&quot;({daily[&#x27;min&#x27;].min():.1f} °C)&quot;
+)
+axes[1, 1].text(0.1, 0.5, summary, fontsize=11, va=&quot;center&quot;, family=&quot;monospace&quot;)
+
+plt.tight_layout()
+plt.savefig(&quot;/home/runner/ws/out/seoul_weather.png&quot;, dpi=150)
+print(&quot;Saved /home/runner/ws/out/seoul_weather.png&quot;)
+print(summary)</pre><pre>저장함: weather_exp.py (2277자)</pre></details><details><summary>[11] shell cd ~/ws &amp;&amp; python3 weather_exp.py</summary><pre></pre><pre>[종료코드 0]
+Saved /home/runner/ws/out/seoul_weather.png
+Period: 2026-11-01 to 2026-11-14
+Overall Min: -0.2 °C
+Overall Max: 16.8 °C
+Largest Daily Range: 11.0 °C
+Hottest Day: 2026-11-04 (16.8 °C)
+Coldest Day: 2026-11-07 (-0.2 °C)
+</pre></details></html>
