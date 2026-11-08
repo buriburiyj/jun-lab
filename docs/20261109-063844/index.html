@@ -1,0 +1,158 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Ubuntu 터미널 UI 실험 rich 라이브러리</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>Ubuntu 터미널 UI 실험 rich 라이브러리</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 5번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 흥미로운 주제로 Python 터미널 UI 라이브러리 rich를 선택했다. Ubuntu 작업 폴더 ~/ws에서 pip로 rich 15.0.0을 설치했고, styled text, panel, table, progress bar, live animation을 포함한 데모 스크립트 rich_demo.py를 작성해 실행했다. 정상 종료 코드 0을 확인했고, 실행 출력을 ~/ws/out/rich_demo_output.txt에 저장했다. 알게 된 점은 rich를 쓰면 복잡한 터미널 출력을 쉽게 꾸밀 수 있고, import만으로 동작 확인할 수 있다는 점이다. 다음에는 실제 시스템 메트릭을 읽어와 실시간으로 보여주는 터미널 대시보드로 확장해 볼 수 있다.</p>
+<h2>결과 파일</h2><ul><li><a href="out/rich_demo_output.txt">rich_demo_output.txt</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting Python terminal experiments Ubuntu research project</summary><pre></pre><pre>1. 50 Terminal Project Ideas with Python - Codédex
+https://www.codedex.io/projects/50-terminal-project-ideas-using-python
+A list of 50 terminal project ideas to implement in your choice of programming language
+
+2. Top 23 Python Ubuntu Projects | LibHunt
+https://www.libhunt.com/l/python/topic/ubuntu
+Which are the best open-source Ubuntu projects in Python ? This list will help you: howdy, piku, fluxgui, vidcutter, mkosi, ffmpeg, and GIMP-ML.
+
+3. Terminal-Applications-Python-Projects - GitHub
+https://github.com/Jbanach123/Terminal-Applications-Python-Projects
+The projects in this repository were created while completing the 100 Days of Code: The Complete Python Pro Bootcamp. These terminal applications helped reinforce Python concepts, including functions, loops, conditionals, and object-oriented programming.
+
+4. Top 23 Python Terminal Projects - LibHunt
+https://www.libhunt.com/l/python/topic/terminal
+Which are the best open-source Terminal projects in Python ? This list will help you: rich, cheat.sh, cli, textual, kitty, glances, and jumpserver.
+
+5. GitHub - dotdotdotpy/terminal_experiments: A curated suite of logic ...
+https://github.com/dotdotdotpy/terminal_experiments
+A curated suite of logic-dense terminal demos, visual algorithms, waveform renderers, and ASCII-based effects designed to push the limits of what&#x27;s possible in raw Python .
+
+6. Python Projects: 50+ Ideas for Beginners to Advanced (2025)
+https://www.rudresh.in/blog/python-projects-50-ideas-for-beginners-to-advanced-2025/
+Comprehensive collection of 50+ Python project ideas for all skill levels. From beginner-friendly scripts to advanced applications covering web development, data science, automation, games, and more. Perfect for building your portfolio in 2025. Read more python development tutorials and guides by Rudresh, a Full Stack Developer from Bangalore.
+
+7. 10 Best Linux Project Ideas For Beginners - GeeksforGeeks
+https://www.geeksforgeeks.org/linux-unix/linux-project-ideas-for-beginners/
+For this project , you must be familiar with the basics of Linux and the skills to configure the services. NAS can be a perfect Linux project because you must code and configure a complete server. Also Read: Python Projects - Beginner to Advanced Top 10 JavaScript Project Ideas For Beginners in 2023 Web Development Projects 6.
+
+8. Top 15 Python Projects with Source Code 2026 - bosscoderacademy.com
+https://www.bosscoderacademy.com/blog/python-projects-ideas-source-code
+Want to improve your Python skills? Build these top 15 Python projects with source code to boost your resume and master coding in 2026!</pre></details><details><summary>[2] shell pip install rich 2&gt;&amp;1 | tail -5 &amp;&amp; python3 -c &quot;import rich; print(rich.__version__)&quot;</summary><pre></pre><pre>[종료코드 1]
+
+Successfully installed markdown-it-py-4.2.0 mdurl-0.1.2 pygments-2.21.0 rich-15.0.0
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+AttributeError: module &#x27;rich&#x27; has no attribute &#x27;__version__&#x27;
+</pre></details><details><summary>[3] write ~/ws/rich_demo.py</summary><pre>import time
+import random
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn
+from rich.live import Live
+from rich.text import Text
+from rich.columns import Columns
+from rich.align import Align
+
+console = Console()
+
+def demo_styles():
+    console.print(&quot;\n[bold magenta]=== Rich Terminal Demo ===[/bold magenta]\n&quot;)
+    console.print(&quot;[green]Hello[/green] [bold red]World[/bold red] [italic cyan]from[/italic cyan] [underline]Ubuntu[/underline]&quot;)
+    console.print(Panel.fit(&quot;Researcher&#x27;s Terminal Experiment&quot;, border_style=&quot;yellow&quot;))
+
+def demo_table():
+    table = Title = None
+    table = Table(title=&quot;System Metrics&quot;)
+    table.add_column(&quot;Metric&quot;, style=&quot;cyan&quot;)
+    table.add_column(&quot;Value&quot;, style=&quot;green&quot;)
+    table.add_column(&quot;Status&quot;, style=&quot;magenta&quot;)
+    table.add_row(&quot;CPU&quot;, &quot;23%&quot;, &quot;OK&quot;)
+    table.add_row(&quot;Memory&quot;, &quot;45%&quot;, &quot;OK&quot;)
+    table.add_row(&quot;Disk&quot;, &quot;67%&quot;, &quot;Warning&quot;)
+    table.add_row(&quot;Network&quot;, &quot;1.2 MB/s&quot;, &quot;OK&quot;)
+    console.print(table)
+
+def demo_progress():
+    with Progress(
+        SpinnerColumn(),
+        TextColumn(&quot;[progress.description]{task.description}&quot;),
+        BarColumn(),
+        TextColumn(&quot;[progress.percentage]{task.percentage:&gt;3.0f}%&quot;),
+    ) as progress:
+        task1 = progress.add_task(&quot;Downloading data...&quot;, total=100)
+        task2 = progress.add_task(&quot;Processing...&quot;, total=100)
+        while not progress.finished:
+            progress.update(task1, advance=random.randint(5, 15))
+            progress.update(task2, advance=random.randint(3, 10))
+            time.sleep(0.1)
+
+def demo_live():
+    def make_frame(n):
+        t = Text()
+        for i in range(20):
+            if i == n % 20:
+                t.append(&quot;● &quot;, style=&quot;bold green&quot;)
+            else:
+                t.append(&quot;○ &quot;, style=&quot;dim&quot;)
+        t.append(f&quot; Frame {n}&quot;)
+        return Align.center(t)
+
+    with Live(console=console, refresh_per_second=10) as live:
+        for n in range(40):
+            live.update(make_frame(n))
+            time.sleep(0.1)
+
+if __name__ == &quot;__main__&quot;:
+    demo_styles()
+    time.sleep(1)
+    demo_table()
+    time.sleep(1)
+    demo_progress()
+    time.sleep(0.5)
+    demo_live()
+    console.print(&quot;\n[bold green]Demo complete![/bold green]&quot;)</pre><pre>저장함: rich_demo.py (2300자)</pre></details><details><summary>[4] shell python3 ~/ws/rich_demo.py</summary><pre></pre><pre>[종료코드 0]
+
+=== Rich Terminal Demo ===
+
+Hello World from Ubuntu
+╭──────────────────────────────────╮
+│ Researcher&#x27;s Terminal Experiment │
+╰──────────────────────────────────╯
+         System Metrics         
+┏━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Metric  ┃ Value    ┃ Status  ┃
+┡━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ CPU     │ 23%      │ OK      │
+│ Memory  │ 45%      │ OK      │
+│ Disk    │ 67%      │ Warning │
+│ Network │ 1.2 MB/s │ OK      │
+└─────────┴──────────┴─────────┘
+  Downloading data... ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100%
+  Processing...       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100%
+               ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ●  Frame 39                
+Demo complete!
+</pre></details><details><summary>[5] shell mkdir -p ~/ws/out &amp;&amp; python3 ~/ws/rich_demo.py &gt; ~/ws/out/rich_demo_output.txt 2&gt;&amp;1 &amp;&amp; cat ~/ws/out/</summary><pre></pre><pre>[종료코드 0]
+
+=== Rich Terminal Demo ===
+
+Hello World from Ubuntu
+╭──────────────────────────────────╮
+│ Researcher&#x27;s Terminal Experiment │
+╰──────────────────────────────────╯
+         System Metrics         
+┏━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Metric  ┃ Value    ┃ Status  ┃
+┡━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ CPU     │ 23%      │ OK      │
+│ Memory  │ 45%      │ OK      │
+│ Disk    │ 67%      │ Warning │
+│ Network │ 1.2 MB/s │ OK      │
+└─────────┴──────────┴─────────┘
+  Downloading data... ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100%
+  Processing...       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100%
+               ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ●  Frame 39                
+Demo complete!
+</pre></details></html>

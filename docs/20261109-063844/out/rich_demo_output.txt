@@ -1,0 +1,20 @@
+
+=== Rich Terminal Demo ===
+
+Hello World from Ubuntu
+╭──────────────────────────────────╮
+│ Researcher's Terminal Experiment │
+╰──────────────────────────────────╯
+         System Metrics         
+┏━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Metric  ┃ Value    ┃ Status  ┃
+┡━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ CPU     │ 23%      │ OK      │
+│ Memory  │ 45%      │ OK      │
+│ Disk    │ 67%      │ Warning │
+│ Network │ 1.2 MB/s │ OK      │
+└─────────┴──────────┴─────────┘
+  Downloading data... ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100%
+  Processing...       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100%
+               ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ●  Frame 39                
+Demo complete!
