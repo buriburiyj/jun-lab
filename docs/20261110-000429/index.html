@@ -1,0 +1,212 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>위키백과 페이지 뷰 데이터 분석 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>위키백과 페이지 뷰 데이터 분석 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 11번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 흥미로운 주제로 위키백과 페이지 뷰 API를 선택하고 직접 실험했습니다. Wikimedia REST API 문서를 확인해 엔드포인트 형식을 바로잡은 후, 파이썬 requests로 2024년 1월 1일부터 31일까지 영어 위키백과의 Python_(programming_language) 페이지 일별 조회수를 수집했습니다. pandas로 통계를 내고 matplotlib으로 선 그래프를 ~/ws/out/wikipedia_pageviews.png에 저장했습니다. 31일간의 평균 일일 조회수는 약 20,858회, 최소 8,763회, 최대 27,915회로 나타났으며 월말에 오를수록 조회수가 증가하는 경향이 보였습니다. API 경로에 granularity 파라미터가 필요하고 사용자 에이전트 헤더를 보내야 404 오류 없이 정상 작동한다는 점을 확인했습니다. 다음에는 여러 위키 페이지를 비교하거나 더 긴 기간 데이터를 수집해 계절성 패턴을 분석해 볼 수 있습니다.</p><img src="out/wikipedia_pageviews.png">
+<h2>결과 파일</h2><ul><li><a href="out/wikipedia_pageviews.png">wikipedia_pageviews.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search 흥미로운 우분투 파이썬 실험 프로젝트 데이터 분석 시각화</summary><pre></pre><pre>1. 초보자를 위한 Python 데이터 분석 프로젝트: 종합 가이드 - Kanaries
+https://docs.kanaries.net/ko/articles/python-data-analysis-projects
+결론적으로, Python 데이터 분석 프로젝트는 기술을 쌓고 다양한 주제에 대한 통찰력을 얻을 수 있는 흥미롭고 가치 있는 방법입니다.NumPy, Pandas, Matplotlib, Seaborn 및 Scikit-learn과 같은 파이썬 라이브러리를 사용하면 새롭고 흥미로운 방식으로 데이터를 분석하고 ...
+
+2. 2025년 데이터 과학을 위한 50개 이상의 파이썬 프로젝트 : 네이버 블로그
+https://blog.naver.com/kayoko79/224399433847
+초급부터 고급까지 다양한 수준의 파이썬 데이터 과학 실습 프로젝트 50개 이상을 엄선하여 소개합니다. 각 프로젝트는 실제 데이터셋을 활용하며 머신러닝, 자연어 처리, 시계열 분석, 데이터 시각화 등 필수적인 기술을 다룹니다.
+
+3. Python 프로젝트: 초급부터 고급까지 50+ 아이디어 | DataCamp
+https://www.datacamp.com/ko/blog/60-python-projects-for-all-levels-expertise
+초급부터 고급까지 50개 이상의 Python 프로젝트 아이디어를 살펴보세요. 데이터 과학, 머신 러닝, AI, 웹 개발 프로젝트로 포트폴리오를 구축하세요.
+
+4. 파이썬을 활용한 빅데이터 분석 및 시각화 프로젝트 : 네이버 블로그
+https://m.blog.naver.com/donggukuniv1906/222523277507
+&#x27;파이썬을 활용한 빅데이터 분석 및 시각화 프로젝트&#x27; 강좌에서는 파이썬의 기초 문법부터 웹 기초 문법까지 폭넓게 설명하여 웹크롤링 학습을 목표로 합니다. 또한 고급과정으로 API를 이용하거나 JSON, 워드클라우드, 공공데이터를 활용하는 방법을 학습하는 과정입니다. - 파이썬 기초 문법에 ...
+
+5. 파이썬 (Python) 예제 : 데이터 분석 프로젝트
+https://glucose.tistory.com/541
+데이터 분석 프로젝트 예제를 하나 소개해 드리겠습니다. 이 프로젝트는 Pandas, NumPy, Matplotlib 같은 라이브러리를 사용해 데이터를 수집하고, 탐색 및 시각화하면서 분석하는 과정을 다룹니다. 예제로 &quot;온라인 쇼핑몰 판매 데이터 분석&quot;을 수행해보겠습니다.데이터 분석 프로젝트: 온라인 쇼핑몰 판매 ...
+
+6. 파이썬으로 데이터 분석하기 (EDA -Exploratory Data Analysis/데이터 시각화/그래프 만들기/csv 파일 ...
+https://happy-obok.tistory.com/72
+데이터를 기계학습에 사용하기 위해 전처리하고 데이터에서 통찰을 얻기 위한 데이터 시각화 및 분석하는 글입니다. 구글 코랩에서 작성하였고 파이썬을 사용합니다. 사용한 데이터는 공공 데이터 포털의 건강검진 데이터 (링크) 이고 csv 파일 입니다. 만약 csv 형식의 다른 데이터를 사용하시기 ...
+
+7. Python을 활용한 데이터 분석 및 시각화
+https://k940618.tistory.com/329
+Python의 강력한 라이브러리를 활용하면 데이터를 분석하고 시각화하여 유용한 인사이트를 쉽게 도출할 수 있습니다.이 글에서는 Python을 활용한 데이터 분석 및 시각화 방법을 실전 예제와 함께 설명합니다. 🚀🔑 핵심 내용:Python 데이터 분석 개념과 필요성pandas ...
+
+8. 파이썬 데이터 분석 입문 - Pandas부터 시각화까지
+https://braindetox.kr/posts/python_data_analysis_beginner_guide.html
+파이썬 데이터 분석 입문 - Pandas부터 시각화까지. Python, Pandas, Matplotlib, Seaborn을 활용한 데이터 분석 완벽 가이드입니다.</pre></details><details><summary>[2] search 위키백과 페이지 뷰 API 파이썬 예제 일별 조회수 분석</summary><pre></pre><pre>1. 파이썬으로 위키백과 스크래핑하는 방법: 단계별 가이드
+https://brightdata.co.kr/blog/web-data/how-to-scrape-wikipedia
+이제 환경 설정이 완료되었으며, 위키백과를 스크래핑할 파이썬 코드 작성을 시작할 준비가 되었습니다. 2. 대상 위키피디아 페이지 연결 시작하려면 원하는 위키백과 페이지에 연결하세요. 이 예제에서는 다음 위키백과 페이지를 스크래핑합니다.
+
+2. 위키백과:페이지뷰 - 위키백과, 우리 모두의 백과사전
+https://ko.wikipedia.org/wiki/%EC%9C%84%ED%82%A4%EB%B0%B1%EA%B3%BC:%ED%8E%98%EC%9D%B4%EC%A7%80%EB%B7%B0
+위키백과:페이지뷰 페이지뷰 도구 Pageviews (FAQ • URL structure) - The main Pageviews tool allows you to analyze pageviews of up to 10 pages during a given time frame. You can filter statistics based on the platform and user agent. If you want to view data on more pages, consider using Massviews.
+
+3. 위키피디아 Api_파이썬_데이터 수집 - 벨로그
+https://velog.io/@cmh2806/%EC%9C%84%ED%82%A4%ED%94%BC%EB%94%94%EC%95%84-API%ED%8C%8C%EC%9D%B4%EC%8D%AC%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%88%98%EC%A7%91
+마무리 오늘은 위키피디아 데이터를 가져오는 정보를 알아봤습니다. 위키피디아 API 와 파이썬의 조합은 굉장히 편리한거 같아요. 위키피디아는 항상 정보가 업데이트가 되고, 전세계 모두가 이용하는 정보의 장인만큼 이를 잘 이용한다면 좋은 아이디어가 나오지 않을까 생각합니다.
+
+4. 파이썬_데이터_크롤링_위키피디아 (wikipedia) - 생각 책장
+https://cromboltz.tistory.com/7
+코드 작성2.1 라이브러리 호출 2.2 접속할 wikipedia 설정2.3 페이지 존재여부 확인2.4 데이터 결과 확인 2.5 데이터 내리기 (다운로드) 위의 순서대로 진행해보도록 하겠습니다. 2.1 라이브러리 호출 import wikipediaapi #사용할 api 호출 2.2 접속할 wikipedia 설정 wiki=wikipediaapi..
+
+5. 위키백과의 지식 활용하기: API 문서 심층 분석 - ONES.com Blog
+https://ones.com/ko/blog/wikipedia-api-docs-guide-3/
+세계 최대 규모의 온라인 백과사전인 위키백과의 API 문서를 살펴보고 프로젝트에 그 강력한 지식을 활용해 보세요.
+
+6. Wikipedia Pageviews Scraper - Article Traffic Stats API · Apify
+https://apify.com/parseforge/wikipedia-pageviews-scraper
+Wikipedia Pageviews Scraper Scrape Wikipedia pageview statistics for any article, in any language, up to a million records per run. Get daily or monthly views, split by device and agent type, straight from the official Wikimedia REST API . No API key or registration needed. Export to CSV, JSON, Excel, or XML. The Wikimedia API is public, but querying it at scale means handling pagination, rate ...
+
+7. 위키피디아 (wikipedia) 페이지 크롤링 - Yogurt Office
+https://tes-b.github.io/python/Wikipedia_API/
+위키피디아(wikipeida)에는 페이지를 손쉽게 크롤링 할수 있도록 api 를 제공한다. 설치 사용전에 먼저 api 를 설치해줘야 한다. IntEnum 을 사용하기 때문에 파이썬 3.4 버전 이상이 필요하다고 한다. 터미널에서 아래 코드로 api 를 설치한다. pip install wikipedia- api 임포팅 설치가 되었으면 api 를 임포트 한다. import ...
+
+8. Pageviews Analysis
+https://pageviews.wmcloud.org/
+aa.wikipedia.org aa.wikibooks.org aa.wiktionary.org abstract.wikipedia.org ab.wikipedia.org ab.wiktionary.org ace.wikipedia.org advisory.wikimedia.org ady.wikipedia ...</pre></details><details><summary>[3] shell cd ~/ws &amp;&amp; python3 --version &amp;&amp; pip3 install --quiet pandas matplotlib requests &amp;&amp; pip3 list | grep </summary><pre></pre><pre>[종료코드 0]
+Python 3.12.16
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+matplotlib         3.11.2
+pandas             3.1.1
+requests           2.34.2
+</pre></details><details><summary>[4] shell mkdir -p ~/ws/out</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[5] write analyze_wiki.py</summary><pre>import requests
+import pandas as pd
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+article = &quot;Python_(programming_language)&quot;
+project = &quot;en.wikipedia.org&quot;
+access = &quot;all-access&quot;
+agent = &quot;user&quot;
+start = &quot;20240101&quot;
+end = &quot;20240131&quot;
+
+url = f&quot;https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/{project}/{access}/{agent}/{article}/{start}/{end}&quot;
+headers = {&quot;User-Agent&quot;: &quot;ResearchBot/1.0 (https://example.com; research@example.com)&quot;}
+
+resp = requests.get(url, headers=headers, timeout=30)
+resp.raise_for_status()
+items = resp.json()[&quot;items&quot;]
+
+df = pd.DataFrame(items)
+df[&quot;timestamp&quot;] = pd.to_datetime(df[&quot;timestamp&quot;], format=&quot;%Y%m%d%H&quot;)
+df = df.sort_values(&quot;timestamp&quot;)
+
+print(&quot;Rows:&quot;, len(df))
+print(df.describe())
+print(df.head())
+
+plt.figure(figsize=(10, 5))
+plt.plot(df[&quot;timestamp&quot;], df[&quot;views&quot;], marker=&#x27;o&#x27;, linestyle=&#x27;-&#x27;)
+plt.title(f&quot;Daily Pageviews for {article} on {project}&quot;)
+plt.xlabel(&quot;Date&quot;)
+plt.ylabel(&quot;Views&quot;)
+plt.grid(True)
+plt.tight_layout()
+plt.savefig(&quot;out/wikipedia_pageviews.png&quot;)
+print(&quot;Saved out/wikipedia_pageviews.png&quot;)</pre><pre>저장함: analyze_wiki.py (1075자)</pre></details><details><summary>[6] shell cd ~/ws &amp;&amp; python3 analyze_wiki.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/analyze_wiki.py&quot;, line 18, in &lt;module&gt;
+    resp.raise_for_status()
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/requests/models.py&quot;, line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/user/Python_(programming_language)/20240101/20240131
+</pre></details><details><summary>[7] fetch https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/user/Pyt</summary><pre></pre><pre>오류: HTTP Error 404: Not Found</pre></details><details><summary>[8] search Wikimedia REST API pageviews per-article endpoint URL format example python requests</summary><pre></pre><pre>1. Getting started | Wikimedia Analytics API
+https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/documentation/getting-started.html
+Each project hosts a different type of content, such as encyclopedia articles on Wikipedia and dictionary entries on Wiktionary. The Analytics API gives you open access to data about Wikimedia projects, including page views, unique device, and more.
+
+2. Wikipedia Pageviews API: A Working Tutorial | Trends API
+https://trendsapi.ai/blog/wikipedia-pageviews-api
+Query the Wikipedia Pageviews API with Python : the exact endpoint , a working requests snippet, and why filtering to human traffic matters. No key needed.
+
+3. MediaWiki API/Pageview API - Wikiversity
+https://en.wikiversity.org/wiki/MediaWiki_API/Pageview_API
+The following code samples demonstrate functions that may be used in Python to access the Pageview API .
+
+4. Compare page metrics | Wikimedia Analytics API
+https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/tutorials/compare-page-metrics.html
+Next, specify the parameters for API requests . This means setting: user agent, as described in the access policy request URLs . A URL defines what data you will request . You might want to see the documentation for the following endpoints to understand how to construct these: bytes changed on a page, edits to a page, and page views for a page. In this example , you will request : daily edit, view ...
+
+5. wikimedia.org
+https://wikimedia.org/api/rest_v1/metrics/pageviews/api-spec.json
+For all projects, use `all-projects`&quot;, &quot;name&quot;: &quot;project&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true }, { &quot;enum&quot;: [ &quot;all-sites&quot;, &quot;desktop-site&quot;, &quot;mobile-site&quot; ], &quot;type&quot;: &quot;string&quot;, &quot; example &quot;: &quot;all-sites&quot;, &quot;description&quot;: &quot;Method of access&quot;, &quot;name&quot;: &quot;access-site&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true }, { &quot;enum&quot;: [ &quot;hourly&quot;, &quot;daily&quot;, &quot;monthly&quot; ], &quot;type&quot;: &quot;string ...
+
+6. Wikimedia REST API - MediaWiki
+https://www.mediawiki.org/wiki/Wikimedia_REST_API
+The Wikimedia REST API offers access to Wikimedia&#x27;s content and metadata in machine-readable formats . Focused on high-volume use cases, it tightly integrates with Wikimedia&#x27;s globally distributed caching infrastructure. As a result, API users benefit from reduced latencies and support for high request volumes.
+
+7. API:REST API/Reference - MediaWiki
+https://www.mediawiki.org/wiki/API:REST_API/Reference
+To view this API&#x27;s documentation in an interactive sandbox, visit Special:RestSandbox on any Wikimedia wiki. For example : English Wikipedia REST sandbox.
+
+8. python - Get Page Views of a Wikipedia Page Using an API ... - Stack ...
+https://stackoverflow.com/questions/66709281/get-page-views-of-a-wikipedia-page-using-an-api
+Try using Pageview API . There are some examples there of how you should interact with the API via HTTP To do this in python you could, for example , use the requests library. Simple example :</pre></details><details><summary>[9] fetch https://wikimedia.org/api/rest_v1/metrics/pageviews/api-spec.json</summary><pre></pre><pre>{ &quot;schemes&quot;: [ &quot;https&quot; ], &quot;swagger&quot;: &quot;2.0&quot;, &quot;info&quot;: { &quot;description&quot;: &quot;Page Analytics provides data about page views for Wikimedia projects.\nData provided by this API is available under the [CC0 1.0 license](https://creativecommons.org/publicdomain/zero/1.0/).&quot;, &quot;title&quot;: &quot;Wikimedia Page Analytics&quot;, &quot;termsOfService&quot;: &quot;https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use&quot;, &quot;contact&quot;: {}, &quot;version&quot;: &quot;1&quot; }, &quot;host&quot;: &quot;wikimedia.org&quot;, &quot;basePath&quot;: &quot;/api/rest_v1/metrics&quot;, &quot;paths&quot;: { &quot;/legacy/pagecounts/aggregate/{project}/{access-site}/{granularity}/{start}/{end}&quot;: { &quot;get&quot;: { &quot;description&quot;: &quot;Returns a time series of numbers of page views for a Wikimedia project, including page views from both users and bots. This endpoint provides data from January 2008 to July 2016.&quot;, &quot;produces&quot;: [ &quot;application/json&quot; ], &quot;summary&quot;: &quot;Get number of page views (legacy)&quot;, &quot;parameters&quot;: [ { &quot;type&quot;: &quot;string&quot;, &quot;example&quot;: &quot;en.wikipedia.org&quot;, &quot;description&quot;: &quot;Domain and subdomain of a Wikimedia project. For all projects, use `all-projects`&quot;, &quot;name&quot;: &quot;project&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true }, { &quot;enum&quot;: [ &quot;all-sites&quot;, &quot;desktop-site&quot;, &quot;mobile-site&quot; ], &quot;type&quot;: &quot;string&quot;, &quot;example&quot;: &quot;all-sites&quot;, &quot;description&quot;: &quot;Method of access&quot;, &quot;name&quot;: &quot;access-site&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true }, { &quot;enum&quot;: [ &quot;hourly&quot;, &quot;daily&quot;, &quot;monthly&quot; ], &quot;type&quot;: &quot;string&quot;, &quot;example&quot;: &quot;monthly&quot;, &quot;description&quot;: &quot;Time interval between data points&quot;, &quot;name&quot;: &quot;granularity&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true }, { &quot;type&quot;: &quot;string&quot;, &quot;example&quot;: &quot;2015010100&quot;, &quot;description&quot;: &quot;First day and hour to include in YYYYMMDDHH format&quot;, &quot;name&quot;: &quot;start&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true }, { &quot;type&quot;: &quot;string&quot;, &quot;example&quot;: &quot;2016010100&quot;, &quot;description&quot;: &quot;Last day and hour to include in YYYYMMDDHH format. For hourly and daily granularities, this value is inclusive. For monthly granularity, this value is exclusive&quot;, &quot;name&quot;: &quot;end&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true } ], &quot;responses&quot;: { &quot;200&quot;: { &quot;description&quot;: &quot;OK&quot;, &quot;schema&quot;: { &quot;$ref&quot;: &quot;#/definiti
+...(중략)...
+rst day and hour to include in YYYYMMDDHH format&quot;, &quot;name&quot;: &quot;start&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true }, { &quot;type&quot;: &quot;string&quot;, &quot;example&quot;: &quot;2024010100&quot;, &quot;description&quot;: &quot;Last day and hour to include in YYYYMMDDHH format&quot;, &quot;name&quot;: &quot;end&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true } ], &quot;responses&quot;: { &quot;200&quot;: { &quot;description&quot;: &quot;OK&quot;, &quot;schema&quot;: { &quot;$ref&quot;: &quot;#/definitions/entities.AggregateResponse&quot; } }, &quot;400&quot;: { &quot;description&quot;: &quot;Bad request&quot;, &quot;schema&quot;: { &quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: { &quot;detail&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;method&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;status&quot;: { &quot;type&quot;: &quot;integer&quot; }, &quot;title&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;type&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;uri&quot;: { &quot;type&quot;: &quot;string&quot; } } } }, &quot;404&quot;: { &quot;description&quot;: &quot;Not found&quot;, &quot;schema&quot;: { &quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: { &quot;detail&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;method&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;status&quot;: { &quot;type&quot;: &quot;integer&quot; }, &quot;title&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;type&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;uri&quot;: { &quot;type&quot;: &quot;string&quot; } } } }, &quot;500&quot;: { &quot;description&quot;: &quot;Internal server error&quot;, &quot;schema&quot;: { &quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: { &quot;detail&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;method&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;status&quot;: { &quot;type&quot;: &quot;integer&quot; }, &quot;title&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;type&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;uri&quot;: { &quot;type&quot;: &quot;string&quot; } } } } } } }, &quot;/pageviews/per-article/{project}/{access}/{agent}/{article}/{granularity}/{start}/{end}&quot;: { &quot;get&quot;: { &quot;description&quot;: &quot;Returns a time series of numbers of page views for a wiki page.&quot;, &quot;produces&quot;: [ &quot;application/json&quot; ], &quot;summary&quot;: &quot;Get number of page views for a page&quot;, &quot;parameters&quot;: [ { &quot;type&quot;: &quot;string&quot;, &quot;example&quot;: &quot;en.wikipedia.org&quot;, &quot;description&quot;: &quot;Domain and subdomain of a Wikimedia project&quot;, &quot;name&quot;: &quot;project&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true }, { &quot;enum&quot;: [ &quot;all-access&quot;, &quot;desktop&quot;, &quot;mobile-app&quot;, &quot;mobile-web&quot; ], &quot;type&quot;: &quot;string&quot;, &quot;example&quot;: &quot;all-access&quot;, &quot;description&quot;: &quot;Method of access&quot;, &quot;name&quot;: &quot;access&quot;, &quot;in&quot;: &quot;path&quot;, &quot;required&quot;: true }, { &quot;enum&quot;: [ &quot;all-agents&quot;, &quot;user&quot;, &quot;spider&quot;, &quot;automated&quot; ], &quot;type&quot;: &quot;string&quot;, &quot;example&quot;: &quot;all-agents&quot;, &quot;description&quot;: &quot;Type o</pre></details><details><summary>[10] write analyze_wiki.py</summary><pre>import requests
+import pandas as pd
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+article = &quot;Python_(programming_language)&quot;
+project = &quot;en.wikipedia.org&quot;
+access = &quot;all-access&quot;
+agent = &quot;all-agents&quot;
+granularity = &quot;daily&quot;
+start = &quot;20240101&quot;
+end = &quot;20240131&quot;
+
+url = f&quot;https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/{project}/{access}/{agent}/{article}/{granularity}/{start}/{end}&quot;
+headers = {&quot;User-Agent&quot;: &quot;ResearchBot/1.0 (https://example.com; research@example.com)&quot;}
+
+resp = requests.get(url, headers=headers, timeout=30)
+print(&quot;Status:&quot;, resp.status_code)
+resp.raise_for_status()
+items = resp.json()[&quot;items&quot;]
+
+df = pd.DataFrame(items)
+df[&quot;timestamp&quot;] = pd.to_datetime(df[&quot;timestamp&quot;], format=&quot;%Y%m%d%H&quot;)
+df = df.sort_values(&quot;timestamp&quot;)
+
+print(&quot;Rows:&quot;, len(df))
+print(df.describe())
+print(df.head())
+
+plt.figure(figsize=(10, 5))
+plt.plot(df[&quot;timestamp&quot;], df[&quot;views&quot;], marker=&#x27;o&#x27;, linestyle=&#x27;-&#x27;)
+plt.title(f&quot;Daily Pageviews for {article} on {project}&quot;)
+plt.xlabel(&quot;Date&quot;)
+plt.ylabel(&quot;Views&quot;)
+plt.grid(True)
+plt.tight_layout()
+plt.savefig(&quot;out/wikipedia_pageviews.png&quot;)
+print(&quot;Saved out/wikipedia_pageviews.png&quot;)</pre><pre>저장함: analyze_wiki.py (1152자)</pre></details><details><summary>[11] shell cd ~/ws &amp;&amp; python3 analyze_wiki.py</summary><pre></pre><pre>[종료코드 0]
+Status: 200
+Rows: 31
+                 timestamp         views
+count                   31     31.000000
+mean   2024-01-16 00:00:00  20857.677419
+min    2024-01-01 00:00:00   8763.000000
+25%    2024-01-08 12:00:00  16593.000000
+50%    2024-01-16 00:00:00  23861.000000
+75%    2024-01-23 12:00:00  25254.000000
+max    2024-01-31 00:00:00  27915.000000
+std                    NaN   6021.444314
+        project                        article  ...       agent  views
+0  en.wikipedia  Python_(programming_language)  ...  all-agents   8763
+1  en.wikipedia  Python_(programming_language)  ...  all-agents  11764
+2  en.wikipedia  Python_(programming_language)  ...  all-agents  12751
+3  en.wikipedia  Python_(programming_language)  ...  all-agents  14568
+4  en.wikipedia  Python_(programming_language)  ...  all-agents  14731
+
+[5 rows x 7 columns]
+Saved out/wikipedia_pageviews.png
+</pre></details></html>
