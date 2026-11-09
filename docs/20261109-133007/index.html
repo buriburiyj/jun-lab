@@ -1,0 +1,465 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>인터넷 흥미 주제 실험: 수열과 랜덤워크 시각화</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>인터넷 흥미 주제 실험: 수열과 랜덤워크 시각화</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 19번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>지금까지 한 일:<br>- 인터넷에서 찾은 흥미로운 주제(피보나치 수열, 소수 간격, 랜덤 워크 등)로 실험 코드(`experiment.py`)를 작성함.<br>- 처음에는 터미널에 그래프를 그리는 `plotext`를 사용하려 했으나 `clf`, `clear`, `title` 등이 없어 반복 오류가 발생함.<br>- `plotext` 문서와 사용 가능한 함수 목록을 확인한 뒤, `matplotlib`로 방향을 바꿈.<br>- `pip install matplotlib`로 라이브러리를 설치하고 `python3 ~/ws/experiment.py`를 실행함.<br>- 종료 코드 0으로 성공하며, `~/ws/out/`에 `fibonacci.png`, `prime_gaps.png`, `random_walk.png` 3개의 PNG 파일을 저장함.<br><br>막힌 점:<br>- 현재 막힌 점은 없음. `plotext` API 오류는 `matplotlib`로 교체해 해결됨.</p><img src="out/fibonacci.png"><img src="out/prime_gaps.png"><img src="out/random_walk.png">
+<h2>결과 파일</h2><ul><li><a href="out/fibonacci.png">fibonacci.png</a></li><li><a href="out/prime_gaps.png">prime_gaps.png</a></li><li><a href="out/random_walk.png">random_walk.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting Python experiment Ubuntu terminal visualization data science</summary><pre></pre><pre>1. Visualizing Data in the Terminal: A Simple Guide to Building a ...
+https://dev.to/timilehin-olusegun/visualizing-data-in-the-terminal-a-simple-guide-to-building-a-customized-data-visualization-tool-47lb
+Data visualization in the terminal can be a powerful tool for analyzing and interpreting data without the need for complex visualization software. By using Python and libraries such as Plotext, you can quickly and easily create powerful visualizations that help you make data -driven decisions.
+
+2. Python - Data visualization Tutorial - GeeksforGeeks
+https://www.geeksforgeeks.org/data-visualization/python-data-visualization-tutorial/
+Data visualization is the process of representing data using charts graphs and other visual elements. Python provides several libraries that make it easier to explore data identify patterns and communicate insights effectively.
+
+3. Self-Hosted Terminal Data Visualization Tools: termgraph vs gnuplot vs ...
+https://www.pistack.xyz/posts/2026-06-17-terminal-data-visualization/
+Running visualization tools locally or on your own infrastructure gives you complete control over your data pipeline. Unlike SaaS analytics platforms that require uploading sensitive metrics to external servers, terminal -based tools process everything in-memory or on local files.
+
+4. Data Visualization using Matplotlib in Python - GeeksforGeeks
+https://www.geeksforgeeks.org/data-visualization/data-visualization-using-matplotlib/
+Visualizing Data with Pyplot using Matplotlib Pyplot is a module in Matplotlib that provides a simple interface for creating plots. It allows users to generate charts like line graphs, bar charts and histograms with minimal code. Let&#x27;s explore some examples with simple code to understand how to use it effectively. 1. Line Chart Line chart is one of the basic plots and can be created using ...
+
+5. 6 Data visualization - Introduction to Data Science with Python
+https://nustat.github.io/DataScience_Intro_python/Data%20visualization.html
+This makes data visualizations a vital part of data science . Some of the key purposes of data visualization are: Data visualization is the first step towards exploratory data analysis (EDA), which reveals trends, patterns, insights, or even irregularities in data . Data visualization can help explain the workings of complex mathematical models.
+
+6. How to Create Stunning Graphs in the Terminal with Python
+https://medium.com/@SrvZ/how-to-create-stunning-graphs-in-the-terminal-with-python-2adf9d012131
+Whether we&#x27;re working remotely, on a server, or just need to share a quick visualization with a colleague, the ability to plot graphs in the terminal can be incredibly useful.
+
+7. 25-Python-Data-Visualization-Projects - GitHub
+https://github.com/kelvintechnical/25-Python-Data-Visualization-Projects
+A collection of 25 Python data visualization projects to practice and showcase skills in creating engaging and meaningful visualizations . These projects explore a variety of techniques using libraries like Matplotlib, Seaborn, Plotly, and more.
+
+8. 50+ Python Projects for Data Science in 2025
+https://www.projectpro.io/article/python-projects-for-data-science/462
+Explore a curated collection of 50+ hands-on data science projects in Python , ranging from beginner to advanced levels. Each project uses real-world datasets and covers essential skills like machine learning, NLP, time series, and data visualization , perfect for building your portfolio, improving your skills, or preparing for job interviews.</pre></details><details><summary>[2] shell pip install plotext</summary><pre></pre><pre>[종료코드 0]
+Collecting plotext
+  Downloading plotext-6.1.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.9 kB)
+Downloading plotext-6.1.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (475 kB)
+Installing collected packages: plotext
+Successfully installed plotext-6.1.0
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[3] shell mkdir -p ~/ws/out &amp;&amp; ls ~/ws</summary><pre></pre><pre>[종료코드 0]
+out
+</pre></details><details><summary>[4] write ~/ws/experiment.py</summary><pre>import plotext as plt
+import math
+import random
+
+# 1. 피보나치 수열 단말기 그래프
+fib = [0, 1]
+for i in range(2, 30):
+    fib.append(fib[-1] + fib[-2])
+plt.clf()
+plt.title(&quot;Fibonacci Sequence (Terminal)&quot;)
+plt.plot(fib, marker=&quot;dot&quot;)
+plt.show()
+
+# 2. 소수 간격 단말기 그래프
+def is_prime(n):
+    if n &lt; 2:
+        return False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+primes = [n for n in range(2, 200) if is_prime(n)]
+gaps = [primes[i+1] - primes[i] for i in range(len(primes)-1)]
+plt.clf()
+plt.title(&quot;Prime Gaps (Terminal)&quot;)
+plt.plot(gaps, marker=&quot;x&quot;)
+plt.show()
+
+# 3. 랜덤 워크 단말기 그래프
+random.seed(42)
+walk = [0]
+for _ in range(100):
+    walk.append(walk[-1] + random.choice([-1, 1]))
+plt.clf()
+plt.title(&quot;1D Random Walk (Terminal)&quot;)
+plt.plot(walk, color=&quot;blue&quot;)
+plt.show()
+
+print(&quot;단말기 그래프 출력 완료&quot;)
+
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt2
+
+# 4. 피보나치 PNG 저장
+plt2.figure(figsize=(8,4))
+plt2.plot(fib, marker=&#x27;o&#x27;)
+plt2.title(&quot;Fibonacci Sequence&quot;)
+plt2.xlabel(&quot;Index&quot;)
+plt2.ylabel(&quot;Value&quot;)
+plt2.grid(True, alpha=0.3)
+plt2.savefig(&quot;~/ws/out/fibonacci.png&quot;, dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt2.close()
+
+# 5. 소수 간격 PNG 저장
+plt2.figure(figsize=(8,4))
+plt2.plot(gaps, marker=&#x27;x&#x27;)
+plt2.title(&quot;Prime Gaps&quot;)
+plt2.xlabel(&quot;Prime Index&quot;)
+plt2.ylabel(&quot;Gap&quot;)
+plt2.grid(True, alpha=0.3)
+plt2.savefig(&quot;~/ws/out/prime_gaps.png&quot;, dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt2.close()
+
+# 6. 랜덤 워크 PNG 저장
+plt2.figure(figsize=(8,4))
+plt2.plot(walk, color=&#x27;blue&#x27;)
+plt2.title(&quot;1D Random Walk&quot;)
+plt2.xlabel(&quot;Step&quot;)
+plt2.ylabel(&quot;Position&quot;)
+plt2.grid(True, alpha=0.3)
+plt2.savefig(&quot;~/ws/out/random_walk.png&quot;, dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt2.close()
+
+print(&quot;PNG 파일 저장 완료: ~/ws/out/&quot;)
+import os
+print(os.listdir(os.path.expanduser(&quot;~/ws/out&quot;)))
+</pre><pre>저장함: experiment.py (1783자)</pre></details><details><summary>[5] shell python3 ~/ws/experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 9, in &lt;module&gt;
+    plt.clf()
+    ^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;clf&#x27;
+</pre></details><details><summary>[6] write ~/ws/experiment.py</summary><pre>import plotext as plt
+import math
+import random
+
+# 1. 피보나치 수열 단말기 그래프
+fib = [0, 1]
+for i in range(2, 30):
+    fib.append(fib[-1] + fib[-2])
+plt.clear()
+plt.title(&quot;Fibonacci Sequence (Terminal)&quot;)
+plt.plot(fib, marker=&quot;dot&quot;)
+plt.show()
+
+# 2. 소수 간격 단말기 그래프
+def is_prime(n):
+    if n &lt; 2:
+        return False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+primes = [n for n in range(2, 200) if is_prime(n)]
+gaps = [primes[i+1] - primes[i] for i in range(len(primes)-1)]
+plt.clear()
+plt.title(&quot;Prime Gaps (Terminal)&quot;)
+plt.plot(gaps, marker=&quot;x&quot;)
+plt.show()
+
+# 3. 랜덤 워크 단말기 그래프
+random.seed(42)
+walk = [0]
+for _ in range(100):
+    walk.append(walk[-1] + random.choice([-1, 1]))
+plt.clear()
+plt.title(&quot;1D Random Walk (Terminal)&quot;)
+plt.plot(walk, color=&quot;blue&quot;)
+plt.show()
+
+print(&quot;단말기 그래프 출력 완료&quot;)
+
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt2
+
+# 4. 피보나치 PNG 저장
+plt2.figure(figsize=(8,4))
+plt2.plot(fib, marker=&#x27;o&#x27;)
+plt2.title(&quot;Fibonacci Sequence&quot;)
+plt2.xlabel(&quot;Index&quot;)
+plt2.ylabel(&quot;Value&quot;)
+plt2.grid(True, alpha=0.3)
+plt2.savefig(&quot;~/ws/out/fibonacci.png&quot;, dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt2.close()
+
+# 5. 소수 간격 PNG 저장
+plt2.figure(figsize=(8,4))
+plt2.plot(gaps, marker=&#x27;x&#x27;)
+plt2.title(&quot;Prime Gaps&quot;)
+plt2.xlabel(&quot;Prime Index&quot;)
+plt2.ylabel(&quot;Gap&quot;)
+plt2.grid(True, alpha=0.3)
+plt2.savefig(&quot;~/ws/out/prime_gaps.png&quot;, dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt2.close()
+
+# 6. 랜덤 워크 PNG 저장
+plt2.figure(figsize=(8,4))
+plt2.plot(walk, color=&#x27;blue&#x27;)
+plt2.title(&quot;1D Random Walk&quot;)
+plt2.xlabel(&quot;Step&quot;)
+plt2.ylabel(&quot;Position&quot;)
+plt2.grid(True, alpha=0.3)
+plt2.savefig(&quot;~/ws/out/random_walk.png&quot;, dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt2.close()
+
+print(&quot;PNG 파일 저장 완료: ~/ws/out/&quot;)
+import os
+print(os.listdir(os.path.expanduser(&quot;~/ws/out&quot;)))
+</pre><pre>저장함: experiment.py (1789자)</pre></details><details><summary>[7] shell python3 ~/ws/experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 9, in &lt;module&gt;
+    plt.clear()
+    ^^^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;clear&#x27;
+</pre></details><details><summary>[8] write ~/ws/experiment.py</summary><pre>import plotext as plt
+import math
+import random
+
+# 1. 피보나치 수열 단말기 그래프
+fib = [0, 1]
+for i in range(2, 30):
+    fib.append(fib[-1] + fib[-2])
+plt.title(&quot;Fibonacci Sequence (Terminal)&quot;)
+plt.plot(fib, marker=&quot;dot&quot;)
+plt.show()
+
+# 2. 소수 간격 단말기 그래프
+def is_prime(n):
+    if n &lt; 2:
+        return False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+primes = [n for n in range(2, 200) if is_prime(n)]
+gaps = [primes[i+1] - primes[i] for i in range(len(primes)-1)]
+plt.title(&quot;Prime Gaps (Terminal)&quot;)
+plt.plot(gaps, marker=&quot;x&quot;)
+plt.show()
+
+# 3. 랜덤 워크 단말기 그래프
+random.seed(42)
+walk = [0]
+for _ in range(100):
+    walk.append(walk[-1] + random.choice([-1, 1]))
+plt.title(&quot;1D Random Walk (Terminal)&quot;)
+plt.plot(walk, color=&quot;blue&quot;)
+plt.show()
+
+print(&quot;단말기 그래프 출력 완료&quot;)
+
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt2
+
+# 4. 피보나치 PNG 저장
+plt2.figure(figsize=(8,4))
+plt2.plot(fib, marker=&#x27;o&#x27;)
+plt2.title(&quot;Fibonacci Sequence&quot;)
+plt2.xlabel(&quot;Index&quot;)
+plt2.ylabel(&quot;Value&quot;)
+plt2.grid(True, alpha=0.3)
+plt2.savefig(os.path.expanduser(&quot;~/ws/out/fibonacci.png&quot;), dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt2.close()
+
+# 5. 소수 간격 PNG 저장
+plt2.figure(figsize=(8,4))
+plt2.plot(gaps, marker=&#x27;x&#x27;)
+plt2.title(&quot;Prime Gaps&quot;)
+plt2.xlabel(&quot;Prime Index&quot;)
+plt2.ylabel(&quot;Gap&quot;)
+plt2.grid(True, alpha=0.3)
+plt2.savefig(os.path.expanduser(&quot;~/ws/out/prime_gaps.png&quot;), dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt2.close()
+
+# 6. 랜덤 워크 PNG 저장
+plt2.figure(figsize=(8,4))
+plt2.plot(walk, color=&#x27;blue&#x27;)
+plt2.title(&quot;1D Random Walk&quot;)
+plt2.xlabel(&quot;Step&quot;)
+plt2.ylabel(&quot;Position&quot;)
+plt2.grid(True, alpha=0.3)
+plt2.savefig(os.path.expanduser(&quot;~/ws/out/random_walk.png&quot;), dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt2.close()
+
+print(&quot;PNG 파일 저장 완료: ~/ws/out/&quot;)
+import os
+print(os.listdir(os.path.expanduser(&quot;~/ws/out&quot;)))
+</pre><pre>저장함: experiment.py (1813자)</pre></details><details><summary>[9] shell python3 ~/ws/experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 9, in &lt;module&gt;
+    plt.title(&quot;Fibonacci Sequence (Terminal)&quot;)
+    ^^^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;title&#x27;. Did you mean: &#x27;file&#x27;?
+</pre></details><details><summary>[10] search plotext Python usage title plot show example</summary><pre></pre><pre>1. GitHub - piccolomo/plotext: plotting on terminal · GitHub
+https://github.com/piccolomo/plotext
+Terminal: read its size, clear it, and catch a key press without waiting. Tools: test data, a file toolkit, a command line tool drawing a plot with no Python written, pretty docstrings browsable in a menu, and recipes for other packages. Here is the link of the main documentation: plotext .readthedocs.io. This project is under active development.
+
+2. plotext · PyPI
+https://pypi.org/project/plotext/
+plotext draws its plots inside the terminal, as colored text, and its installation needs nothing beside itself; only pictures and videos ask for the optional extras. Basic plots : scatter, line and stem, each returning a signal you configure and then draw. Bars: simple, labeled, floating, multiple and stacked, with histograms and box plots .
+
+3. User Guide — plotext 6.1.0 documentation
+https://plotext.readthedocs.io/en/latest/
+image code plotext draws its plots inside the terminal, as colored text, and its installation needs nothing beside itself; only pictures and videos ask for the optional extras. Basic plots : scatter, line and stem, each returning a signal you configure and then draw. Bars: simple, labeled, floating, multiple and stacked, with histograms and box ...
+
+4. GitHub - Textualize/textual-plotext: A Textual widget wrapper library ...
+https://github.com/Textualize/textual-plotext/
+A Textual widget wrapper for the Plotext plotting library. Also, currently, there is no support for GIF plots or playing videos; one or both could follow at some point in the future. Plotext has a system of themes. The themes provided by Plotext are supported by PlotextPlot. However, some of those ...
+
+5. python - How to plot a chart in the terminal - Stack Overflow
+https://stackoverflow.com/questions/37288421/how-to-plot-a-chart-in-the-terminal
+It is possible to plot raster images in terminals and terminal emulators: ... This particular example uses matplotlib-sixel, a library that uses Xterm emulating a Sixel compatible terminal and ImageTrick. Similar technology could be implemented in the Linux terminal (through the Framebuffer) or emulators (kitty or iTerm2).
+
+6. plotext-plus · PyPI
+https://pypi.org/project/plotext-plus/
+📊 Plotext+ - Modern Terminal Plotting Plotext+ plots directly in your terminal with stunning visuals, modern APIs, and professional styling. Plotext+ is a redesigned version of the original plotext library by Savino Piccolomo. New features include an updated API with object oriented features, an MCP server to make the project easily usable with AI &amp; LLM scenarios, new themes and integration ...
+
+7. Examples and Tutorials | Textualize/textual-plotext | DeepWiki
+https://deepwiki.com/Textualize/textual-plotext/5-examples-and-tutorials
+Examples and Tutorials Relevant source files This document provides a comprehensive guide to the practical examples included with textual- plotext , demonstrating how to integrate plotext visualizations into Textual applications. The examples range from simple scatter plots to complex real-time data visualization applications, showcasing different plotting techniques, theme management, and ...
+
+8. Pyplot tutorial — Matplotlib 3.11.2 documentation
+https://matplotlib.org/stable/tutorials/pyplot.html
+Pyplot tutorial # An introduction to the pyplot interface. Please also see Quick start guide for an overview of how Matplotlib works and Matplotlib Application Interfaces (APIs) for an explanation of the trade-offs between the supported user APIs. Introduction to pyplot # matplotlib.pyplot is a collection of functions that make matplotlib work like MATLAB. Each pyplot function makes some ...</pre></details><details><summary>[11] fetch https://plotext.readthedocs.io/en/latest/</summary><pre></pre><pre>User Guide — plotext 6.1.0 documentation plotext Getting Started Installation Basic Plots Signal Plot Types Shapes and Text Bar Plots Specialized Plots Date Plots Media Streaming Plots Plot Settings Size Labels Rulers Axes Canvas Themes Clear Interactive Mode Subplots Plot Utilities Plot Inspection Terminal Colored Primitives Pixel Colored Text Matrix Marker General Tools Test Data File Toolkit Command Line Pretty Docstrings Other Packages Project API Documentation Change Log Future Plan Credits plotext User Guide View page source plotting on terminal image code plotext draws its plots inside the terminal , as colored text, and its installation needs nothing beside itself ; only pictures and videos ask for the optional extras . Basic plots : scatter , line and stem , each returning a signal you configure and then draw. Bars : simple , labeled , floating , multiple and stacked , with histograms and box plots . Specialized plots : error bars , event plots , heatmaps , confusion matrices and indicators . Shapes and text : rectangles , polygons , segments and lines in five line styles , plus text written anywhere on the plot. Dates : a date and time axis , and the candlestick chart of financial prices. Media : pictures , gifs and video with its sound, YouTube included. Live plots : streaming that redraws in place, and text animated by a moving effect. Plot settings : the size , the title and labels , the rulers and their ticks , the axes , the canvas and its legend , twelve themes and your own . Subplots : a grid of plots , each panel holding a grid of its own, to any number of levels, and each with its own size , theme and settings. Higher resolution : markers splitting each character into a grid of sub-points, fitting four to eight times the data in the same space. Colored primitives : the pixel holding a color pair and a style, colored strings , the matrix of colored characters a plot is made of, and the marker drawn at each point. Terminal : read its size , clear it, and catch a key press without waiting. Tools : test data , a file toolkit , a command line tool drawing a plot with no Python written, pretty docstrings browsable in a menu, and recipes for other packages . The source code lives on GitHub , together with its issue tracker . Note This project is under active development . Note AI helped speed up the writing and polishing, particularly of the repetitive parts of the code, the documentation and the issue replies, in the last months of version 6. User Guide  Next © Copyright 2024, Savino Piccolomo. Built with Sphinx using a theme provided by Read the Docs .</pre></details><details><summary>[12] fetch https://github.com/piccolomo/plotext</summary><pre></pre><pre>GitHub - piccolomo/plotext: plotting on terminal · GitHub Skip to content Navigation Menu Sign in Products Platform GitHub Repository hosting, code review, and collaboration Copilot AI coding agent for tasks, projects, and automated work Build &amp; Ship Actions CI/CD and automation Code Quality Quality analysis, fixes, and enforcement Codespaces Cloud development environments Secure Code Security Vulnerability detection and remediation Secret Protection Secret scanning and leak prevention All Features Developers Learn Documentation Training Certifications Build Build with Copilot Customize Copilot Integrations Explore Trending repos GitHub Sponsors Developer articles Changelog Changelog Your source for the latest features, improvements, and fixes across GitHub products, all in one place. Businesses By Stage Enterprises Team Startups Nonprofits By Industry Healthcare Financial services Manufacturing Government See all industries Evaluate GitHub Why GitHub Customer Stories Business insights Trust Center Add-ons GitHub Advanced Security Enterprise-grade code security Copilot for business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Resources Learn &amp; Connect Documentation Resource center Blog Events &amp; webinars Community Forum Customer Stories Integrations Support Customer support Training GitHub Status Company About Partners Changelog GitHub Universe GitHub Universe The event for developers, by developers — talks, workshops, and what’s next for GitHub. Pricing Search / Sign in Sign up Appearance settings You signed in with another tab or window. Reload to refresh your session. You signed out in another tab or window. Reload to refresh your session. You switched accounts on another tab or window. Reload to refresh your session. Dismiss alert {{ message }} piccolomo plotext Repository navigation Code Issues 3 ( 3 ) Pull requests Discussions Actions Projects Wiki Security and quality Insights More items plotext Public Notifications You must be si
+...(중략)...
+acked , with histograms and box plots . Specialized plots : error bars , event plots , heatmaps , confusion matrices and indicators . Shapes and text : rectangles , polygons , segments and lines in five line styles , plus text written anywhere on the plot. Dates : a date and time axis , and the candlestick chart of financial prices. Media : pictures , gifs and video with its sound, YouTube included. Live plots : streaming that redraws in place, and text animated by a moving effect. Plot settings : the size , the title and labels , the rulers and their ticks , the axes , the canvas and its legend , twelve themes and your own . Subplots : a grid of plots , each panel holding a grid of its own, to any number of levels, and each with its own size , theme and settings. Higher resolution : markers splitting each character into a grid of sub-points, fitting four to eight times the data in the same space. Colored primitives : the pixel holding a color pair and a style, colored strings , the matrix of colored characters a plot is made of, and the marker drawn at each point. Terminal : read its size , clear it, and catch a key press without waiting. Tools : test data , a file toolkit , a command line tool drawing a plot with no Python written, pretty docstrings browsable in a menu, and recipes for other packages . Here is the link of the main documentation: plotext.readthedocs.io . This project is under active development . AI helped speed up the writing and polishing, particularly of the repetitive parts of the code, the documentation and the issue replies, in the last months of version 6. About plotting on terminal plotext.readthedocs.io Resources Readme MIT license Activity Stars 2.2k stars Watchers 14 watching Forks 90 forks Report repository Releases Used by Contributors Languages Footer © 2026 GitHub, Inc. Footer navigation Terms Privacy Security Status Community Docs Contact Manage cookies Do not share my personal information You can’t perform that action at this time.</pre></details><details><summary>[13] shell python3 -c &quot;import plotext as plt; print([x for x in dir(plt) if not x.startswith(&#x27;_&#x27;)])&quot;</summary><pre></pre><pre>[종료코드 0]
+[&#x27;add_theme&#x27;, &#x27;colorize&#x27;, &#x27;colors&#x27;, &#x27;doc&#x27;, &#x27;effect&#x27;, &#x27;figure&#x27;, &#x27;file&#x27;, &#x27;gif&#x27;, &#x27;image&#x27;, &#x27;line&#x27;, &#x27;line_styles&#x27;, &#x27;marker&#x27;, &#x27;markers&#x27;, &#x27;matplotlib&#x27;, &#x27;matrix&#x27;, &#x27;noise&#x27;, &#x27;pixel&#x27;, &#x27;platform&#x27;, &#x27;prettydoc&#x27;, &#x27;sample&#x27;, &#x27;sin&#x27;, &#x27;sleep&#x27;, &#x27;square&#x27;, &#x27;styles&#x27;, &#x27;terminal&#x27;, &#x27;test&#x27;, &#x27;themes&#x27;, &#x27;uncolorize&#x27;, &#x27;version&#x27;, &#x27;video&#x27;]
+</pre></details><details><summary>[14] write ~/ws/test_plotext.py</summary><pre>import plotext as plt
+
+fib = [0, 1]
+for i in range(2, 20):
+    fib.append(fib[-1] + fib[-2])
+
+plt.line(fib, marker=&quot;dot&quot;)
+print(&quot;plotext line 실행 완료&quot;)
+</pre><pre>저장함: test_plotext.py (150자)</pre></details><details><summary>[15] shell python3 ~/ws/test_plotext.py</summary><pre></pre><pre>[종료코드 1]
+Exception ignored in: &lt;function box_class.__del__ at 0x7f089729bf60&gt;
+Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/plotext/_primitives/box.py&quot;, line 21, in __del__
+    if self._pointer is not None:
+       ^^^^^^^^^^^^^
+AttributeError: &#x27;line&#x27; object has no attribute &#x27;_pointer&#x27;
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/test_plotext.py&quot;, line 7, in &lt;module&gt;
+    plt.line(fib, marker=&quot;dot&quot;)
+TypeError: line.__init__() got an unexpected keyword argument &#x27;marker&#x27;
+</pre></details><details><summary>[16] write ~/ws/experiment.py</summary><pre>import math
+import random
+import os
+
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+# 1. 피보나치 수열
+fib = [0, 1]
+for i in range(2, 30):
+    fib.append(fib[-1] + fib[-2])
+
+plt.figure(figsize=(8,4))
+plt.plot(fib, marker=&#x27;o&#x27;)
+plt.title(&quot;Fibonacci Sequence&quot;)
+plt.xlabel(&quot;Index&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.grid(True, alpha=0.3)
+plt.savefig(os.path.expanduser(&quot;~/ws/out/fibonacci.png&quot;), dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt.close()
+
+# 2. 소수 간격
+def is_prime(n):
+    if n &lt; 2:
+        return False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+primes = [n for n in range(2, 200) if is_prime(n)]
+gaps = [primes[i+1] - primes[i] for i in range(len(primes)-1)]
+
+plt.figure(figsize=(8,4))
+plt.plot(gaps, marker=&#x27;x&#x27;)
+plt.title(&quot;Prime Gaps&quot;)
+plt.xlabel(&quot;Prime Index&quot;)
+plt.ylabel(&quot;Gap&quot;)
+plt.grid(True, alpha=0.3)
+plt.savefig(os.path.expanduser(&quot;~/ws/out/prime_gaps.png&quot;), dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt.close()
+
+# 3. 랜덤 워크
+random.seed(42)
+walk = [0]
+for _ in range(100):
+    walk.append(walk[-1] + random.choice([-1, 1]))
+
+plt.figure(figsize=(8,4))
+plt.plot(walk, color=&#x27;blue&#x27;)
+plt.title(&quot;1D Random Walk&quot;)
+plt.xlabel(&quot;Step&quot;)
+plt.ylabel(&quot;Position&quot;)
+plt.grid(True, alpha=0.3)
+plt.savefig(os.path.expanduser(&quot;~/ws/out/random_walk.png&quot;), dpi=150, bbox_inches=&#x27;tight&#x27;)
+plt.close()
+
+print(&quot;PNG 파일 저장 완료: ~/ws/out/&quot;)
+print(os.listdir(os.path.expanduser(&quot;~/ws/out&quot;)))
+</pre><pre>저장함: experiment.py (1431자)</pre></details><details><summary>[17] shell python3 ~/ws/experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 5, in &lt;module&gt;
+    import matplotlib
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[18] shell pip install matplotlib</summary><pre></pre><pre>[종료코드 0]
+Collecting matplotlib
+  Downloading matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+Collecting contourpy&gt;=1.0.1 (from matplotlib)
+  Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting cycler&gt;=0.10 (from matplotlib)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools&gt;=4.28.2 (from matplotlib)
+  Downloading fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+Collecting kiwisolver&gt;=1.3.1 (from matplotlib)
+  Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+Collecting numpy&gt;=1.25 (from matplotlib)
+  Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting packaging&gt;=20.0 (from matplotlib)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow&gt;=9 (from matplotlib)
+  Downloading pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting pyparsing&gt;=3 (from matplotlib)
+  Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting python-dateutil&gt;=2.7 (from matplotlib)
+  Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting tzdata (from python-dateutil&gt;=2.7-&gt;matplotlib)
+  Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Downloading matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 60.9 MB/s  0:00:00
+Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (383 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 300.7 MB/s  0:00:00
+Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 217.9 MB/s  0:00:00
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 252.5 MB/s  0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 192.1 MB/s  0:00:00
+Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: tzdata, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, python-dateutil, contourpy, matplotlib
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[19] shell python3 ~/ws/experiment.py</summary><pre></pre><pre>[종료코드 0]
+PNG 파일 저장 완료: ~/ws/out/
+[&#x27;fibonacci.png&#x27;, &#x27;prime_gaps.png&#x27;, &#x27;random_walk.png&#x27;]
+</pre></details></html>
