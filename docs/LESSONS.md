@@ -32,3 +32,4 @@
 - Wikimedia REST API를 호출할 때는 요청 헤더에 User-Agent를 넣고 URL에 granularity=daily를 붙여야 404 오류 없이 데이터를 받을 수 있으며, 31일치 데이터를 모아 평균 일일 조회수 20,858회를 산출할 수 있다. (위키백과 페이지 뷰 데이터 분석 실험)
 - 터미널 그래프를 그릴 때는 plotext의 `plt.line(x, y)`로 x·y 리스트를 순서대로 넘기고, `plt.show()`가 없으면 `plt.save(path)`나 `plt.build()`로 출력하며, 데이터는 최소 100개 이상 준비해 가시성을 확보한다. (소수 분포와 소수 간격 실험)
 - 벤치마크 4개를 돌릴 때는 pyperformance로 실행하고 결과를 JSON에 저장한 뒤 matplotlib로 시각화하며, 인수·권한·KeyError 오류는 실행 전 인수와 파일 권한, JSON 키를 먼저 확인하면 3번의 실패를 줄일 수 있다. (파이썬 성능 벤치마크 실험)
+- ICMP가 차단된 환경에서는 ping/mtr 대신 curl로 HTTPS 접속을 테스트하고(5개 사이트 모두 응답, 예: 구글 0.115초), 대역폭 측정은 speedtest-cli(다운로드 287.39 Mbit/s)나 iperf3를 사용하라. (인터넷 속도와 웹 접속 실험)
