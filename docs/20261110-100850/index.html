@@ -1,0 +1,864 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>소수 분포와 소수 간격 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>소수 분포와 소수 간격 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 30번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>주제: plotext로 터미널 그래프 그리기(첫 100개 소수 시각화)<br><br>지금까지 한 일:<br>- plotext 라이브러리 API 탐색(label, line, signal, figure 메서드 등)<br>- experiment.py 작성 및 반복 수정<br>- 최종 실행 성공: 터미널에 그래프 출력, `~/ws/out/primes.png` 저장됨(46,046 바이트)<br><br>막혔던 점:<br>- `plt.line()` 인자 오류(TypeError), `plt.show()` 없음(AttributeError) 등으로 초기 실행 실패(종료코드 1)<br><br>현재 상태:<br>- 막힌 점 없음. 실험 완료, 결과 이미지 생성됨.</p><img src="out/primes.png">
+<h2>결과 파일</h2><ul><li><a href="out/primes.png">primes.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting python experiment ubuntu terminal visualization</summary><pre></pre><pre>1. Visualizing Data in the Terminal: A Simple Guide to Building a ...
+https://dev.to/timilehin-olusegun/visualizing-data-in-the-terminal-a-simple-guide-to-building-a-customized-data-visualization-tool-47lb
+By using Python and libraries such as Plotext, you can quickly and easily create powerful visualizations that help you make data-driven decisions. Whether you&#x27;re tracking user growth or analyzing sales data, a terminal -based visualization tool can help you streamline your analysis and make sense of complex data.
+
+2. Draw Graphs in Linux Terminal with Termgraph [Guide]
+https://computingforgeeks.com/draw-graphs-terminal-linux/
+Termgraph is a Python command-line tool that draws basic graphs directly in the terminal . It reads data from CSV files and renders horizontal bar charts, stacked charts, and multi-variable comparisons using Unicode block characters. This is useful when you need quick data visualization during SSH sessions, inside shell scripts, or as part of CI/CD pipeline output - no GUI or browser required ...
+
+3. How to Create Stunning Graphs in the Terminal with Python
+https://medium.com/@SrvZ/how-to-create-stunning-graphs-in-the-terminal-with-python-2adf9d012131
+Whether we&#x27;re working remotely, on a server, or just need to share a quick visualization with a colleague, the ability to plot graphs in the terminal can be incredibly useful.
+
+4. Python - Data visualization Tutorial - GeeksforGeeks
+https://www.geeksforgeeks.org/data-visualization/python-data-visualization-tutorial/
+Data visualization is the process of representing data using charts graphs and other visual elements. Python provides several libraries that make it easier to explore data identify patterns and communicate insights effectively.
+
+5. Self-Hosted Terminal Data Visualization Tools: termgraph vs gnuplot vs ...
+https://www.pistack.xyz/posts/2026-06-17-terminal-data-visualization/
+Running visualization tools locally or on your own infrastructure gives you complete control over your data pipeline. Unlike SaaS analytics platforms that require uploading sensitive metrics to external servers, terminal -based tools process everything in-memory or on local files.
+
+6. GitHub - piccolomo/plotext: plotting on terminal
+https://github.com/piccolomo/plotext
+Terminal : read its size, clear it, and catch a key press without waiting. Tools: test data, a file toolkit, a command line tool drawing a plot with no Python written, pretty docstrings browsable in a menu, and recipes for other packages. Here is the link of the main documentation: plotext.readthedocs.io. This project is under active development.
+
+7. GitHub - mkaz/termgraph: A Python command-line and library that draws ...
+https://github.com/mkaz/termgraph
+A command-line tool and Python library that draws basic graphs in the terminal . Graph types supported: Bar Graphs Color charts Multi-variable Stacked charts Histograms Horizontal or Vertical Calendar heatmaps Emoji!
+
+8. python - How to plot a chart in the terminal - Stack Overflow
+https://stackoverflow.com/questions/37288421/how-to-plot-a-chart-in-the-terminal
+It is possible to plot raster images in terminals and terminal emulators: ... This particular example uses matplotlib-sixel, a library that uses Xterm emulating a Sixel compatible terminal and ImageTrick. Similar technology could be implemented in the Linux terminal (through the Framebuffer) or emulators (kitty or iTerm2).</pre></details><details><summary>[2] shell pip install plotext matplotlib</summary><pre></pre><pre>[종료코드 0]
+Collecting plotext
+  Downloading plotext-6.1.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.9 kB)
+Collecting matplotlib
+  Downloading matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+Collecting contourpy&gt;=1.0.1 (from matplotlib)
+  Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting cycler&gt;=0.10 (from matplotlib)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools&gt;=4.28.2 (from matplotlib)
+  Downloading fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+Collecting kiwisolver&gt;=1.3.1 (from matplotlib)
+  Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+Collecting numpy&gt;=1.25 (from matplotlib)
+  Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting packaging&gt;=20.0 (from matplotlib)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow&gt;=9 (from matplotlib)
+  Downloading pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting pyparsing&gt;=3 (from matplotlib)
+  Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting python-dateutil&gt;=2.7 (from matplotlib)
+  Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting tzdata (from python-dateutil&gt;=2.7-&gt;matplotlib)
+  Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Downloading plotext-6.1.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (475 kB)
+Downloading matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 22.1 MB/s  0:00:00
+Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (383 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 47.4 MB/s  0:00:00
+Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 62.5 MB/s  0:00:00
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 66.1 MB/s  0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 88.3 MB/s  0:00:00
+Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: tzdata, pyparsing, plotext, pillow, packaging, numpy, kiwisolver, fonttools, cycler, python-dateutil, contourpy, matplotlib
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pillow-13.0.0 plotext-6.1.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[3] shell mkdir -p ~/ws/out &amp;&amp; cat &gt; ~/ws/experiment.py &lt;&lt; &#x27;EOF&#x27;</summary><pre></pre><pre>[종료코드 0]
+bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted `EOF&#x27;)
+</pre></details><details><summary>[4] write experiment.py</summary><pre>import plotext as plt
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt2
+import os
+
+def first_primes(n):
+    res = []
+    x = 2
+    while len(res) &lt; n:
+        is_p = True
+        for p in res:
+            if p * p &gt; x:
+                break
+            if x % p == 0:
+                is_p = False
+                break
+        if is_p:
+            res.append(x)
+        x += 1
+    return res
+
+p = first_primes(100)
+gaps = [p[i+1] - p[i] for i in range(len(p)-1)]
+
+# Terminal visualization with plotext
+plt.clf()
+plt.title(&quot;First 100 Prime Numbers&quot;)
+plt.plot(p, marker=&#x27;dot&#x27;)
+plt.xlabel(&quot;Index&quot;)
+plt.ylabel(&quot;Prime&quot;)
+plt.show()
+
+plt.clf()
+plt.title(&quot;Prime Gaps&quot;)
+plt.bar(gaps)
+plt.xlabel(&quot;Index&quot;)
+plt.ylabel(&quot;Gap&quot;)
+plt.show()
+
+# Save PNG with matplotlib
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+fig, axs = plt2.subplots(1, 2, figsize=(10, 4))
+axs[0].plot(p, marker=&#x27;o&#x27;, markersize=3)
+axs[0].set_title(&quot;First 100 Prime Numbers&quot;)
+axs[0].set_xlabel(&quot;Index&quot;)
+axs[0].set_ylabel(&quot;Prime&quot;)
+axs[1].bar(range(len(gaps)), gaps)
+axs[1].set_title(&quot;Prime Gaps&quot;)
+axs[1].set_xlabel(&quot;Index&quot;)
+axs[1].set_ylabel(&quot;Gap&quot;)
+fig.tight_layout()
+fig.savefig(&#x27;out/primes.png&#x27;, dpi=150)
+print(&quot;Saved out/primes.png&quot;)</pre><pre>저장함: experiment.py (1201자)</pre></details><details><summary>[5] shell cd ~/ws &amp;&amp; python3 experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 27, in &lt;module&gt;
+    plt.clf()
+    ^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;clf&#x27;
+</pre></details><details><summary>[6] write experiment.py</summary><pre>import plotext as plt
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt2
+import os
+
+def first_primes(n):
+    res = []
+    x = 2
+    while len(res) &lt; n:
+        is_p = True
+        for p in res:
+            if p * p &gt; x:
+                break
+            if x % p == 0:
+                is_p = False
+                break
+        if is_p:
+            res.append(x)
+        x += 1
+    return res
+
+p = first_primes(100)
+gaps = [p[i+1] - p[i] for i in range(len(p)-1)]
+
+# Terminal visualization with plotext
+try:
+    plt.clear()
+except Exception:
+    pass
+plt.title(&quot;First 100 Prime Numbers&quot;)
+plt.plot(p, marker=&#x27;dot&#x27;)
+plt.xlabel(&quot;Index&quot;)
+plt.ylabel(&quot;Prime&quot;)
+plt.show()
+
+try:
+    plt.clear()
+except Exception:
+    pass
+plt.title(&quot;Prime Gaps&quot;)
+plt.bar(gaps)
+plt.xlabel(&quot;Index&quot;)
+plt.ylabel(&quot;Gap&quot;)
+plt.show()
+
+# Save PNG with matplotlib
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+fig, axs = plt2.subplots(1, 2, figsize=(10, 4))
+axs[0].plot(p, marker=&#x27;o&#x27;, markersize=3)
+axs[0].set_title(&quot;First 100 Prime Numbers&quot;)
+axs[0].set_xlabel(&quot;Index&quot;)
+axs[0].set_ylabel(&quot;Prime&quot;)
+axs[1].bar(range(len(gaps)), gaps)
+axs[1].set_title(&quot;Prime Gaps&quot;)
+axs[1].set_xlabel(&quot;Index&quot;)
+axs[1].set_ylabel(&quot;Gap&quot;)
+fig.tight_layout()
+fig.savefig(&#x27;out/primes.png&#x27;, dpi=150)
+print(&quot;Saved out/primes.png&quot;)
+print(&quot;Max prime:&quot;, p[-1])
+print(&quot;Max gap:&quot;, max(gaps), &quot;at index&quot;, gaps.index(max(gaps)))</pre><pre>저장함: experiment.py (1368자)</pre></details><details><summary>[7] shell cd ~/ws &amp;&amp; python3 experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 31, in &lt;module&gt;
+    plt.title(&quot;First 100 Prime Numbers&quot;)
+    ^^^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;title&#x27;. Did you mean: &#x27;file&#x27;?
+</pre></details><details><summary>[8] shell python3 -c &quot;import plotext as plt; print([x for x in dir(plt) if not x.startswith(&#x27;_&#x27;)])&quot;</summary><pre></pre><pre>[종료코드 0]
+[&#x27;add_theme&#x27;, &#x27;colorize&#x27;, &#x27;colors&#x27;, &#x27;doc&#x27;, &#x27;effect&#x27;, &#x27;figure&#x27;, &#x27;file&#x27;, &#x27;gif&#x27;, &#x27;image&#x27;, &#x27;line&#x27;, &#x27;line_styles&#x27;, &#x27;marker&#x27;, &#x27;markers&#x27;, &#x27;matplotlib&#x27;, &#x27;matrix&#x27;, &#x27;noise&#x27;, &#x27;pixel&#x27;, &#x27;platform&#x27;, &#x27;prettydoc&#x27;, &#x27;sample&#x27;, &#x27;sin&#x27;, &#x27;sleep&#x27;, &#x27;square&#x27;, &#x27;styles&#x27;, &#x27;terminal&#x27;, &#x27;test&#x27;, &#x27;themes&#x27;, &#x27;uncolorize&#x27;, &#x27;version&#x27;, &#x27;video&#x27;]
+</pre></details><details><summary>[9] write experiment.py</summary><pre>import plotext as plt
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt2
+import os
+
+def first_primes(n):
+    res = []
+    x = 2
+    while len(res) &lt; n:
+        is_p = True
+        for p in res:
+            if p * p &gt; x:
+                break
+            if x % p == 0:
+                is_p = False
+                break
+        if is_p:
+            res.append(x)
+        x += 1
+    return res
+
+p = first_primes(100)
+gaps = [p[i+1] - p[i] for i in range(len(p)-1)]
+
+# Terminal visualization with plotext (v6 API)
+plt.figure(title=&quot;First 100 Prime Numbers&quot;, xlabel=&quot;Index&quot;, ylabel=&quot;Prime&quot;)
+plt.line(p, marker=&#x27;dot&#x27;)
+plt.show()
+
+plt.figure(title=&quot;Prime Gaps&quot;, xlabel=&quot;Index&quot;, ylabel=&quot;Gap&quot;)
+plt.bar(gaps)
+plt.show()
+
+# Save PNG with matplotlib
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+fig, axs = plt2.subplots(1, 2, figsize=(10, 4))
+axs[0].plot(p, marker=&#x27;o&#x27;, markersize=3)
+axs[0].set_title(&quot;First 100 Prime Numbers&quot;)
+axs[0].set_xlabel(&quot;Index&quot;)
+axs[0].set_ylabel(&quot;Prime&quot;)
+axs[1].bar(range(len(gaps)), gaps)
+axs[1].set_title(&quot;Prime Gaps&quot;)
+axs[1].set_xlabel(&quot;Index&quot;)
+axs[1].set_ylabel(&quot;Gap&quot;)
+fig.tight_layout()
+fig.savefig(&#x27;out/primes.png&#x27;, dpi=150)
+print(&quot;Saved out/primes.png&quot;)
+print(&quot;Max prime:&quot;, p[-1])
+print(&quot;Max gap:&quot;, max(gaps), &quot;at index&quot;, gaps.index(max(gaps)))</pre><pre>저장함: experiment.py (1279자)</pre></details><details><summary>[10] shell cd ~/ws &amp;&amp; python3 experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 27, in &lt;module&gt;
+    plt.figure(title=&quot;First 100 Prime Numbers&quot;, xlabel=&quot;Index&quot;, ylabel=&quot;Prime&quot;)
+TypeError: &#x27;plot_class&#x27; object is not callable
+</pre></details><details><summary>[11] shell python3 -c &quot;import plotext as plt; help(plt.figure); print(&#x27;---&#x27;); help(plt.line)&quot;</summary><pre></pre><pre>[종료코드 0]
+Help on plot_class in module plotext._plotter.plot:
+
+Master(height 22, width 80, id b320)
+    Accesses the master figure: the plot object on which every drawing and dressing method is called. This is an attribute. Its methods create the signals to plot (signal, bar, hist, box, candlestick, error, event, heatmap, cmatrix, rectangle, polygon, segment, line, text, image), draw and render them (draw, show, build), dress it up (title, label, axes, canvas, legend), divide the figure into subplots (subplots, subplot, plot_size), configure its look (theme, interactive), reach its components (clear, ruler, date) and inspect its state (size, position, master, parent, time, log). The subplots, returned by its subplot() method, offer the same methods.
+
+    Source: plotext
+
+    Returns: the master figure.
+    type: a plotext figure object
+
+---
+Help on class line in module plotext._primitives.box:
+
+class line(box_class)
+ |  line(orientation=0, pixel=PlotextPixel(), style=&#x27;default&#x27;, _pointer=None)
+ |
+ |  Creates a line marker: a single character drawn as a horizontal or vertical line, matching the plot axes styles. Useful as a signal marker to draw straight lines across the canvas.
+ |
+ |  Source: plotext
+ |
+ |  These are its parameters:
+ |
+ |  orientation: line orientation: 0 for horizontal, 1 for vertical.
+ |  type: an integer
+ |  default: 0
+ |
+ |  pixel: pixel that determines the line color and style.
+ |  type: a plotext.pixel object, a foreground string or integer, a tuple specifying (foreground, background, style), or an (r, g, b) integer triple used as foreground alone
+ |
+ |  style: line style. Use plotext.line_styles() for a preview of the available styles.
+ |  type: the strings default, double, heavy or dotted
+ |  default: &#x27;default&#x27;
+ |
+ |  Returns: a line object.
+ |  type: a plotext line object
+ |
+ |  Method resolution order:
+ |      line
+ |      box_class
+ |      builtins.object
+ |
+ |  Methods defined here:
+ |
+ |  __init__(self, orientation=0, pixel=PlotextPixel(), style=&#x27;default&#x27;, _pointer=None)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |
+ |  doc lambda *instance from plotext.prettydoc._primitives.function.function_class._update.&lt;locals&gt;
+ |
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from box_class:
+ |
+ |  __copy__(self)
+ |
+ |  __del__(self)
+ |      # Release the C marker pointer on deletion
+ |
+ |  __repr__(self)
+ |      Return repr(self).
+ |
+ |  copy(self)
+ |      # Deep copy
+ |
+ |  get_orientation(self)
+ |      # Orientation heuristic from the C kernel: 0 = horizontal, 1 = any vertical-arm
+ |
+ |  get_style(self)
+ |      # Style index (0..4 → default/double/heavy/dotted/rounded)
+ |
+ |  pixel(self)
+ |      # Pixel associated with the line
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from box_class:
+ |
+ |  __dict__
+ |      dictionary for instance variables
+ |
+ |  __weakref__
+ |      list of weak references to the object
+
+</pre></details><details><summary>[12] write experiment.py</summary><pre>import plotext as plt
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt2
+import os
+
+def first_primes(n):
+    res = []
+    x = 2
+    while len(res) &lt; n:
+        is_p = True
+        for p in res:
+            if p * p &gt; x:
+                break
+            if x % p == 0:
+                is_p = False
+                break
+        if is_p:
+            res.append(x)
+        x += 1
+    return res
+
+p = first_primes(100)
+gaps = [p[i+1] - p[i] for i in range(len(p)-1)]
+
+# Terminal visualization with plotext (v6 API)
+plt.figure.title(&quot;First 100 Prime Numbers&quot;)
+plt.figure.xlabel(&quot;Index&quot;)
+plt.figure.ylabel(&quot;Prime&quot;)
+plt.line(p, marker=&#x27;dot&#x27;)
+plt.show()
+
+plt.figure.clear()
+plt.figure.title(&quot;Prime Gaps&quot;)
+plt.figure.xlabel(&quot;Index&quot;)
+plt.figure.ylabel(&quot;Gap&quot;)
+plt.bar(gaps)
+plt.show()
+
+# Save PNG with matplotlib
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+fig, axs = plt2.subplots(1, 2, figsize=(10, 4))
+axs[0].plot(p, marker=&#x27;o&#x27;, markersize=3)
+axs[0].set_title(&quot;First 100 Prime Numbers&quot;)
+axs[0].set_xlabel(&quot;Index&quot;)
+axs[0].set_ylabel(&quot;Prime&quot;)
+axs[1].bar(range(len(gaps)), gaps)
+axs[1].set_title(&quot;Prime Gaps&quot;)
+axs[1].set_xlabel(&quot;Index&quot;)
+axs[1].set_ylabel(&quot;Gap&quot;)
+fig.tight_layout()
+fig.savefig(&#x27;out/primes.png&#x27;, dpi=150)
+print(&quot;Saved out/primes.png&quot;)
+print(&quot;Max prime:&quot;, p[-1])
+print(&quot;Max gap:&quot;, max(gaps), &quot;at index&quot;, gaps.index(max(gaps)))</pre><pre>저장함: experiment.py (1342자)</pre></details><details><summary>[13] shell cd ~/ws &amp;&amp; python3 experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 28, in &lt;module&gt;
+    plt.figure.xlabel(&quot;Index&quot;)
+    ^^^^^^^^^^^^^^^^^
+AttributeError: &#x27;plot_class&#x27; object has no attribute &#x27;xlabel&#x27;. Did you mean: &#x27;label&#x27;?
+</pre></details><details><summary>[14] write experiment.py</summary><pre>import plotext as plt
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt2
+import os
+
+def first_primes(n):
+    res = []
+    x = 2
+    while len(res) &lt; n:
+        is_p = True
+        for p in res:
+            if p * p &gt; x:
+                break
+            if x % p == 0:
+                is_p = False
+                break
+        if is_p:
+            res.append(x)
+        x += 1
+    return res
+
+p = first_primes(100)
+gaps = [p[i+1] - p[i] for i in range(len(p)-1)]
+
+# Terminal visualization with plotext (v6 API)
+plt.figure.title(&quot;First 100 Prime Numbers&quot;)
+plt.figure.label(x=&quot;Index&quot;, y=&quot;Prime&quot;)
+plt.line(p, marker=&#x27;dot&#x27;)
+plt.show()
+
+plt.figure.clear()
+plt.figure.title(&quot;Prime Gaps&quot;)
+plt.figure.label(x=&quot;Index&quot;, y=&quot;Gap&quot;)
+plt.bar(gaps)
+plt.show()
+
+# Save PNG with matplotlib
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+fig, axs = plt2.subplots(1, 2, figsize=(10, 4))
+axs[0].plot(p, marker=&#x27;o&#x27;, markersize=3)
+axs[0].set_title(&quot;First 100 Prime Numbers&quot;)
+axs[0].set_xlabel(&quot;Index&quot;)
+axs[0].set_ylabel(&quot;Prime&quot;)
+axs[1].bar(range(len(gaps)), gaps)
+axs[1].set_title(&quot;Prime Gaps&quot;)
+axs[1].set_xlabel(&quot;Index&quot;)
+axs[1].set_ylabel(&quot;Gap&quot;)
+fig.tight_layout()
+fig.savefig(&#x27;out/primes.png&#x27;, dpi=150)
+print(&quot;Saved out/primes.png&quot;)
+print(&quot;Max prime:&quot;, p[-1])
+print(&quot;Max gap:&quot;, max(gaps), &quot;at index&quot;, gaps.index(max(gaps)))</pre><pre>저장함: experiment.py (1312자)</pre></details><details><summary>[15] shell cd ~/ws &amp;&amp; python3 experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 28, in &lt;module&gt;
+    plt.figure.label(x=&quot;Index&quot;, y=&quot;Prime&quot;)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/plotext/_plotter/utils/interactive.py&quot;, line 35, in run_method
+    result = method(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: plot_class.label() got an unexpected keyword argument &#x27;x&#x27;
+</pre></details><details><summary>[16] shell python3 -c &quot;import plotext as plt; help(plt.figure.label)&quot;</summary><pre></pre><pre>[종료코드 0]
+Help on method label in module plotext._plotter.plot:
+
+label(label=None, axis=None, side=None) method of plotext._plotter.plot.plot_class instance
+    Sets the label of the selected axis and axis side.
+
+    Source: plotext.figure, plotext.figure.subplot()
+
+    These are its parameters:
+
+    label: the axis label.
+    type: a string, a plotext.colorize object, or a plotext.matrix object
+
+    axis: axis to access: x, y, or both.
+    type: the strings x or y, or the integers 0 or 1; a list of the two axes, or the word both, is also allowed
+    default: &#x27;x&#x27;
+
+    side: axis side to access.
+    type: the strings lower or upper for the x axis, left or right for the y axis, or the integers 0 or 1; a list of the two sides, or the word both, is also allowed
+    default: 0
+
+    Returns: the figure itself.
+    type: a plotext figure object
+
+</pre></details><details><summary>[17] write experiment.py</summary><pre>import plotext as plt
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt2
+import os
+
+def first_primes(n):
+    res = []
+    x = 2
+    while len(res) &lt; n:
+        is_p = True
+        for p in res:
+            if p * p &gt; x:
+                break
+            if x % p == 0:
+                is_p = False
+                break
+        if is_p:
+            res.append(x)
+        x += 1
+    return res
+
+p = first_primes(100)
+gaps = [p[i+1] - p[i] for i in range(len(p)-1)]
+
+# Terminal visualization with plotext (v6 API)
+plt.figure.title(&quot;First 100 Prime Numbers&quot;)
+plt.figure.label(label=&quot;Index&quot;, axis=&quot;x&quot;)
+plt.figure.label(label=&quot;Prime&quot;, axis=&quot;y&quot;)
+plt.line(p, marker=&#x27;dot&#x27;)
+plt.show()
+
+plt.figure.clear()
+plt.figure.title(&quot;Prime Gaps&quot;)
+plt.figure.label(label=&quot;Index&quot;, axis=&quot;x&quot;)
+plt.figure.label(label=&quot;Gap&quot;, axis=&quot;y&quot;)
+plt.bar(gaps)
+plt.show()
+
+# Save PNG with matplotlib
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+fig, axs = plt2.subplots(1, 2, figsize=(10, 4))
+axs[0].plot(p, marker=&#x27;o&#x27;, markersize=3)
+axs[0].set_title(&quot;First 100 Prime Numbers&quot;)
+axs[0].set_xlabel(&quot;Index&quot;)
+axs[0].set_ylabel(&quot;Prime&quot;)
+axs[1].bar(range(len(gaps)), gaps)
+axs[1].set_title(&quot;Prime Gaps&quot;)
+axs[1].set_xlabel(&quot;Index&quot;)
+axs[1].set_ylabel(&quot;Gap&quot;)
+fig.tight_layout()
+fig.savefig(&#x27;out/primes.png&#x27;, dpi=150)
+print(&quot;Saved out/primes.png&quot;)
+print(&quot;Max prime:&quot;, p[-1])
+print(&quot;Max gap:&quot;, max(gaps), &quot;at index&quot;, gaps.index(max(gaps)))</pre><pre>저장함: experiment.py (1402자)</pre></details><details><summary>[18] shell cd ~/ws &amp;&amp; python3 experiment.py</summary><pre></pre><pre>[종료코드 1]
+Exception ignored in: &lt;function box_class.__del__ at 0x7f7a15b9b240&gt;
+Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/plotext/_primitives/box.py&quot;, line 21, in __del__
+    if self._pointer is not None:
+       ^^^^^^^^^^^^^
+AttributeError: &#x27;line&#x27; object has no attribute &#x27;_pointer&#x27;
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 30, in &lt;module&gt;
+    plt.line(p, marker=&#x27;dot&#x27;)
+TypeError: line.__init__() got an unexpected keyword argument &#x27;marker&#x27;
+</pre></details><details><summary>[19] shell python3 -c &quot;import plotext as plt; help(plt.line)&quot;</summary><pre></pre><pre>[종료코드 0]
+Help on class line in module plotext._primitives.box:
+
+class line(box_class)
+ |  line(orientation=0, pixel=PlotextPixel(), style=&#x27;default&#x27;, _pointer=None)
+ |
+ |  Creates a line marker: a single character drawn as a horizontal or vertical line, matching the plot axes styles. Useful as a signal marker to draw straight lines across the canvas.
+ |
+ |  Source: plotext
+ |
+ |  These are its parameters:
+ |
+ |  orientation: line orientation: 0 for horizontal, 1 for vertical.
+ |  type: an integer
+ |  default: 0
+ |
+ |  pixel: pixel that determines the line color and style.
+ |  type: a plotext.pixel object, a foreground string or integer, a tuple specifying (foreground, background, style), or an (r, g, b) integer triple used as foreground alone
+ |
+ |  style: line style. Use plotext.line_styles() for a preview of the available styles.
+ |  type: the strings default, double, heavy or dotted
+ |  default: &#x27;default&#x27;
+ |
+ |  Returns: a line object.
+ |  type: a plotext line object
+ |
+ |  Method resolution order:
+ |      line
+ |      box_class
+ |      builtins.object
+ |
+ |  Methods defined here:
+ |
+ |  __init__(self, orientation=0, pixel=PlotextPixel(), style=&#x27;default&#x27;, _pointer=None)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |
+ |  doc lambda *instance from plotext.prettydoc._primitives.function.function_class._update.&lt;locals&gt;
+ |
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from box_class:
+ |
+ |  __copy__(self)
+ |
+ |  __del__(self)
+ |      # Release the C marker pointer on deletion
+ |
+ |  __repr__(self)
+ |      Return repr(self).
+ |
+ |  copy(self)
+ |      # Deep copy
+ |
+ |  get_orientation(self)
+ |      # Orientation heuristic from the C kernel: 0 = horizontal, 1 = any vertical-arm
+ |
+ |  get_style(self)
+ |      # Style index (0..4 → default/double/heavy/dotted/rounded)
+ |
+ |  pixel(self)
+ |      # Pixel associated with the line
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from box_class:
+ |
+ |  __dict__
+ |      dictionary for instance variables
+ |
+ |  __weakref__
+ |      list of weak references to the object
+
+</pre></details><details><summary>[20] shell python3 -c &quot;import plotext as plt; help(plt.figure.plot); print(&#x27;---&#x27;); help(plt.figure.bar)&quot;</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+AttributeError: &#x27;plot_class&#x27; object has no attribute &#x27;plot&#x27;. Did you mean: &#x27;_plot&#x27;?
+</pre></details><details><summary>[21] shell python3 -c &quot;import plotext as plt; help(plt.figure.line)&quot;</summary><pre></pre><pre>[종료코드 0]
+Help on method line in module plotext._plotter.draw:
+
+line(position, orientation=0, relative=True, pixel=None, style=None, label=None, xside=None, yside=None) method of plotext._plotter.plot.plot_class instance
+    Adds a horizontal or vertical line spanning the whole plot canvas at the given coordinate. The line is added directly to the plot&#x27;s draw sequence.
+
+    Source: plotext.figure, plotext.figure.subplot()
+
+    These are its parameters:
+
+    position: position of the line along the perpendicular axis: a y value when horizontal, an x value when vertical.
+    type: a numeric value or date; dates, once activated on the relevant axis via figure.date().activate(), may be provided as string, timestamp (int or float), or a Python/Pandas datetime object.
+
+    orientation: line orientation, either horizontal (or h) or vertical (or v).
+    type: the strings horizontal or vertical (short h, v), or the integers 0 or 1
+    default: &#x27;horizontal&#x27;
+
+    relative: measures position relative to the axis units and limits, otherwise in character cells.
+    type: a boolean value
+    default: True
+
+    pixel: pixel used to draw the line.
+    type: a plotext.pixel object, a foreground string or integer, a tuple specifying (foreground, background, style), or an (r, g, b) integer triple used as foreground alone
+    default: PlotextPixel()
+
+    style: line drawing style. Use plotext.line_styles() for a preview of the available styles.
+    type: the strings default, double, heavy or dotted
+    default: &#x27;default&#x27;
+
+    label: legend label for the line.
+    type: a string, a plotext.colorize object, or a plotext.matrix object
+
+    xside: which x axis to plot against.
+    type: the strings lower or upper, or the integers 0 or 1
+    default: &#x27;lower&#x27;
+
+    yside: which y axis to plot against.
+    type: the strings left or right, or the integers 0 or 1
+    default: &#x27;left&#x27;
+
+    Returns: the figure itself.
+    type: a plotext figure object
+
+</pre></details><details><summary>[22] shell python3 -c &quot;import plotext as plt; print([x for x in dir(plt.figure) if not x.startswith(&#x27;_&#x27;)])&quot;</summary><pre></pre><pre>[종료코드 0]
+[&#x27;axes&#x27;, &#x27;bar&#x27;, &#x27;box&#x27;, &#x27;build&#x27;, &#x27;candlestick&#x27;, &#x27;canvas&#x27;, &#x27;clear&#x27;, &#x27;cmatrix&#x27;, &#x27;date&#x27;, &#x27;doc&#x27;, &#x27;draw&#x27;, &#x27;error&#x27;, &#x27;event&#x27;, &#x27;heatmap&#x27;, &#x27;hist&#x27;, &#x27;image&#x27;, &#x27;interactive&#x27;, &#x27;label&#x27;, &#x27;legend&#x27;, &#x27;line&#x27;, &#x27;log&#x27;, &#x27;master&#x27;, &#x27;parent&#x27;, &#x27;plot_size&#x27;, &#x27;polygon&#x27;, &#x27;position&#x27;, &#x27;rectangle&#x27;, &#x27;ruler&#x27;, &#x27;segment&#x27;, &#x27;show&#x27;, &#x27;signal&#x27;, &#x27;size&#x27;, &#x27;subplot&#x27;, &#x27;subplots&#x27;, &#x27;text&#x27;, &#x27;theme&#x27;, &#x27;time&#x27;, &#x27;title&#x27;]
+</pre></details><details><summary>[23] shell python3 -c &quot;import plotext as plt; print([x for x in dir(plt) if &#x27;scatter&#x27; in x.lower() or &#x27;plot&#x27; in</summary><pre></pre><pre>[종료코드 0]
+[&#x27;_plotter&#x27;, &#x27;matplotlib&#x27;]
+no scatter
+</pre></details><details><summary>[24] shell python3 -c &quot;import plotext as plt; print([x for x in dir(plt) if not x.startswith(&#x27;_&#x27;)])&quot;</summary><pre></pre><pre>[종료코드 0]
+[&#x27;add_theme&#x27;, &#x27;colorize&#x27;, &#x27;colors&#x27;, &#x27;doc&#x27;, &#x27;effect&#x27;, &#x27;figure&#x27;, &#x27;file&#x27;, &#x27;gif&#x27;, &#x27;image&#x27;, &#x27;line&#x27;, &#x27;line_styles&#x27;, &#x27;marker&#x27;, &#x27;markers&#x27;, &#x27;matplotlib&#x27;, &#x27;matrix&#x27;, &#x27;noise&#x27;, &#x27;pixel&#x27;, &#x27;platform&#x27;, &#x27;prettydoc&#x27;, &#x27;sample&#x27;, &#x27;sin&#x27;, &#x27;sleep&#x27;, &#x27;square&#x27;, &#x27;styles&#x27;, &#x27;terminal&#x27;, &#x27;test&#x27;, &#x27;themes&#x27;, &#x27;uncolorize&#x27;, &#x27;version&#x27;, &#x27;video&#x27;]
+</pre></details><details><summary>[25] shell python3 -c &quot;import plotext as plt; help(plt.figure.signal)&quot;</summary><pre></pre><pre>[종료코드 0]
+Help on method signal in module plotext._plotter.plot:
+
+signal(*args, marker=None, xside=None, yside=None) method of plotext._plotter.plot.plot_class instance
+    Creates a signal, a sequence of points to be plotted.
+
+    Source: plotext.figure, plotext.figure.subplot()
+
+    These are its parameters:
+
+    *args: input data: x, y coordinates, or a single y sequence, whose points are counted along x from 1 to their number; date values are also supported.
+    type: one or two sequences of numeric values or dates; dates, once activated on the relevant axis via figure.date().activate(), may be provided as string, timestamp (int or float), or a Python/Pandas datetime object.
+
+    marker: symbol used to represent each data point.
+    type: a single character, a code from plotext.markers(), a plotext.matrix or plotext.colorize for a multi-cell marker, a plotext.marker() object, or a list of any of these (one per point)
+    default: &#x27;hd&#x27;
+
+    xside: which x axis to plot against.
+    type: the strings lower or upper, or the integers 0 or 1
+    default: &#x27;lower&#x27;
+
+    yside: which y axis to plot against.
+    type: the strings left or right, or the integers 0 or 1
+    default: &#x27;left&#x27;
+
+    Returns: a signal object.
+    type: a plotext signal object
+
+</pre></details><details><summary>[26] write experiment.py</summary><pre>import plotext as plt
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt2
+import os
+
+def first_primes(n):
+    res = []
+    x = 2
+    while len(res) &lt; n:
+        is_p = True
+        for p in res:
+            if p * p &gt; x:
+                break
+            if x % p == 0:
+                is_p = False
+                break
+        if is_p:
+            res.append(x)
+        x += 1
+    return res
+
+p = first_primes(100)
+gaps = [p[i+1] - p[i] for i in range(len(p)-1)]
+
+# Terminal visualization with plotext (v6 API)
+plt.figure.title(&quot;First 100 Prime Numbers&quot;)
+plt.figure.label(label=&quot;Index&quot;, axis=&quot;x&quot;)
+plt.figure.label(label=&quot;Prime&quot;, axis=&quot;y&quot;)
+plt.figure.signal(p, marker=&#x27;dot&#x27;)
+plt.show()
+
+plt.figure.clear()
+plt.figure.title(&quot;Prime Gaps&quot;)
+plt.figure.label(label=&quot;Index&quot;, axis=&quot;x&quot;)
+plt.figure.label(label=&quot;Gap&quot;, axis=&quot;y&quot;)
+plt.figure.bar(gaps)
+plt.show()
+
+# Save PNG with matplotlib
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+fig, axs = plt2.subplots(1, 2, figsize=(10, 4))
+axs[0].plot(p, marker=&#x27;o&#x27;, markersize=3)
+axs[0].set_title(&quot;First 100 Prime Numbers&quot;)
+axs[0].set_xlabel(&quot;Index&quot;)
+axs[0].set_ylabel(&quot;Prime&quot;)
+axs[1].bar(range(len(gaps)), gaps)
+axs[1].set_title(&quot;Prime Gaps&quot;)
+axs[1].set_xlabel(&quot;Index&quot;)
+axs[1].set_ylabel(&quot;Gap&quot;)
+fig.tight_layout()
+fig.savefig(&#x27;out/primes.png&#x27;, dpi=150)
+print(&quot;Saved out/primes.png&quot;)
+print(&quot;Max prime:&quot;, p[-1])
+print(&quot;Max gap:&quot;, max(gaps), &quot;at index&quot;, gaps.index(max(gaps)))</pre><pre>저장함: experiment.py (1418자)</pre></details><details><summary>[27] shell cd ~/ws &amp;&amp; python3 experiment.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/experiment.py&quot;, line 31, in &lt;module&gt;
+    plt.show()
+    ^^^^^^^^
+AttributeError: module &#x27;plotext&#x27; has no attribute &#x27;show&#x27;
+</pre></details><details><summary>[28] write experiment.py</summary><pre>import plotext as plt
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt2
+import os
+
+def first_primes(n):
+    res = []
+    x = 2
+    while len(res) &lt; n:
+        is_p = True
+        for p in res:
+            if p * p &gt; x:
+                break
+            if x % p == 0:
+                is_p = False
+                break
+        if is_p:
+            res.append(x)
+        x += 1
+    return res
+
+p = first_primes(100)
+gaps = [p[i+1] - p[i] for i in range(len(p)-1)]
+
+# Terminal visualization with plotext (v6 API)
+plt.figure.title(&quot;First 100 Prime Numbers&quot;)
+plt.figure.label(label=&quot;Index&quot;, axis=&quot;x&quot;)
+plt.figure.label(label=&quot;Prime&quot;, axis=&quot;y&quot;)
+plt.figure.signal(p, marker=&#x27;dot&#x27;)
+plt.figure.show()
+
+plt.figure.clear()
+plt.figure.title(&quot;Prime Gaps&quot;)
+plt.figure.label(label=&quot;Index&quot;, axis=&quot;x&quot;)
+plt.figure.label(label=&quot;Gap&quot;, axis=&quot;y&quot;)
+plt.figure.bar(gaps)
+plt.figure.show()
+
+# Save PNG with matplotlib
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+fig, axs = plt2.subplots(1, 2, figsize=(10, 4))
+axs[0].plot(p, marker=&#x27;o&#x27;, markersize=3)
+axs[0].set_title(&quot;First 100 Prime Numbers&quot;)
+axs[0].set_xlabel(&quot;Index&quot;)
+axs[0].set_ylabel(&quot;Prime&quot;)
+axs[1].bar(range(len(gaps)), gaps)
+axs[1].set_title(&quot;Prime Gaps&quot;)
+axs[1].set_xlabel(&quot;Index&quot;)
+axs[1].set_ylabel(&quot;Gap&quot;)
+fig.tight_layout()
+fig.savefig(&#x27;out/primes.png&#x27;, dpi=150)
+print(&quot;Saved out/primes.png&quot;)
+print(&quot;Max prime:&quot;, p[-1])
+print(&quot;Max gap:&quot;, max(gaps), &quot;at index&quot;, gaps.index(max(gaps)))</pre><pre>저장함: experiment.py (1432자)</pre></details><details><summary>[29] shell cd ~/ws &amp;&amp; python3 experiment.py</summary><pre></pre><pre>[종료코드 0]
+[0m[38;5;12m[48;5;15m                             First 100 Prime Numbers                            [0m
+[0m[38;5;0m[48;5;15m┌──────────────────────────────────────────────────────────────────────────────┐[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5
+...(중략)...
+;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m│[0m[48;5;15m                                                                              [0m[38;5;0m[48;5;15m│[0m
+[0m[38;5;0m[48;5;15m└┬─┬─┬─┬─┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬───┘[0m
+[0m[38;5;12m[48;5;15m 1 3 6 8 11 15 19 22 26 30 34 38 42 45 49 53 57 61 65 68 72 76 80 84 87 91 95   [0m
+[0m[38;5;12m[48;5;15mGap                                   Index                                     [0m
+Saved out/primes.png
+Max prime: 541
+Max gap: 18 at index 98
+</pre></details><details><summary>[30] shell ls -la ~/ws/out/primes.png</summary><pre></pre><pre>[종료코드 0]
+-rw-r--r-- 1 runner runner 46046 Nov 10 01:10 /home/runner/ws/out/primes.png
+</pre></details></html>
