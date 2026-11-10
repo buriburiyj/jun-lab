@@ -1,0 +1,391 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>파이썬 성능 벤치마크 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>파이썬 성능 벤치마크 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 16번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>지금까지 `pyperformance`를 설치해 파이썬 벤치마크(`fannkuch`, `nbody`, `richards`, `deltablue`)를 여러 개 실행하고, 결과를 JSON으로 저장한 뒤 `matplotlib`로 그래프 이미지(`benchmark_results.png`)를 생성하는 것까지 완료했습니다.<br><br>과정에서 벤치마크 인수 오류, `matplotlib` 미설치, 파일 읽기 권한 오류, JSON 데이터 구조(`KeyError`) 오류로 몇 차례 실패했으나, 모두 수정해서 현재는 정상적으로 그래프 출력과 콘솔 결과 확인까지 성공한 상태입니다.</p><img src="out/benchmark_results.png">
+<h2>결과 파일</h2><ul><li><a href="out/benchmark_results.png">benchmark_results.png</a></li><li><a href="out/fannkuch.json">fannkuch.json</a></li><li><a href="out/multi.json">multi.json</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting linux system performance experiment python benchmark</summary><pre></pre><pre>1. GitHub - python/pyperformance: Python Performance Benchmark Suite · GitHub
+https://github.com/python/pyperformance
+The pyperformance project is intended to be an authoritative source of benchmarks for all Python implementations. The focus is on real-world benchmarks , rather than synthetic benchmarks , using whole applications when possible.
+
+2. Accurate benchmarking at scale - GitHub
+https://github.com/miraisolutions/benchmarking
+This project provides functionality to run reproducible and accurate benchmarks at scale and reliably through Python and Linux kernel tuning. You can make sure benchmark .sh is executable by running chmod +x benchmark .sh. The script modifies operating system settings to perform Linux kernel tuning in ...
+
+3. The Python Performance Benchmark Suite
+https://pyperformance.readthedocs.io/
+The Python Performance Benchmark Suite ¶ The pyperformance project is intended to be an authoritative source of benchmarks for all Python implementations. The focus is on real-world benchmarks , rather than synthetic benchmarks , using whole applications when possible. pyperformance documentation pyperformance GitHub project (source code, issues) Download pyperformance on PyPI pyperformance is ...
+
+4. PyPerformance Benchmark - OpenBenchmarking.org
+https://openbenchmarking.org/test/pts/pyperformance
+PyPerformance is the reference Python performance benchmark suite that can be used for comparing Python implementations or also benchmarking hardware/software performance . To run this test with the Phoronix Test Suite, the basic command is: phoronix-test-suite benchmark pyperformance.
+
+5. Benchmarks — Python Performance Benchmark Suite 1.14.0 documentation
+https://pyperformance.readthedocs.io/benchmarks.html
+Measure the performance of the python path/to/hg help command using pyperf.Runner.bench_command (), where python is sys.executable and path/to/hg is the Mercurial program installed in a virtual environmnent.
+
+6. Real-time latency benchmarking and test automation in a multi-process ...
+https://sites.coecis.cornell.edu/ece5725f25/ece5725-fall-2025-projects/embedded-linux-real-time-benchmarking-framework-comparing-inter-process-inter-thread-and-scheduling-latencies/
+This project demonstrates a complete embedded Linux real-time latency benchmarking framework that connects low-level C pipeline design with Python -based automation and analysis.
+
+7. Linux Benchmarking: A Comprehensive Guide — linuxvox.com
+https://linuxvox.com/blog/linux-benchmark/
+In the world of Linux systems , benchmarking plays a crucial role in evaluating the performance of hardware, software, and the overall system . By conducting benchmarks , system administrators, developers, and enthusiasts can measure how well a Linux system performs under different workloads, compare different configurations, and identify areas for improvement. This blog post aims to provide a ...
+
+8. 18 Best Free and Open Source Linux Benchmark Tools
+https://www.linuxlinks.com/BenchmarkTools/
+Benchmark software enables system testers and users to obtain an objective and independent way of assessing the performance of hardware.</pre></details><details><summary>[2] shell pip install pyperformance 2&gt;&amp;1 | tail -20</summary><pre></pre><pre>[종료코드 0]
+Collecting pyperformance
+  Downloading pyperformance-1.14.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting packaging (from pyperformance)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pyperf (from pyperformance)
+  Downloading pyperf-2.11.0-py3-none-any.whl.metadata (6.0 kB)
+Collecting psutil&gt;=5.9.0 (from pyperf-&gt;pyperformance)
+  Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
+Downloading pyperformance-1.14.0-py3-none-any.whl (9.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.1/9.1 MB 15.3 MB/s  0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pyperf-2.11.0-py3-none-any.whl (149 kB)
+Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+Installing collected packages: psutil, packaging, pyperf, pyperformance
+
+Successfully installed packaging-26.3 psutil-7.2.2 pyperf-2.11.0 pyperformance-1.14.0
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[3] shell pyperformance list 2&gt;&amp;1 | head -40</summary><pre></pre><pre>[종료코드 0]
+&#x27;&lt;default&gt;&#x27; benchmarks:
+- 2to3
+- argparse
+- argparse_subparsers
+- async_generators
+- async_tree
+- async_tree_cpu_io_mixed
+- async_tree_cpu_io_mixed_tg
+- async_tree_eager
+- async_tree_eager_cpu_io_mixed
+- async_tree_eager_cpu_io_mixed_tg
+- async_tree_eager_io
+- async_tree_eager_io_tg
+- async_tree_eager_memoization
+- async_tree_eager_memoization_tg
+- async_tree_eager_tg
+- async_tree_io
+- async_tree_io_tg
+- async_tree_memoization
+- async_tree_memoization_tg
+- async_tree_tg
+- asyncio_tcp
+- asyncio_tcp_ssl
+- asyncio_websockets
+- base64
+- bpe_tokeniser
+- chameleon
+- chaos
+- comprehensions
+- concurrent_imap
+- coroutines
+- coverage
+- crypto_pyaes
+- dask
+- deepcopy
+- deltablue
+- django_template
+- docutils
+- dulwich_log
+- fannkuch
+</pre></details><details><summary>[4] shell pyperformance run fannkuch 2&gt;&amp;1 | tail -30</summary><pre></pre><pre>[종료코드 0]
+usage: pyperformance [-h] [-V]
+                     {run,show,compare,list,list_groups,compile,compile_all,upload,venv}
+                     ...
+pyperformance: error: unrecognized arguments: fannkuch
+</pre></details><details><summary>[5] shell pyperformance run --help 2&gt;&amp;1</summary><pre></pre><pre>[종료코드 0]
+usage: pyperformance run [-h] [-r] [-f] [--debug-single-value] [-v] [-m]
+                         [--affinity CPU_LIST] [-o FILENAME]
+                         [--append FILENAME] [--min-time MIN_TIME]
+                         [--same-loops SAME_LOOPS] [--timeout TIMEOUT]
+                         [--hook perf_record, pystats, tachyon]
+                         [--warmups WARMUPS] [--manifest MANIFEST]
+                         [-b BM_LIST] [--inherit-environ VAR_LIST] [-p PYTHON]
+
+options:
+  -h, --help            show this help message and exit
+  -r, --rigorous        Spend longer running tests to get more accurate
+                        results
+  -f, --fast            Get rough answers quickly
+  --debug-single-value  Debug: fastest mode, only compute a single value
+  -v, --verbose         Print more output
+  -m, --track-memory    Track memory usage. This only works on Linux.
+  --affinity CPU_LIST   Specify CPU affinity for benchmark runs. This way,
+                        benchmarks can be forced to run on a given CPU to
+                        minimize run to run variation.
+  -o FILENAME, --output FILENAME
+                        Run the benchmarks on only one interpreter and write
+                        benchmark into FILENAME. Provide only baseline_python,
+                        not changed_python.
+  --append FILENAME     Add runs to an existing file, or create it if it
+                        doesn&#x27;t exist
+  --min-time MIN_TIME   Minimum duration in seconds of a single value, used to
+                        calibrate the number of loops
+  --same-loops SAME_LOOPS
+                        Use the same number of loops as a previous run (i.e.,
+                        don&#x27;t recalibrate). Should be a path to a .json file
+                        from a previous run.
+  --timeout TIMEOUT     Specify a timeout in seconds for a single benchmark
+                        run (default: disabled)
+  --hook perf_record, pystats, tachyon
+                        Apply the given pyperf hook(s) when running each
+                        benchmark
+  --warmups WARMUPS     number of skipped values per run used to warmup the
+                        benchmark
+  --manifest MANIFEST   benchmark manifest file to use
+  -b BM_LIST, --benchmarks BM_LIST
+                        Comma-separated list of benchmarks or groups to run.
+                        Can contain both positive and negative arguments:
+                        --benchmarks=run_this,also_this,-not_this. If there
+                        are no positive arguments, we&#x27;ll run all benchmarks
+                        except the negative arguments. Otherwise we run only
+                        the positive arguments.
+  --inherit-environ VAR_LIST
+                        Comma-separated list of environment variable names
+                        that are inherited from the parent environment when
+                        running benchmarking subprocesses.
+  -p PYTHON, --python PYTHON
+                        Python executable (default: use running Python)
+</pre></details><details><summary>[6] shell mkdir -p ~/ws/out &amp;&amp; cd ~/ws &amp;&amp; pyperformance run -f -b fannkuch -o out/fannkuch.json 2&gt;&amp;1 | tail -2</summary><pre></pre><pre>[종료코드 0]
+WARNING: the benchmark result may be unstable
+* Not enough samples to get a stable result (95% certainly of less than 1% variation)
+
+Try to rerun the benchmark with more runs, values and/or loops.
+Run &#x27;python -m pyperf system tune&#x27; command to reduce the system jitter.
+Use pyperf stats, pyperf dump and pyperf hist to analyze results.
+Use --quiet option to hide these warnings.
+
+fannkuch: Mean +- std dev: 500 ms +- 10 ms
+
+Performance version: 1.14.0
+Python version: 3.12.16 (64-bit)
+Report on Linux-7.0.0-1017-azure-x86_64-with-glibc2.39
+Number of logical CPUs: 4
+Start date: 2026-11-10 14:17:29.260035
+End date: 2026-11-10 14:17:47.328551
+
+### fannkuch ###
+Mean +- std dev: 500 ms +- 10 ms
+
+</pre></details><details><summary>[7] shell cd ~/ws &amp;&amp; pyperformance run -f -b fannkuch,nbody,richards,deltablue -o out/multi.json 2&gt;&amp;1 | tail -</summary><pre></pre><pre>[종료코드 0]
+Run &#x27;python -m pyperf system tune&#x27; command to reduce the system jitter.
+Use pyperf stats, pyperf dump and pyperf hist to analyze results.
+Use --quiet option to hide these warnings.
+
+richards: Mean +- std dev: 52.2 ms +- 1.5 ms
+
+Performance version: 1.14.0
+Python version: 3.12.16 (64-bit)
+Report on Linux-7.0.0-1017-azure-x86_64-with-glibc2.39
+Number of logical CPUs: 4
+Start date: 2026-11-10 14:17:55.259361
+End date: 2026-11-10 14:18:29.343296
+
+### deltablue ###
+Mean +- std dev: 3.91 ms +- 0.06 ms
+
+### fannkuch ###
+Mean +- std dev: 497 ms +- 6 ms
+
+### nbody ###
+Mean +- std dev: 121 ms +- 6 ms
+
+### richards ###
+Mean +- std dev: 52.2 ms +- 1.5 ms
+
+</pre></details><details><summary>[8] write ~/ws/make_graph.py</summary><pre>import json
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+with open(&#x27;/root/ws/out/multi.json&#x27;) as f:
+    data = json.load(f)
+
+benchmarks = data[&#x27;benchmarks&#x27;]
+names = []
+means = []
+errors = []
+
+for b in benchmarks:
+    names.append(b[&#x27;name&#x27;])
+    stats = b[&#x27;values&#x27;][0][&#x27;stats&#x27;] if &#x27;values&#x27; in b else b[&#x27;stats&#x27;]
+    means.append(stats[&#x27;mean&#x27;] / 1000.0)
+    errors.append(stats[&#x27;stddev&#x27;] / 1000.0)
+
+plt.figure(figsize=(8, 5))
+plt.bar(names, means, yerr=errors, capsize=5, color=&#x27;steelblue&#x27;, edgecolor=&#x27;black&#x27;)
+plt.ylabel(&#x27;Time (seconds)&#x27;)
+plt.title(&#x27;Python Benchmark Results (pyperformance, fast mode)&#x27;)
+plt.xticks(rotation=30, ha=&#x27;right&#x27;)
+plt.tight_layout()
+plt.savefig(&#x27;/root/ws/out/benchmark_results.png&#x27;, dpi=150)
+print(&#x27;Graph saved to /root/ws/out/benchmark_results.png&#x27;)
+for n, m, e in zip(names, means, errors):
+    print(f&#x27;{n}: {m:.3f} +/- {e:.3f} s&#x27;)
+</pre><pre>저장함: make_graph.py (885자)</pre></details><details><summary>[9] shell cd ~/ws &amp;&amp; python make_graph.py 2&gt;&amp;1</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/make_graph.py&quot;, line 2, in &lt;module&gt;
+    import matplotlib
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[10] shell pip install matplotlib 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[11] shell cd ~/ws &amp;&amp; python make_graph.py 2&gt;&amp;1</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/make_graph.py&quot;, line 6, in &lt;module&gt;
+    with open(&#x27;/root/ws/out/multi.json&#x27;) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: &#x27;/root/ws/out/multi.json&#x27;
+</pre></details><details><summary>[12] write ~/ws/make_graph.py</summary><pre>import json
+import os
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+ws = os.path.expanduser(&#x27;~/ws&#x27;)
+path = os.path.join(ws, &#x27;out&#x27;, &#x27;multi.json&#x27;)
+
+with open(path) as f:
+    data = json.load(f)
+
+benchmarks = data[&#x27;benchmarks&#x27;]
+names = []
+means = []
+errors = []
+
+for b in benchmarks:
+    names.append(b[&#x27;name&#x27;])
+    stats = b[&#x27;values&#x27;][0][&#x27;stats&#x27;] if &#x27;values&#x27; in b else b[&#x27;stats&#x27;]
+    means.append(stats[&#x27;mean&#x27;] / 1000.0)
+    errors.append(stats[&#x27;stddev&#x27;] / 1000.0)
+
+plt.figure(figsize=(8, 5))
+plt.bar(names, means, yerr=errors, capsize=5, color=&#x27;steelblue&#x27;, edgecolor=&#x27;black&#x27;)
+plt.ylabel(&#x27;Time (seconds)&#x27;)
+plt.title(&#x27;Python Benchmark Results (pyperformance, fast mode)&#x27;)
+plt.xticks(rotation=30, ha=&#x27;right&#x27;)
+plt.tight_layout()
+out = os.path.join(ws, &#x27;out&#x27;, &#x27;benchmark_results.png&#x27;)
+plt.savefig(out, dpi=150)
+print(&#x27;Graph saved to&#x27;, out)
+for n, m, e in zip(names, means, errors):
+    print(f&#x27;{n}: {m:.3f} +/- {e:.3f} s&#x27;)
+</pre><pre>저장함: make_graph.py (944자)</pre></details><details><summary>[13] shell cd ~/ws &amp;&amp; python make_graph.py 2&gt;&amp;1</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/make_graph.py&quot;, line 19, in &lt;module&gt;
+    names.append(b[&#x27;name&#x27;])
+                 ~^^^^^^^^
+KeyError: &#x27;name&#x27;
+</pre></details><details><summary>[14] shell cd ~/ws &amp;&amp; python -c &quot;import json; d=json.load(open(&#x27;out/multi.json&#x27;)); print(list(d.keys())); print</summary><pre></pre><pre>[종료코드 0]
+[&#x27;benchmarks&#x27;, &#x27;metadata&#x27;, &#x27;version&#x27;]
+&lt;class &#x27;list&#x27;&gt;
+{
+  &quot;metadata&quot;: {
+    &quot;description&quot;: &quot;DeltaBlue benchmark&quot;,
+    &quot;loops&quot;: 32,
+    &quot;name&quot;: &quot;deltablue&quot;,
+    &quot;tags&quot;: []
+  },
+  &quot;runs&quot;: [
+    {
+      &quot;metadata&quot;: {
+        &quot;calibrate_loops&quot;: 32,
+        &quot;cpu_freq&quot;: &quot;0=3237 MHz; 1=3232 MHz; 2=2868 MHz; 3=2445 MHz&quot;,
+        &quot;date&quot;: &quot;2026-11-10 14:17:55.259361&quot;,
+        &quot;duration&quot;: 0.501953548000003,
+        &quot;load_avg_1min&quot;: 0.57,
+        &quot;mem_max_rss&quot;: 23904256,
+        &quot;uptime&quot;: 109.26108169555664
+      },
+      &quot;warmups&quot;: [
+        [
+          1,
+          0.0038290899999964267
+        ],
+        [
+          2,
+          0.003722952499998655
+        ],
+        [
+          4,
+          0.003890409749999435
+        ],
+        [
+          8,
+          0.0038203704999997257
+        ],
+        [
+          16,
+          0.0037959882500002706
+        ],
+        [
+          32,
+          0.003897234281250217
+        ],
+        [
+          32,
+          0.003960275125000301
+        ],
+        [
+          32,
+          0.0038938576874998354
+        
+</pre></details><details><summary>[15] write ~/ws/make_graph.py</summary><pre>import json
+import os
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+ws = os.path.expanduser(&#x27;~/ws&#x27;)
+path = os.path.join(ws, &#x27;out&#x27;, &#x27;multi.json&#x27;)
+
+with open(path) as f:
+    data = json.load(f)
+
+benchmarks = data[&#x27;benchmarks&#x27;]
+names = []
+means = []
+errors = []
+
+for b in benchmarks:
+    names.append(b[&#x27;metadata&#x27;][&#x27;name&#x27;])
+    # Collect all run durations (in seconds)
+    durations = []
+    for run in b[&#x27;runs&#x27;]:
+        durations.append(run[&#x27;metadata&#x27;][&#x27;duration&#x27;])
+    import statistics
+    mean = statistics.mean(durations)
+    std = statistics.stdev(durations) if len(durations) &gt; 1 else 0.0
+    means.append(mean)
+    errors.append(std)
+
+plt.figure(figsize=(8, 5))
+plt.bar(names, means, yerr=errors, capsize=5, color=&#x27;steelblue&#x27;, edgecolor=&#x27;black&#x27;)
+plt.ylabel(&#x27;Time (seconds)&#x27;)
+plt.title(&#x27;Python Benchmark Results (pyperformance, fast mode)&#x27;)
+plt.xticks(rotation=30, ha=&#x27;right&#x27;)
+plt.tight_layout()
+out = os.path.join(ws, &#x27;out&#x27;, &#x27;benchmark_results.png&#x27;)
+plt.savefig(out, dpi=150)
+print(&#x27;Graph saved to&#x27;, out)
+for n, m, e in zip(names, means, errors):
+    print(f&#x27;{n}: {m:.3f} +/- {e:.3f} s&#x27;)
+</pre><pre>저장함: make_graph.py (1121자)</pre></details><details><summary>[16] shell cd ~/ws &amp;&amp; python make_graph.py 2&gt;&amp;1</summary><pre></pre><pre>[종료코드 0]
+Graph saved to /home/runner/ws/out/benchmark_results.png
+deltablue: 0.391 +/- 0.037 s
+fannkuch: 1.502 +/- 0.025 s
+nbody: 0.368 +/- 0.016 s
+richards: 0.328 +/- 0.019 s
+</pre></details></html>
