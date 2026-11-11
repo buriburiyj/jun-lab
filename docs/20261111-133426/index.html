@@ -1,0 +1,163 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>리눅스 터미널 재미있는 명령어 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>리눅스 터미널 재미있는 명령어 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 6번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 리눅스 터미널 재미있는 명령어를 검색해 cmatrix와 sl을 선택했다. Ubuntu에 두 패키지를 apt로 설치하고 각각 5초씩 실행해 화면 출력을 ~/ws/out/sl.log와 ~/ws/out/cmatrix.log에 저장했다. sl.log는 29KB, cmatrix.log는 108KB로 터미널 제어 코드를 포함한 출력이 정상적으로 저장된 것을 확인했다. 알게 된 점은 cmatrix는 매트릭스 영화 스타일의 녹색 문자 비를, sl은 증기 기관차 ASCII 애니메이션을 보여준다는 점이며, 로그 파일에는 이스케이프 시퀀스가 그대로 기록된다. 다음에는 cowsay나 fortune 같은 다른 터미널 장난 명령어를 추가로 설치해 비교 실험해 볼 수 있다.</p>
+<h2>결과 파일</h2><ul><li><a href="out/cmatrix.log">cmatrix.log</a></li><li><a href="out/sl.log">sl.log</a></li></ul><h2>작업 기록</h2><details><summary>[1] search fun linux terminal experiments ubuntu beginner</summary><pre></pre><pre>1. 13 Linux Commands to Have Some Fun in the Terminal
+https://itsfoss.com/funny-linux-commands/
+However, you will be surprised to know that there are tons of terminal based games and ASCII games that you can play in the terminal . And, in this article, I&#x27;m going to explore some interesting, some funny and some ridiculous commands that you can type into the terminal on Linux and have fun !
+
+2. Fun Commands in Linux - GeeksforGeeks
+https://www.geeksforgeeks.org/linux-unix/fun-commands-linux/
+Linux isn&#x27;t just for coding and administration—it can also be a lot of fun . With a variety of terminal commands, you can add some entertainment to your Linux experience. Below is a list of some cool and fun commands you can use in Linux to enhance your terminal experience. We&#x27;ll also cover how to install and use each one. 1.
+
+3. 17 Fun Linux Commands to Run in the Terminal - Make Tech Easier
+https://www.maketecheasier.com/fun-linux-commands/
+The terminal is a very powerful tool, and it can be a fun place to be, too. Here are some fun Linux commands to run in terminal to make it interesting.
+
+4. Useful and Fun things to do with the Ubuntu Terminal
+https://www.ubuntugeek.com/useful-and-fun-things-to-do-with-the-ubuntu-terminal.html
+If you want to have fun with ubuntu terminal this is for you Entertainment Watch Star Wars telnet towel.blinkenlights.nl Chat with a bot telnet the-funk.net 7000 Custom ascii text banner See how long your machine has been running uptime To see the arbitrary precision calculator (7^500 is interesting! That&#x27;s 7 to the 500th power) bc Must enter below code to use the next few sudo apt-get install ...
+
+5. Interesting Funny Commands in Linux - GeeksforGeeks
+https://www.geeksforgeeks.org/linux-unix/interesting-funny-commands-in-linux/
+This entire article is all about showing off cool commands executable in the Linux terminal . This article is aimed at being a one-stop destination for all cool or you can say interesting funny commands in Linux to play.
+
+6. 24 Hilarious Linux Commands That Will Make You Laugh - Tecmint
+https://www.tecmint.com/funny-linux-commands/
+Linux has a rich collection of commands for various tasks, there are also some funny and whimsical commands that you can try out for amusement.
+
+7. 5 hidden terminal surprises you can try on Ubuntu right now
+https://www.howtogeek.com/ubuntu-terminal-easter-eggs/
+If you&#x27;re trying to get into the terminal app on your Ubuntu computer, why not start with some lighthearted fun ? There are some command line Easter eggs that won&#x27;t do anything but entertain you, and I&#x27;ve gathered some of the best. Linux developers know that personal computers are supposed to be fun .
+
+8. 11 Fun Linux Command-Line Programs You Should Try When Bored
+https://www.thetechedvocate.org/11-fun-linux-command-line-programs-you-should-try-when-bored/
+Spread the loveAs a Linux user, there are times when you might find yourself with some free time on your hands and want to do something fun and exciting on the command line. Linux has a wealth of command-line utilities that can help kill time or even teach you something new. Here are 11 fun Linux command-line programs you should try when bored. 1. cmatrix cmatrix is a terminal emulator that ...</pre></details><details><summary>[2] shell apt update &amp;&amp; apt install -y cmatrix sl</summary><pre></pre><pre>[종료코드 100]
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)
+E: Unable to lock directory /var/lib/apt/lists/
+</pre></details><details><summary>[3] shell sudo apt update &amp;&amp; sudo apt install -y cmatrix sl</summary><pre></pre><pre>[종료코드 0]
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [690 kB]
+Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [12.6 kB]
+Get:9 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [760 kB]
+Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1444 kB]
+Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [315 kB]
+Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1711 kB]
+Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [344 kB]
+Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1879 kB]
+Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [429 kB]
+Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [50.7 kB]
+Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.3 kB]
+Get:18 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1160 kB]
+Get:19 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [234 kB]
+Get:20 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1228 kB]
+Get:21 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [248 kB]
+Get:22 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages
+...(중략)...
+le CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Suggested packages:
+  cmatrix-xfont
+The following NEW packages will be installed:
+  cmatrix sl
+0 upgraded, 2 newly installed, 0 to remove and 40 not upgraded.
+Need to get 46.4 kB of archives.
+After this operation, 136 kB of additional disk space will be used.
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+Get:2 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 cmatrix amd64 2.0-6 [33.7 kB]
+Get:3 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 sl amd64 5.02-1 [12.7 kB]
+Fetched 46.4 kB in 0s (378 kB/s)
+Selecting previously unselected package cmatrix.
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 215960 files and directories currently installed.)
+Preparing to unpack .../cmatrix_2.0-6_amd64.deb ...
+Unpacking cmatrix (2.0-6) ...
+Selecting previously unselected package sl.
+Preparing to unpack .../archives/sl_5.02-1_amd64.deb ...
+Unpacking sl (5.02-1) ...
+Setting up sl (5.02-1) ...
+Setting up cmatrix (2.0-6) ...
+Processing triggers for hicolor-icon-theme (0.17-2) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Not building database; man-db/auto-update is not &#x27;true&#x27;.
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+</pre></details><details><summary>[4] shell mkdir -p ~/ws/out &amp;&amp; script -q -c &quot;timeout 5 sl&quot; ~/ws/out/sl.log &amp;&amp; script -q -c &quot;timeout 5 cmatrix </summary><pre></pre><pre>[종료코드 0]
+Error opening terminal: unknown.
+Error opening terminal: unknown.
+saved
+</pre></details><details><summary>[5] shell TERM=xterm script -q -c &quot;timeout 5 sl&quot; ~/ws/out/sl.log &amp;&amp; TERM=xterm script -q -c &quot;timeout 5 cmatrix</summary><pre></pre><pre>[종료코드 0]
+[?1049h[22;0;0t[1;24r(B[m[4l[?7h[?25l[H[2J[15;80H_[15;79H_[16d|[9;80H_[12;80H|[13;80H|[14;80H|[15;78H__/[16;79H|/[17;80H\[9;79H_D[10;80H|[11;80H/[12;79H|[K[13d|[K[14d|/[15;1H[1P[16;78H|/-[17;79H\_[9;1H[1P[10;79H|([11;79H/[K[12d|[K[13d| _[14;1H[1P[15;76H__/ =[16;77H|/-=[17;78H\_/[9;77H_D _[10;78H|(_[11;78H/[K[12d|[K[13d| _[14;77H|/ |[15;75H__/ =|[16;76H|/-=|[17;1H[1P[8;80H=[9;76H_D _|[10;77H|(_)[11;77H/[K[12d|[K[13d| _
+[14d[1P[15d[1P[16;75H|/-=|_[17;1H[1P[8;79H=
+[9d[1P[10;76H|(_)-[11;76H/[K[12d|[K[13d| _
+[14d[1P[15;73H__/ =| o[16;74H|/-=|_
+[17d[1P[8;78H=
+[9d[1P[10;75H|(_)-[11;75H/[K[12d|[K[13d| _
+[14d[1P[15d[1P[16;73H|/-=|_
+[17d[1P[8;77H=[9;73H_D _|  |[10;74H|(_)-[11;74H/     |[12;73H|      |[13;73H| _[14;73H|/ |   |[15;71H__/ =| o |[16;72H|/-=|___|[17;1H[1P[5;79H(@[7;77H(
+[8d[1P[9;72H_D _|  |_[10;1H[1P[11d[1P[12d[1P[13;72H| _[14;72H|/ |   |-[15;70H__/ =| o |=[16;71H|/-=|___|=[17;1H[1P[8d[1P[9;71H_D _|  |_
+[10d[1P[11d[1P[12d[1P[13;71H| _[14;71H|/ |   |-[15;69H__/ =| o |=-[16;70H|/-=|___|=O[17;71H\_/      \[8;1H[1P[9;70H_D _|  |_[10;71H|(_)---  |[11;71H/     |  |[12;70H|      |  |[13;70H| _[80G|[14;70H|/ |   |-[15;68H__/ =| o |=-~[16;69H|/-=|___|=[K[17;70H\_/      \O[8;1H[1P[9;69H_D _|  |_
+[10d[1P[11d[1P[12d[1P[13;69H| _[79G|_[14;69H|/ |   |-[15;67H__/ =| o |=-~
+[16d[1P[17;69H\_/      \_[4d(@@[5;75H(    )[7;73H(@@@)
+[8d[1P[9;68H_D _|  |_
+[10d[1P[11d[1P[12d[1P[13;68H| _[78G|_[14;68H|/ |   |-[15;66H__/ =| o |=-~~\[16;67H|/-=|___|=   O[17;68H\_/      \__/[8;1H[1P[9;67H_D _|  |_
+[10d[1P[11d[1P[12d[1P[13;67H| _[77G|_[14;67H|/ |   |-[15;65H__/ =| o |=-~O==[16;66H|/-=|___|=    |[17;1H[1P[8d[1P[9;66H_D _|  |_[10;67H|(_)---  |   H[11;67H/     |  |   H[12;66H|      |  |   H[13;66H| _[76G|___H[14;66H|/ |   |-[15;64H__/ =| o |=-O==[16;65
+...(중략)...
+Z[39m(B[m (B[0;1m[37mS[39m(B[m [32ms[39m(B[m [32mM[75G(B[0;1m[32m [10;27H [39m(B[m [32mM[39m(B[m (B[0;1m[37mi[39m(B[m (B[0;1m[37m][39m(B[m (B[0;1m[32mH[39m(B[m (B[0;1m[32m [39m(B[m [32mg[39m(B[m (B[0;1m[37mC[10;57H[32m [10;69HL
+[11d [11;29H[37mM[11;39Hz[11;51H[32m [11;67H [39m(B[m (B[0;1m[37mJ[12;15H[32mn[13;3H(B[0m[32mk[11GU[39m(B[m [32m_[39m(B[m (B[0;1m[37m\[13;35H[32m&gt;[14;3H[37m8[39m(B[m [32m [39m(B[m [32m5[39m(B[m (B[0;1m[32m [39m(B[m (B[0;1m[37m6[14;27H(B[0m[32me[35G(B[0;1m[37mz[14;55H[32m([39m(B[m (B[0;1m[32m$[39m(B[m (B[0;1m[32m 
+[15dD[15;23H [39m(B[m (B[0;1m[32mH[39m(B[m (B[0;1m[37ms[15;49H(B[0m[32mY[39m(B[m (B[0;1m[32m&quot;[39m(B[m (B[0;1m[32mt[39m(B[m (B[0;1m[37m\[63G[32mJ[39m(B[m (B[0;1m[32m [39m(B[m (B[0;1m[32m^[39m(B[m (B[0;1m[32m [79GF
+[16d[37m:[16;49H![16;63H:[39m(B[m (B[0;1m[32m [39m(B[m [32mu[79G(B[0;1m[37m`[17;17H(B[0m[32mG[39m(B[m (B[0;1m[32m [39m(B[m (B[0;1m[32m [17;43H0[17;67H[37mR[18;17H\[18;35H[32m [43G[37m&lt;[18;53H[32mj[73G(B[0m[32m;[39m(B[m (B[0;1m[32mV[39m(B[m (B[0;1m[32m [19;13H(B[0m[32m;[39m(B[m (B[0;1m[32m [39m(B[m (B[0;1m[32m [39m(B[m (B[0;1m[32m [39m(B[m [32mi[39m(B[m (B[0;1m[32m8[39m(B[m (B[0;1m[32mJ[19;45H [39m(B[m (B[0;1m[32m [39m(B[m (B[0;1m[32m [39m(B[m [32m=[39m(B[m (B[0;1m[37mJ[73G![20;13H,[20;25H?[21;7H(B[0m[32mM[21;17H(B[0;1m[32m [39m(B[m (B[0;1m[32m@[39m(B[m [32m=[21;61Hi[39m(B[m [32m [39m(B[m (B[0;1m[32m [22;7H[37mR[22;21H1[22;45H(B[0m[32m&#x27;[22;57H&#x27;[39m(B[m [32me[39m(B[m (B[0;1m[37mV[23;9H(B[0m[32m#[23;45H(B[0;1m[37m[[23;57Hi[39m(B[m [32m+[24;9H(B[0;1m[37m5[24;25H[32m [24;59H[37m8[24;71H[32m [39m(B[m[24;1H[?12l[?25h[?1049l[23;0;0t
+[?1l&gt;done
+</pre></details><details><summary>[6] shell ls -lh ~/ws/out &amp;&amp; head -c 300 ~/ws/out/sl.log | cat -v | head -5</summary><pre></pre><pre>[종료코드 0]
+total 140K
+-rw-r--r-- 1 runner runner 108K Nov 11 04:35 cmatrix.log
+-rw-r--r-- 1 runner runner  29K Nov 11 04:35 sl.log
+Script started on 2026-11-11 04:34:56+00:00 [COMMAND=&quot;timeout 5 sl&quot; &lt;not executed on terminal&gt;]
+^[[?1049h^[[22;0;0t^[[1;24r^[(B^[[m^[[4l^[[?7h^[[?25l^[[H^[[2J^[[15;80H_^[[15;79H_^[[16d|^[[9;80H_^[[12;80H|^[[13;80H|^[[14;80H|^[[15;78H__/^[[16;79H|/^[[17;80H\^[[9;79H_D^[[10;80H|^[[11;80H/^[[12;79H|^[[K^[[13d^H|^[[K^[[14d^H|/^[[15;1</pre></details></html>
