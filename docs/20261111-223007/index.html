@@ -1,0 +1,92 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Linux 텍스트 처리 도구 성능 비교 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>Linux 텍스트 처리 도구 성능 비교 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 8번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>Ubuntu에서 100만 줄 로그 파일을 생성하고 grep, awk, sed로 status=200 줄을 필터링하는 속도를 비교했습니다. 결과는 grep이 0.002초로 가장 빠르고, sed가 0.184초, awk가 0.241초로 나타났습니다. grep은 단순 패턴 매칭에 최적화되어 있어 압도적으로 빠르며, awk와 sed는 필드 파싱과 스트림 편집 기능 때문에 상대적으로 느렸습니다. 측정 결과를 ~/ws/out/benchmark.png 그래프로 저장했습니다. 다음에는 더 복잡한 조건 필터링이나 대용량 파일에서의 메모리 사용량도 비교해 볼 수 있습니다.</p><img src="out/benchmark.png">
+<h2>결과 파일</h2><ul><li><a href="out/benchmark.png">benchmark.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search Linux Ubuntu interesting command line experiment benchmark text processing grep awk sed python perfo</summary><pre></pre><pre>1. grep vs awk vs sed: Examples and Benchmarks | ComputingForGeeks
+https://computingforgeeks.com/grep-vs-awk-vs-sed-commands-in-linux/
+Compare grep vs awk vs sed with tested examples on Ubuntu 26.04, a 2-million- line speed test, mawk vs gawk differences and a quick reference table.
+
+2. Stream Processing: Benchmarking Bash sed/awk/grep Pipelines vs. Python ...
+https://www.vengalavinay.com/stream-processing-benchmarking-bash-sed-awk-grep-pipelines-vs-python-re-module-performance/
+When dealing with large log files or continuous data streams, efficient text processing is paramount. For decades, Unix-like systems have relied on a powerful toolkit of command-line utilities like sed , awk , and grep for these tasks. These tools, often chained together in pipelines, are known for their speed and low memory footprint.
+
+3. Linux Triple Threat: Practical grep, sed, and awk Tip… | BestHub
+https://www.besthub.dev/articles/linux-triple-threat-practical-grep-sed-and-awk-tips-to-double-your-efficiency-8b60cf0c4ac9
+It then compares the core capabilities of each tool: grep for fast line filtering, sed for in‑place editing, and awk for field‑level analysis and reporting. A concrete benchmark shows extracting POST requests from a 1 GB nginx log with a one‑line awk command takes under 3 seconds, whereas a comparable Python script needs about 45 seconds.
+
+4. Double Your Linux Efficiency with Practical grep, se… | BestHub
+https://www.besthub.dev/articles/double-your-linux-efficiency-with-practical-grep-sed-and-awk-tricks-53f5f58becba
+This guide shows how Linux power users can dramatically speed up log analysis, configuration management, and data processing by mastering grep , sed , and awk , offering concrete command examples, performance benchmarks , and best‑practice patterns that turn these three classic tools into a productivity powerhouse.
+
+5. Using awk, sed, and grep to Process Text Like a Pro
+https://linuxmind.dev/2025/09/02/using-awk-sed-and-grep-to-process-text-like-a-pro/
+Introduction In the world of Unix and Linux administration, text processing is at the core of daily workflows. Whether you&#x27;re sifting through log files, transforming data streams, or extracting insights, the trio of grep , sed , and awk empowers you to process text like a pro. This article dives deep into each tool, covers best practices, performance tips, and shows you how to chain them ...
+
+6. grep, sed and awk: Text Processing Pipelines That Answer Real Questions
+https://kitutils.com/learn/linux/text-processing-grep-sed-awk
+Three tools cover almost all command-line text processing : grep selects lines , sed edits them, awk computes over fields. This guide builds the shared regular-expression foundation, gives each tool the depth it deserves, adds the smaller utilities that glue pipelines together, and then works through realistic questions about a web server log from first match to a ranked report.
+
+7. Difference Between grep, sed, and awk | Baeldung on Linux
+https://www.baeldung.com/linux/grep-sed-awk-differences
+1. Overview In this article, we&#x27;ll go through the command-line tools grep , sed , and awk . In particular, we&#x27;ll study the differences in functionality among them. 2. Background When it comes to text processing in Linux , the three tools that come in pretty handy are grep , sed , and awk .
+
+8. Linux Text Processing with grep, sed and awk - GoLinuxCloud
+https://www.golinuxcloud.com/bash-text-processing/
+Learn Linux text processing with grep , sed , and awk on one access log: filter lines , transform text , read fields, then use cut, sort, and uniq as supporting pipeline tools in Bash pipelines.</pre></details><details><summary>[2] shell mkdir -p ~/ws/out &amp;&amp; awk &#x27;BEGIN{for(i=1;i&lt;=1000000;i++) printf &quot;2024-01-01 12:00:00 INFO user%d proc</summary><pre></pre><pre>[종료코드 0]
+1000000 /home/runner/ws/data.txt
+</pre></details><details><summary>[3] shell cd ~/ws &amp;&amp; echo &quot;=== grep benchmark ===&quot; &amp;&amp; time grep &quot;status=200&quot; data.txt &gt; /dev/null &amp;&amp; echo &quot;===</summary><pre></pre><pre>[종료코드 0]
+=== grep benchmark ===
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+=== awk benchmark ===
+
+real	0m0.241s
+user	0m0.233s
+sys	0m0.008s
+=== sed benchmark ===
+
+real	0m0.184s
+user	0m0.164s
+sys	0m0.020s
+</pre></details><details><summary>[4] shell cd ~/ws &amp;&amp; python3 -c &quot;</summary><pre></pre><pre>[종료코드 2]
+bash: -c: line 1: unexpected EOF while looking for matching `&quot;&#x27;
+</pre></details><details><summary>[5] write ~/ws/make_plot.py</summary><pre>import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+tools = [&#x27;grep&#x27;, &#x27;awk&#x27;, &#x27;sed&#x27;]
+times = [0.002, 0.241, 0.184]
+
+plt.figure(figsize=(6, 4))
+plt.bar(tools, times, color=[&#x27;#2ecc71&#x27;, &#x27;#e74c3c&#x27;, &#x27;#3498db&#x27;])
+plt.ylabel(&#x27;seconds&#x27;)
+plt.title(&#x27;Text filtering benchmark (1M lines, status=200)&#x27;)
+plt.grid(axis=&#x27;y&#x27;, alpha=0.3)
+for i, v in enumerate(times):
+    plt.text(i, v + 0.005, f&#x27;{v:.3f}s&#x27;, ha=&#x27;center&#x27;)
+plt.tight_layout()
+plt.savefig(&#x27;out/benchmark.png&#x27;)
+print(&#x27;saved out/benchmark.png&#x27;)</pre><pre>저장함: make_plot.py (505자)</pre></details><details><summary>[6] shell cd ~/ws &amp;&amp; python3 make_plot.py &amp;&amp; ls -la out/</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/make_plot.py&quot;, line 1, in &lt;module&gt;
+    import matplotlib
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[7] shell cd ~/ws &amp;&amp; pip install matplotlib 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[8] shell cd ~/ws &amp;&amp; python3 make_plot.py &amp;&amp; ls -la out/</summary><pre></pre><pre>[종료코드 0]
+saved out/benchmark.png
+total 28
+drwxr-xr-x 2 runner runner  4096 Nov 11 13:31 .
+drwxr-xr-x 3 runner runner  4096 Nov 11 13:30 ..
+-rw-r--r-- 1 runner runner 18232 Nov 11 13:31 benchmark.png
+</pre></details></html>
