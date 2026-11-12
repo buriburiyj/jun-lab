@@ -1,0 +1,245 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>미국 지질조사국(USGS) 지진 API로 최근 7일 전세계 지진 분석</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>미국 지질조사국(USGS) 지진 API로 최근 7일 전세계 지진 분석</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 9번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>USGS Earthquake Catalog API를 검색해 사용법을 확인하고, 파이썬 requests로 지난 7일간 규모 2.5 이상 전세계 지진 데이터를 직접 내려받아 분석했다. 지진 330건을 수집했고, 한국·일본 인근 지진은 15건으로 대부분 일본 근해에서 발생했다. 규모 분포는 M2~3이 118건으로 가장 많았고, M4~5가 116건, M5~6이 24건, M6~7이 3건이었다. 규모 히스토그램 그래프를 ~/ws/out/quake_mag_hist.png로 저장했다. API는 인증 키 없이 공개로 사용 가능하며, 응답은 GeoJSON 형식으로 반환된다. 다음에는 지역별 지진 빈도나 시간대별 발생 패턴을 추가로 시각화해 볼 수 있다.</p><img src="out/quake_mag_hist.png">
+<h2>결과 파일</h2><ul><li><a href="out/quake_mag_hist.png">quake_mag_hist.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search USGS earthquake API Python example</summary><pre></pre><pre>1. USGS Earthquake Hazards Program API — API Key, Docs &amp; Examples ...
+https://publicapis.io/usgs-earthquake-hazards-program-api
+Earthquakes data real-time. This is an implementation of the FDSN Event Web Service Specification, and allows custom searches for earthquake information using a variety of parameters. Includes API key &amp; authentication setup, code examples in Python , JavaScript and cURL, and the best USGS Earthquake Hazards Program alternatives.
+
+2. API Documentation - Earthquake Catalog
+https://earthquake.usgs.gov/fdsnws/event/1/
+USGS Earthquake Hazards Program, responsible for monitoring, reporting, and researching earthquakes and earthquake hazards
+
+3. equake · PyPI
+https://pypi.org/project/equake/
+equake equake is a Python library to intuitively access and handle earthquake data. This library retrieves earthquake data from the USGS earthquake database and allows you to apply various filters to customise your search. Benefits This library is a convenient wrapper of the USGS Earthquake API , meaning you can communicate with its key functionality in an object-oriented, Pythonic way. Plenty ...
+
+4. USGS Earthquake Data API: Quakes by Magnitude and Region API in Python ...
+https://apify.com/yadroo/usgs-earthquakes/api/python
+Learn how to interact with USGS Earthquakes : Search Quakes by Magnitude, Area and Date API in Python . Includes an example Python code snippet to help yo...
+
+5. USGS Earthquakes API - Real-Time &amp; Historical Data Feed API in Python ...
+https://apify.com/scrapeworks/usgs-earthquakes/api/python
+Learn how to interact with USGS Earthquakes — Real-Time &amp; Historical API in Python . Includes an example Python code snippet to help you get started quic...
+
+6. aio-geojson-usgs-earthquakes · PyPI
+https://pypi.org/project/aio-geojson-usgs-earthquakes/
+python -aio-geojson- usgs - earthquakes This library provides convenient async access to U.S. Geological Survey Earthquake Hazards Program feeds. Installation pip install aio-geojson- usgs - earthquakes Usage See below for examples of how this library can be used. After instantiating a particular class - feed or feed manager - and supply the required parameters, you can call update to retrieve the ...
+
+7. GitHub - kapadia/usgs: Client library for interfacing with USGS ...
+https://github.com/kapadia/usgs
+USGS is a python module for interfacing with the US Geological Survey&#x27;s API . It provides submodules to interact with various endpoints, and command line utilities, helpful for building out large pipelines.
+
+8. Developer Resources &amp; Software - USGS Earthquake Hazards Program
+https://earthquake.usgs.gov/data/software/
+Product Distribution Layer (PDL) — find source code for distributing earthquake products. PDL documentation — learn about receiving and contributing products. Libcomcat for Python developers — work with ComCat earthquake data in Python . Earthquake Hazards Program software catalog — browse software for earthquake research and analysis.</pre></details><details><summary>[2] fetch https://earthquake.usgs.gov/fdsnws/event/1/</summary><pre></pre><pre>API Documentation - Earthquake Catalog Jump to Navigation API Documentation - Earthquake Catalog This is an implementation of the FDSN Event Web Service Specification , and allows custom searches for earthquake information using a variety of parameters. Please note that automated applications should use Real-time GeoJSON Feeds for displaying earthquake information whenever possible, as they will have the best performance and availability for that type of information. URL https://earthquake.usgs.gov/fdsnws/event/1/[ METHOD [? PARAMETERS ]] Methods application.json request known enumerated parameter values for the interface. https://earthquake.usgs.gov/fdsnws/event/1/application.json application.wadl request WADL for the interface. https://earthquake.usgs.gov/fdsnws/event/1/application.wadl catalogs request available catalogs. https://earthquake.usgs.gov/fdsnws/event/1/catalogs contributors request available contributors https://earthquake.usgs.gov/fdsnws/event/1/contributors count to perform a count on a data request. Count uses the same parameters as the query method, and is availablein these formats : plain text (default), geojson, and xml. https://earthquake.usgs.gov/fdsnws/event/1/count?format=geojson https://earthquake.usgs.gov/fdsnws/event/1/count?starttime=2014-01-01&amp;endtime=2014-01-02 query to submit a data request. See the parameters section for supported url parameters. https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&amp;starttime=2014-01-01&amp;endtime=2014-01-02 https://earthquake.usgs.gov/fdsnws/event/1/query?format=xml&amp;starttime=2014-01-01&amp;endtime=2014-01-02&amp;minmagnitude=5 version request full service version number https://earthquake.usgs.gov/fdsnws/event/1/version Query method Parameters These parameters should be submitted as key=value pairs using the HTTP GET method and may not be specified more than once; if a parameter is submitted multiple times the result is undefined. Formats If no format is specified quakeml will be returned by default
+...(중략)...
+specified, UTC is assumed. Location Requests that use both rectangle and circle will return the intersection, which may be empty, use with caution. Rectangle Requests may use any combination of these parameters. parameter type default description minlatitude Decimal [-90,90] degrees -90 Limit to events with a latitude larger than the specified minimum. NOTE: min values must be less than max values. minlongitude Decimal [-360,360] degrees -180 Limit to events with a longitude larger than the specified minimum. NOTE: rectangles may cross the date line by using a minlongitude &lt; -180 or maxlongitude &gt; 180. NOTE: min values must be less than max values. maxlatitude Decimal [-90,90] degrees 90 Limit to events with a latitude smaller than the specified maximum. NOTE: min values must be less than max values. maxlongitude Decimal [-360,360] degrees 180 Limit to events with a longitude smaller than the specified maximum. NOTE: rectangles may cross the date line by using a minlongitude &lt; -180 or maxlongitude &gt; 180. NOTE: min values must be less than max values. Circle Requests must include all of latitude, longitude, and maxradius to perform a circle search. parameter type default description latitude Decimal [-90,90] degrees null Specify the latitude to be used for a radius search. longitude Decimal [-180,180] degrees null Specify the longitude to be used for a radius search. maxradius Decimal [0, 180] degrees 180 Limit to events within the specified maximum number of degrees from the geographic point defined by the latitude and longitude parameters. NOTE: This option is mutually exclusive with maxradiuskm and specifying both will result in an error. maxradiuskm Decimal [0, 20001.6] km 20001.6 Limit to events within the specified maximum number of kilometers from the geographic point defined by the latitude and longitude parameters. NOTE: This option is mutually exclusive with maxradius and specifying both will result in an error. Time and area limits Some combinations of tim</pre></details><details><summary>[3] shell mkdir -p ~/ws/out &amp;&amp; python3 --version &amp;&amp; pip3 install requests matplotlib 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+Python 3.12.16
+
+Successfully installed certifi-2026.10.23 charset_normalizer-3.5.2 contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 idna-3.20 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 requests-2.34.2 tzdata-2026.6 urllib3-2.8.0
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[4] write ~/ws/quake_test.py</summary><pre>import requests
+import json
+
+url = &quot;https://earthquake.usgs.gov/fdsnws/event/1/query&quot;
+params = {
+    &quot;format&quot;: &quot;geojson&quot;,
+    &quot;starttime&quot;: &quot;2024-01-01&quot;,
+    &quot;endtime&quot;: &quot;2024-01-07&quot;,
+    &quot;minmagnitude&quot;: 4.0,
+    &quot;limit&quot;: 100
+}
+
+r = requests.get(url, params=params, timeout=30)
+print(&quot;status:&quot;, r.status_code)
+data = r.json()
+print(&quot;count:&quot;, data.get(&quot;metadata&quot;, {}).get(&quot;count&quot;))
+for f in data.get(&quot;features&quot;, [])[:5]:
+    p = f[&quot;properties&quot;]
+    print(p.get(&quot;mag&quot;), p.get(&quot;place&quot;), p.get(&quot;time&quot;))</pre><pre>저장함: quake_test.py (496자)</pre></details><details><summary>[5] shell python3 ~/ws/quake_test.py</summary><pre></pre><pre>[종료코드 0]
+status: 200
+count: None
+4.6 141 km NE of Hihifo, Tonga 1704583277579
+4.6 140 km NE of Hihifo, Tonga 1704582619656
+4.7 54 km NNW of Sola, Vanuatu 1704579785537
+4.1 Vanuatu region 1704578347188
+4.2 286 km SW of Tual, Indonesia 1704575798216
+</pre></details><details><summary>[6] write ~/ws/quake_study.py</summary><pre>import requests
+import json
+from datetime import datetime, timedelta
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+url = &quot;https://earthquake.usgs.gov/fdsnws/event/1/query&quot;
+
+end = datetime.utcnow()
+start = end - timedelta(days=7)
+
+params = {
+    &quot;format&quot;: &quot;geojson&quot;,
+    &quot;starttime&quot;: start.strftime(&quot;%Y-%m-%d&quot;),
+    &quot;endtime&quot;: end.strftime(&quot;%Y-%m-%d&quot;),
+    &quot;minmagnitude&quot;: 2.5,
+    &quot;limit&quot;: 20000,
+    &quot;orderby&quot;: &quot;time&quot;
+}
+
+r = requests.get(url, params=params, timeout=60)
+print(&quot;status:&quot;, r.status_code)
+data = r.json()
+meta = data.get(&quot;metadata&quot;, {})
+print(&quot;total count:&quot;, meta.get(&quot;count&quot;))
+
+features = data.get(&quot;features&quot;, [])
+mags = [f[&quot;properties&quot;][&quot;mag&quot;] for f in features if f[&quot;properties&quot;].get(&quot;mag&quot;) is not None]
+places = [f[&quot;properties&quot;].get(&quot;place&quot;, &quot;&quot;) for f in features]
+
+kr = [p for p in places if &quot;Korea&quot; in p or &quot;Japan&quot; in p or &quot;East Sea&quot; in p]
+print(&quot;near Korea/Japan count:&quot;, len(kr))
+for p in kr[:10]:
+    print(&quot;-&quot;, p)
+
+# 규모 분포 그래프
+plt.figure(figsize=(8,5))
+plt.hist(mags, bins=30, color=&quot;steelblue&quot;, edgecolor=&quot;black&quot;)
+plt.xlabel(&quot;Magnitude&quot;)
+plt.ylabel(&quot;Number of earthquakes&quot;)
+plt.title(&quot;Global Earthquake Magnitude Distribution (past 7 days, M&gt;=2.5)&quot;)
+plt.grid(axis=&quot;y&quot;, alpha=0.3)
+plt.tight_layout()
+plt.savefig(&quot;~/ws/out/quake_mag_hist.png&quot;, dpi=150)
+print(&quot;saved ~/ws/out/quake_mag_hist.png&quot;)
+
+# 규모별 요약
+import collections
+bins = collections.Counter()
+for m in mags:
+    b = int(m)
+    bins[b] += 1
+for b in sorted(bins):
+    print(f&quot;M{b}-{b+1}: {bins[b]}&quot;)</pre><pre>저장함: quake_study.py (1509자)</pre></details><details><summary>[7] shell python3 ~/ws/quake_study.py</summary><pre></pre><pre>[종료코드 1]
+/home/runner/ws/quake_study.py:10: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  end = datetime.utcnow()
+status: 200
+total count: None
+near Korea/Japan count: 15
+- 130 km ENE of Hasaki, Japan
+- 90 km SSE of Tateyama, Japan
+- 78 km ESE of Hitachi, Japan
+- 69 km ESE of Takahagi, Japan
+- 106 km ENE of Hasaki, Japan
+- 70 km S of Yudomari, Japan
+- 85 km NE of Hasaki, Japan
+- 43 km E of Onagawa Chō, Japan
+- 137 km E of Miyako, Japan
+- 11 km W of Honmachi, Japan
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/quake_study.py&quot;, line 45, in &lt;module&gt;
+    plt.savefig(&quot;~/ws/out/quake_mag_hist.png&quot;, dpi=150)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/pyplot.py&quot;, line 1346, in savefig
+    res = fig.savefig(fname, **kwargs)  # type: ignore[func-returns-value]
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/figure.py&quot;, line 3515, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backend_bases.py&quot;, line 2289, in print_figure
+    result = print_method(
+             ^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backend_bases.py&quot;, line 2146, in &lt;lambda&gt;
+    print_method = functools.wraps(meth)(lambda *args, **kwargs: meth(
+                                                                 ^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backends/backend_agg.py&quot;, line 537, in print_png
+    self._print_pil(filename_or_obj, &quot;png&quot;, pil_kwargs, metadata)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backends/backend_agg.py&quot;, line 486, in _print_pil
+    mpl.image.imsave(
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/image.py&quot;, line 1729, in imsave
+    image.save(fname, **pil_kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/PIL/Image.py&quot;, line 2707, in save
+    fp = builtins.open(filename, &quot;w+b&quot;)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: &#x27;~/ws/out/quake_mag_hist.png&#x27;
+</pre></details><details><summary>[8] write ~/ws/quake_study.py</summary><pre>import requests
+import os
+from datetime import datetime, timedelta, timezone
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+url = &quot;https://earthquake.usgs.gov/fdsnws/event/1/query&quot;
+
+end = datetime.now(timezone.utc)
+start = end - timedelta(days=7)
+
+params = {
+    &quot;format&quot;: &quot;geojson&quot;,
+    &quot;starttime&quot;: start.strftime(&quot;%Y-%m-%d&quot;),
+    &quot;endtime&quot;: end.strftime(&quot;%Y-%m-%d&quot;),
+    &quot;minmagnitude&quot;: 2.5,
+    &quot;limit&quot;: 20000,
+    &quot;orderby&quot;: &quot;time&quot;
+}
+
+r = requests.get(url, params=params, timeout=60)
+print(&quot;status:&quot;, r.status_code)
+data = r.json()
+meta = data.get(&quot;metadata&quot;, {})
+print(&quot;metadata count:&quot;, meta.get(&quot;count&quot;))
+
+features = data.get(&quot;features&quot;, [])
+print(&quot;features length:&quot;, len(features))
+mags = [f[&quot;properties&quot;][&quot;mag&quot;] for f in features if f[&quot;properties&quot;].get(&quot;mag&quot;) is not None]
+places = [f[&quot;properties&quot;].get(&quot;place&quot;, &quot;&quot;) for f in features]
+
+kr = [p for p in places if &quot;Korea&quot; in p or &quot;Japan&quot; in p or &quot;East Sea&quot; in p]
+print(&quot;near Korea/Japan count:&quot;, len(kr))
+for p in kr[:10]:
+    print(&quot;-&quot;, p)
+
+outdir = os.path.expanduser(&quot;~/ws/out&quot;)
+os.makedirs(outdir, exist_ok=True)
+
+plt.figure(figsize=(8,5))
+plt.hist(mags, bins=30, color=&quot;steelblue&quot;, edgecolor=&quot;black&quot;)
+plt.xlabel(&quot;Magnitude&quot;)
+plt.ylabel(&quot;Number of earthquakes&quot;)
+plt.title(&quot;Global Earthquake Magnitude Distribution (past 7 days, M&gt;=2.5)&quot;)
+plt.grid(axis=&quot;y&quot;, alpha=0.3)
+plt.tight_layout()
+outpath = os.path.join(outdir, &quot;quake_mag_hist.png&quot;)
+plt.savefig(outpath, dpi=150)
+print(&quot;saved&quot;, outpath)
+
+import collections
+bins = collections.Counter()
+for m in mags:
+    bins[int(m)] += 1
+for b in sorted(bins):
+    print(f&quot;M{b}-{b+1}: {bins[b]}&quot;)</pre><pre>저장함: quake_study.py (1627자)</pre></details><details><summary>[9] shell python3 ~/ws/quake_study.py</summary><pre></pre><pre>[종료코드 0]
+status: 200
+metadata count: None
+features length: 330
+near Korea/Japan count: 15
+- 130 km ENE of Hasaki, Japan
+- 90 km SSE of Tateyama, Japan
+- 78 km ESE of Hitachi, Japan
+- 69 km ESE of Takahagi, Japan
+- 106 km ENE of Hasaki, Japan
+- 70 km S of Yudomari, Japan
+- 85 km NE of Hasaki, Japan
+- 43 km E of Onagawa Chō, Japan
+- 137 km E of Miyako, Japan
+- 11 km W of Honmachi, Japan
+saved /home/runner/ws/out/quake_mag_hist.png
+M2-3: 118
+M3-4: 69
+M4-5: 116
+M5-6: 24
+M6-7: 3
+</pre></details></html>
