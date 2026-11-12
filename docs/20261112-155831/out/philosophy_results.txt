@@ -1,0 +1,32 @@
+Apple: reached steps=6
+Apple -> Fruit -> Botany -> Natural_science -> Empirical_science -> Epistemology -> Philosophy
+
+Banana: reached steps=6
+Banana -> Fruit -> Botany -> Natural_science -> Empirical_science -> Epistemology -> Philosophy
+
+Python_(programming_language): loop steps=11
+Python_(programming_language) -> High-level_programming_language -> Programming_language -> Formal_language -> Logic -> Logical_reasoning -> Thinking -> Cognition -> Knowledge -> Descriptive_knowledge -> Awareness -> Cognitive
+
+Moon: loop steps=5
+Moon -> Natural_satellite -> Astronomical_object -> Universe -> Existence -> Reality
+
+Love: loop steps=8
+Love -> Mental_state -> Mind -> Thought -> Cognition -> Knowledge -> Descriptive_knowledge -> Awareness -> Cognitive
+
+War: reached steps=10
+War -> Military -> Weapon -> Death -> Life -> Matter -> Outline_of_physical_science -> Natural_science -> Empirical_science -> Epistemology -> Philosophy
+
+Computer_science: loop steps=4
+Computer_science -> Computation -> Arithmetic -> Mathematics -> Number_theory
+
+Democracy: reached steps=15
+Democracy -> Form_of_government -> State_(polity) -> Politics -> Society -> Social_group -> Social_science -> Branches_of_science -> Basic_sciences -> Scientific_research -> Empirical_evidence -> Evidence -> Proposition -> Meaning_(philosophy) -> Event_(philosophy) -> Philosophy
+
+Music: loop steps=9
+Music -> Sound -> Phenomenon -> Observable -> Physics -> Science -> Knowledge -> Descriptive_knowledge -> Awareness -> Cognitive
+
+Bread: reached steps=10
+Bread -> Baking -> Oven -> Tool -> Physical_object -> Natural_language -> Spoken_language -> Communication -> Information -> Abstract_and_concrete -> Philosophy
+
+Summary: 5/10 reached Philosophy
+Min steps: 6, Max steps: 15, Avg: 9.40

@@ -1,0 +1,395 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>위키백과 첫 링크 따라가기 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>위키백과 첫 링크 따라가기 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 12번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 흥미로운 주제로 위키백과의 &#x27;Getting to Philosophy&#x27; 현상을 선택하고, 파이썬으로 직접 실험했습니다. requests와 beautifulsoup4를 설치하고, 10개의 위키백과 문서(Apple, Banana, Python, Moon, Love, War, Computer_science, Democracy, Music, Bread)에서 첫 유효 링크를 순차적으로 따라가며 Philosophy 문서에 도달하는지 확인했습니다.<br><br>결과: 10개 중 5개가 Philosophy에 도달했습니다. 도달한 문서는 Apple(6단계), Banana(6단계), War(10단계), Democracy(15단계), Bread(10단계)입니다. 나머지 5개(Python, Moon, Love, Computer_science, Music)는 루프에 빠지거나 유효 링크 없이 중단되었습니다. 도달한 경우 최소 6단계, 최대 15단계, 평균 9.40단계가 소요되었습니다. 결과는 ~/ws/out/philosophy_results.txt에 저장되었고, 단계 분포 그래프는 ~/ws/out/philosophy_steps.png에 저장되었습니다.<br><br>알게 된 점: 위키백과 문서의 첫 링크를 계속 따르면 상당수가 철학 문서로 수렴하지만, 모든 문서가 그렇지는 않으며 인지·언어·수학 관련 문서는 루프에 빠지는 경향이 있었습니다. 다음에는 더 많은 문서 샘플로 실험하거나, 링크 선택 기준을 다르게 하여 비교해 볼 수 있습니다.</p><img src="out/philosophy_steps.png">
+<h2>결과 파일</h2><ul><li><a href="out/philosophy_results.txt">philosophy_results.txt</a></li><li><a href="out/philosophy_steps.png">philosophy_steps.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search six degrees of wikipedia first link philosophy experiment python</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] shell fetch getting to philosophy wiki</summary><pre>mkdir -p ~/ws/out
+curl -sL &quot;https://en.wikipedia.org/wiki/Wikipedia:Getting_to_Philosophy&quot; -o ~/ws/philosophy.html
+wc -c ~/ws/philosophy.html
+head -c 500 ~/ws/philosophy.html</pre><pre>[종료코드 0]
+115260 /home/runner/ws/philosophy.html
+&lt;!DOCTYPE html&gt;
+&lt;html class=&quot;client-nojs vector-feature-language-in-header-enabled vector-feature-language-in-main-menu-disabled vector-feature-language-in-main-page-header-disabled vector-feature-page-tools-pinned-disabled vector-feature-toc-pinned-clientpref-1 vector-feature-main-menu-pinned-disabled vector-feature-limited-width-clientpref-1 vector-feature-limited-width-content-enabled vector-feature-custom-font-size-clientpref-1 vector-feature-appearance-pinned-clientpref-1 skin-theme-clientp</pre></details><details><summary>[3] write philosophy_exp.py</summary><pre>import requests
+from bs4 import BeautifulSoup
+import time
+import os
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+HEADERS = {&#x27;User-Agent&#x27;: &#x27;ResearchBot/1.0 (educational experiment)&#x27;}
+
+def first_link(title):
+    url = f&quot;https://en.wikipedia.org/wiki/{title}&quot;
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+    except Exception as e:
+        return None, f&quot;request error: {e}&quot;
+    soup = BeautifulSoup(r.text, &#x27;html.parser&#x27;)
+    content = soup.find(id=&quot;mw-content-text&quot;)
+    if content is None:
+        return None, &quot;no content&quot;
+    for p in content.find_all(&#x27;p&#x27;):
+        for a in p.find_all(&#x27;a&#x27;):
+            href = a.get(&#x27;href&#x27;, &#x27;&#x27;)
+            if href.startswith(&#x27;/wiki/&#x27;) and &#x27;:&#x27; not in href:
+                if a.find_parent(&#x27;i&#x27;) or a.find_parent(&#x27;em&#x27;):
+                    continue
+                return href[6:], a.get(&#x27;title&#x27;, &#x27;&#x27;)
+    return None, &quot;no valid link&quot;
+
+def trace(start, max_steps=40):
+    path = [start]
+    cur = start
+    for _ in range(max_steps):
+        if cur == &quot;Philosophy&quot;:
+            return path, &quot;reached&quot;
+        nxt, reason = first_link(cur)
+        if nxt is None:
+            return path, f&quot;stopped ({reason})&quot;
+        if nxt in path:
+            return path, &quot;loop&quot;
+        path.append(nxt)
+        cur = nxt
+        time.sleep(0.3)
+    return path, &quot;max steps&quot;
+
+if __name__ == &quot;__main__&quot;:
+    starts = [&quot;Apple&quot;, &quot;Banana&quot;, &quot;Python_(programming_language)&quot;, &quot;Moon&quot;, &quot;Love&quot;, &quot;War&quot;, &quot;Computer_science&quot;, &quot;Democracy&quot;, &quot;Music&quot;, &quot;Bread&quot;]
+    out_dir = os.path.expanduser(&quot;~/ws/out&quot;)
+    os.makedirs(out_dir, exist_ok=True)
+    results = []
+    with open(os.path.join(out_dir, &quot;philosophy_results.txt&quot;), &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+        for s in starts:
+            path, status = trace(s)
+            steps = len(path) - 1
+            results.append((s, status, steps, path))
+            line = f&quot;{s}: {status} steps={steps}\n&quot;
+            f.write(line)
+            f.write(&quot; -&gt; &quot;.join(path) + &quot;\n\n&quot;)
+            print(line.strip())
+            print(&quot; -&gt; &quot;.join(path))
+            print()
+        reached = [r for r in results if r[1] == &quot;reached&quot;]
+        f.write(f&quot;Summary: {len(reached)}/{len(results)} reached Philosophy\n&quot;)
+        if reached:
+            steps = [r[2] for r in reached]
+            f.write(f&quot;Min steps: {min(steps)}, Max steps: {max(steps)}, Avg: {sum(steps)/len(steps):.2f}\n&quot;)
+            print(f&quot;Summary: {len(reached)}/{len(results)} reached Philosophy&quot;)
+            print(f&quot;Min: {min(steps)}, Max: {max(steps)}, Avg: {sum(steps)/len(steps):.2f}&quot;)
+            plt.figure(figsize=(8,5))
+            plt.hist(steps, bins=range(0, max(steps)+2), edgecolor=&#x27;black&#x27;)
+            plt.xlabel(&#x27;Steps to Philosophy&#x27;)
+            plt.ylabel(&#x27;Count&#x27;)
+            plt.title(&#x27;Steps to Reach Philosophy from Wikipedia Articles&#x27;)
+            plt.savefig(os.path.join(out_dir, &quot;philosophy_steps.png&quot;))
+            plt.close()</pre><pre>저장함: philosophy_exp.py (2948자)</pre></details><details><summary>[4] shell run philosophy experiment</summary><pre>cd ~/ws
+python3 philosophy_exp.py</pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/philosophy_exp.py&quot;, line 1, in &lt;module&gt;
+    import requests
+ModuleNotFoundError: No module named &#x27;requests&#x27;
+</pre></details><details><summary>[5] shell install requests and beautifulsoup4</summary><pre>pip install requests beautifulsoup4</pre><pre>[종료코드 0]
+Collecting requests
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting beautifulsoup4
+  Downloading beautifulsoup4-4.15.0-py3-none-any.whl.metadata (3.8 kB)
+Collecting charset_normalizer&lt;4,&gt;=2 (from requests)
+  Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+Collecting idna&lt;4,&gt;=2.5 (from requests)
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting urllib3&lt;3,&gt;=1.26 (from requests)
+  Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting certifi&gt;=2023.5.7 (from requests)
+  Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting soupsieve&gt;=1.6.1 (from beautifulsoup4)
+  Downloading soupsieve-4.1-py3-none-any.whl.metadata (4.4 kB)
+Collecting typing-extensions&gt;=4.0.0 (from beautifulsoup4)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+Downloading beautifulsoup4-4.15.0-py3-none-any.whl (109 kB)
+Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+Downloading soupsieve-4.1-py3-none-any.whl (52 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Installing collected packages: urllib3, typing-extensions, soupsieve, idna, charset_normalizer, certifi, requests, beautifulsoup4
+
+Successfully installed beautifulsoup4-4.15.0 certifi-2026.10.23 charset_normalizer-3.5.2 idna-3.20 requests-2.34.2 soupsieve-4.1 typing-extensions-4.16.0 urllib3-2.8.0
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[6] shell run philosophy experiment again</summary><pre>cd ~/ws
+python3 philosophy_exp.py</pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/philosophy_exp.py&quot;, line 5, in &lt;module&gt;
+    import matplotlib
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[7] shell install matplotlib</summary><pre>pip install matplotlib</pre><pre>[종료코드 0]
+Collecting matplotlib
+  Downloading matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+Collecting contourpy&gt;=1.0.1 (from matplotlib)
+  Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting cycler&gt;=0.10 (from matplotlib)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools&gt;=4.28.2 (from matplotlib)
+  Downloading fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+Collecting kiwisolver&gt;=1.3.1 (from matplotlib)
+  Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+Collecting numpy&gt;=1.25 (from matplotlib)
+  Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting packaging&gt;=20.0 (from matplotlib)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow&gt;=9 (from matplotlib)
+  Downloading pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting pyparsing&gt;=3 (from matplotlib)
+  Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting python-dateutil&gt;=2.7 (from matplotlib)
+  Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting tzdata (from python-dateutil&gt;=2.7-&gt;matplotlib)
+  Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Downloading matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 221.7 MB/s  0:00:00
+Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (383 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 223.4 MB/s  0:00:00
+Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 251.8 MB/s  0:00:00
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 251.8 MB/s  0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 348.9 MB/s  0:00:00
+Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: tzdata, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, python-dateutil, contourpy, matplotlib
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+
+[notice] A new release of pip is available: 26.2.2 -&gt; 26.3
+[notice] To update, run: pip install --upgrade pip
+</pre></details><details><summary>[8] shell run philosophy experiment again</summary><pre>cd ~/ws
+python3 philosophy_exp.py</pre><pre>[종료코드 0]
+Apple: stopped (no valid link) steps=0
+Apple
+
+Banana: stopped (no valid link) steps=0
+Banana
+
+Python_(programming_language): stopped (no valid link) steps=0
+Python_(programming_language)
+
+Moon: stopped (no valid link) steps=0
+Moon
+
+Love: stopped (no valid link) steps=0
+Love
+
+War: stopped (no valid link) steps=0
+War
+
+Computer_science: stopped (no valid link) steps=0
+Computer_science
+
+Democracy: stopped (no valid link) steps=0
+Democracy
+
+Music: stopped (no valid link) steps=0
+Music
+
+Bread: stopped (no valid link) steps=0
+Bread
+
+</pre></details><details><summary>[9] shell debug first link extraction on Apple page</summary><pre>cd ~/ws
+python3 -c &quot;
+import requests
+from bs4 import BeautifulSoup
+url=&#x27;https://en.wikipedia.org/wiki/Apple&#x27;
+r=requests.get(url,headers={&#x27;User-Agent&#x27;:&#x27;ResearchBot/1.0&#x27;},timeout=20)
+print(r.status_code, len(r.text))
+soup=BeautifulSoup(r.text,&#x27;html.parser&#x27;)
+content=soup.find(id=&#x27;mw-content-text&#x27;)
+print(&#x27;content:&#x27;, content is not None)
+if content:
+    for p in content.find_all(&#x27;p&#x27;)[:5]:
+        txt=p.get_text()[:200]
+        links=[(a.get_text(),a.get(&#x27;href&#x27;)) for a in p.find_all(&#x27;a&#x27;)]
+        print(&#x27;P:&#x27;, txt)
+        print(&#x27;  LINKS:&#x27;, links)
+&quot;</pre><pre>[종료코드 0]
+200 903255
+content: True
+P: 
+
+
+
+
+  LINKS: []
+P: An apple is the round, edible fruit of an apple tree (Malus spp.). Fruit trees of the orchard or domestic apple (Malus domestica), the most widely grown in the genus, are cultivated worldwide. The tre
+  LINKS: [(&#x27;fruit&#x27;, &#x27;https://en.wikipedia.org/wiki/Fruit&#x27;), (&#x27;Malus&#x27;, &#x27;https://en.wikipedia.org/wiki/Malus&#x27;), (&#x27;Fruit trees&#x27;, &#x27;https://en.wikipedia.org/wiki/Fruit_tree&#x27;), (&#x27;cultivated&#x27;, &#x27;https://en.wikipedia.org/wiki/Agriculture&#x27;), (&#x27;Central Asia&#x27;, &#x27;https://en.wikipedia.org/wiki/Central_Asia&#x27;), (&#x27;Malus sieversii&#x27;, &#x27;https://en.wikipedia.org/wiki/Malus_sieversii&#x27;), (&#x27;Eurasia&#x27;, &#x27;https://en.wikipedia.org/wiki/Eurasia&#x27;), (&#x27;American&#x27;, &#x27;https://en.wikipedia.org/wiki/America_(continent)&#x27;), (&#x27;European colonists&#x27;, &#x27;https://en.wikipedia.org/wiki/European_colonization_of_the_Americas&#x27;), (&#x27;mythologies&#x27;, &#x27;https://en.wikipedia.org/wiki/Mythological&#x27;), (&#x27;Norse&#x27;, &#x27;https://en.wikipedia.org/wiki/Norse_mythology&#x27;), (&#x27;Greek&#x27;, &#x27;https://en.wikipedia.org/wiki/Greek_mythology&#x27;), (&#x27;religions&#x27;, &#x27;https://en.wikipedia.org/wiki/Religion&#x27;), (&#x27;Christianity in Europe&#x27;, &#x27;https://en.wikipedia.org/wiki/Christianity_in_Europe&#x27;)]
+P: Apples grown from seeds tend to be very different from those of their parents, and the resultant fruit frequently lacks desired characteristics. For commercial purposes, including botanical evaluation
+  LINKS: [(&#x27;seeds&#x27;, &#x27;https://en.wikipedia.org/wiki/Seed&#x27;), (&#x27;botanical&#x27;, &#x27;https://en.wikipedia.org/wiki/Botany&#x27;), (&#x27;cultivars&#x27;, &#x27;https://en.wikipedia.org/wiki/Cultivar&#x27;), (&#x27;grafting&#x27;, &#x27;https://en.wikipedia.org/wiki/Grafting&#x27;), (&#x27;rootstocks&#x27;, &#x27;https://en.wikipedia.org/wiki/Rootstock&#x27;)]
+P: There are more than 7,500 cultivars of apples. Different cultivars are bred for various tastes and uses, including cooking, eating raw, and cider or apple juice production. Trees and fruit are prone t
+  LINKS: [(&#x27;more than 7,500 cultivars of apples&#x27;, &#x27;https://en.wikipedia.org/wiki/List_of_apple_cultivars&#x27;), (&#x27;cooking&#x27;, &#x27;https://en.wikipedia.org/wiki/Cooking_apple&#x27;), (&#x27;cider&#x27;, &#x27;https://en.wikipedia.org/wiki/Cider&#x27;), (&#x27;apple juice&#x27;, &#x27;https://en.wikipedia.org/wiki/Apple_cider&#x27;), (&#x27;fungal&#x27;, &#x27;https://en.wikipedia.org/wiki/Fungal&#x27;), (&#x27;pest&#x27;, &#x27;https://en.wikipedia.org/wiki/Pest_(organism)&#x27;), (&#x27;organic&#x27;, &#x27;https://en.wikipedia.org/wiki/Organic_farming&#x27;), (&#x27;genome&#x27;, &#x27;https://en.wikipedia.org/wiki/Genome&#x27;), (&#x27;sequenced&#x27;, &#x27;https://en.wikipedia.org/wiki/DNA_sequencing&#x27;)]
+P: The word apple is derived from Old English æppel, meaning &quot;fruit&quot;, not specifically the apple.[4] That in turn is descended from the Proto-Germanic noun *aplaz, descended in turn from Proto-Indo-Europ
+  LINKS: [(&#x27;Old English&#x27;, &#x27;https://en.wikipedia.org/wiki/Old_English&#x27;), (&#x27;[4]&#x27;, &#x27;#cite_note-OnlineEtymDict-4&#x27;), (&#x27;Proto-Germanic&#x27;, &#x27;https://en.wikipedia.org/wiki/Proto-Germanic&#x27;), (&#x27;Proto-Indo-European&#x27;, &#x27;https://en.wikipedia.org/wiki/Proto-Indo-European&#x27;), (&#x27;[5]&#x27;, &#x27;#cite_note-Lisa_Lim-5&#x27;), (&#x27;nuts&#x27;, &#x27;https://en.wikipedia.org/wiki/Nut_(food)&#x27;), (&#x27;pineapple&#x27;, &#x27;https://en.wikipedia.org/wiki/Pineapple&#x27;), (&#x27;accessory fruit&#x27;, &#x27;https://en.wikipedia.org/wiki/Accessory_fruit&#x27;), (&#x27;cashew&#x27;, &#x27;https://en.wikipedia.org/wiki/Cashew&#x27;), (&#x27;[6]&#x27;, &#x27;#cite_note-mw-6&#x27;), (&#x27;Middle English&#x27;, &#x27;https://en.wikipedia.org/wiki/Middle_English&#x27;), (&#x27;banana&#x27;, &#x27;https://en.wikipedia.org/wiki/Banana&#x27;), (&#x27;[4]&#x27;, &#x27;#cite_note-OnlineEtymDict-4&#x27;)]
+</pre></details><details><summary>[10] write philosophy_exp.py</summary><pre>import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
+import time
+import os
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+HEADERS = {&#x27;User-Agent&#x27;: &#x27;ResearchBot/1.0 (educational experiment)&#x27;}
+
+def first_link(title):
+    url = f&quot;https://en.wikipedia.org/wiki/{title}&quot;
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+    except Exception as e:
+        return None, f&quot;request error: {e}&quot;
+    soup = BeautifulSoup(r.text, &#x27;html.parser&#x27;)
+    content = soup.find(id=&quot;mw-content-text&quot;)
+    if content is None:
+        return None, &quot;no content&quot;
+    for p in content.find_all(&#x27;p&#x27;):
+        for a in p.find_all(&#x27;a&#x27;):
+            href = a.get(&#x27;href&#x27;, &#x27;&#x27;)
+            # Handle both relative (/wiki/...) and absolute (https://en.wikipedia.org/wiki/...) URLs
+            if href.startswith(&#x27;/wiki/&#x27;):
+                path = href[6:]
+            elif href.startswith(&#x27;https://en.wikipedia.org/wiki/&#x27;):
+                path = href[len(&#x27;https://en.wikipedia.org/wiki/&#x27;):]
+            else:
+                continue
+            if &#x27;:&#x27; in path:
+                continue
+            if a.find_parent(&#x27;i&#x27;) or a.find_parent(&#x27;em&#x27;):
+                continue
+            return path, a.get(&#x27;title&#x27;, &#x27;&#x27;)
+    return None, &quot;no valid link&quot;
+
+def trace(start, max_steps=40):
+    path = [start]
+    cur = start
+    for _ in range(max_steps):
+        if cur == &quot;Philosophy&quot;:
+            return path, &quot;reached&quot;
+        nxt, reason = first_link(cur)
+        if nxt is None:
+            return path, f&quot;stopped ({reason})&quot;
+        if nxt in path:
+            return path, &quot;loop&quot;
+        path.append(nxt)
+        cur = nxt
+        time.sleep(0.3)
+    return path, &quot;max steps&quot;
+
+if __name__ == &quot;__main__&quot;:
+    starts = [&quot;Apple&quot;, &quot;Banana&quot;, &quot;Python_(programming_language)&quot;, &quot;Moon&quot;, &quot;Love&quot;, &quot;War&quot;, &quot;Computer_science&quot;, &quot;Democracy&quot;, &quot;Music&quot;, &quot;Bread&quot;]
+    out_dir = os.path.expanduser(&quot;~/ws/out&quot;)
+    os.makedirs(out_dir, exist_ok=True)
+    results = []
+    with open(os.path.join(out_dir, &quot;philosophy_results.txt&quot;), &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+        for s in starts:
+            path, status = trace(s)
+            steps = len(path) - 1
+            results.append((s, status, steps, path))
+            line = f&quot;{s}: {status} steps={steps}\n&quot;
+            f.write(line)
+            f.write(&quot; -&gt; &quot;.join(path) + &quot;\n\n&quot;)
+            print(line.strip())
+            print(&quot; -&gt; &quot;.join(path))
+            print()
+        reached = [r for r in results if r[1] == &quot;reached&quot;]
+        f.write(f&quot;Summary: {len(reached)}/{len(results)} reached Philosophy\n&quot;)
+        if reached:
+            steps = [r[2] for r in reached]
+            f.write(f&quot;Min steps: {min(steps)}, Max steps: {max(steps)}, Avg: {sum(steps)/len(steps):.2f}\n&quot;)
+            print(f&quot;Summary: {len(reached)}/{len(results)} reached Philosophy&quot;)
+            print(f&quot;Min: {min(steps)}, Max: {max(steps)}, Avg: {sum(steps)/len(steps):.2f}&quot;)
+            plt.figure(figsize=(8,5))
+            </pre><pre>저장함: philosophy_exp.py (3311자)</pre></details><details><summary>[11] shell run philosophy experiment again</summary><pre>cd ~/ws
+python3 philosophy_exp.py</pre><pre>[종료코드 0]
+Apple: reached steps=6
+Apple -&gt; Fruit -&gt; Botany -&gt; Natural_science -&gt; Empirical_science -&gt; Epistemology -&gt; Philosophy
+
+Banana: reached steps=6
+Banana -&gt; Fruit -&gt; Botany -&gt; Natural_science -&gt; Empirical_science -&gt; Epistemology -&gt; Philosophy
+
+Python_(programming_language): loop steps=11
+Python_(programming_language) -&gt; High-level_programming_language -&gt; Programming_language -&gt; Formal_language -&gt; Logic -&gt; Logical_reasoning -&gt; Thinking -&gt; Cognition -&gt; Knowledge -&gt; Descriptive_knowledge -&gt; Awareness -&gt; Cognitive
+
+Moon: loop steps=5
+Moon -&gt; Natural_satellite -&gt; Astronomical_object -&gt; Universe -&gt; Existence -&gt; Reality
+
+Love: loop steps=8
+Love -&gt; Mental_state -&gt; Mind -&gt; Thought -&gt; Cognition -&gt; Knowledge -&gt; Descriptive_knowledge -&gt; Awareness -&gt; Cognitive
+
+War: reached steps=10
+War -&gt; Military -&gt; Weapon -&gt; Death -&gt; Life -&gt; Matter -&gt; Outline_of_physical_science -&gt; Natural_science -&gt; Empirical_science -&gt; Epistemology -&gt; Philosophy
+
+Computer_science: loop steps=4
+Computer_science -&gt; Computation -&gt; Arithmetic -&gt; Mathematics -&gt; Number_theory
+
+Democracy: reached steps=15
+Democracy -&gt; Form_of_government -&gt; State_(polity) -&gt; Politics -&gt; Society -&gt; Social_group -&gt; Social_science -&gt; Branches_of_science -&gt; Basic_sciences -&gt; Scientific_research -&gt; Empirical_evidence -&gt; Evidence -&gt; Proposition -&gt; Meaning_(philosophy) -&gt; Event_(philosophy) -&gt; Philosophy
+
+Music: loop steps=9
+Music -&gt; Sound -&gt; Phenomenon -&gt; Observable -&gt; Physics -&gt; Science -&gt; Knowledge -&gt; Descriptive_knowledge -&gt; Awareness -&gt; Cognitive
+
+Bread: reached steps=10
+Bread -&gt; Baking -&gt; Oven -&gt; Tool -&gt; Physical_object -&gt; Natural_language -&gt; Spoken_language -&gt; Communication -&gt; Information -&gt; Abstract_and_concrete -&gt; Philosophy
+
+Summary: 5/10 reached Philosophy
+Min: 6, Max: 15, Avg: 9.40
+</pre></details><details><summary>[12] shell verify output files</summary><pre>ls -la ~/ws/out/
+cat ~/ws/out/philosophy_results.txt</pre><pre>[종료코드 0]
+total 36
+drwxr-xr-x 2 runner runner  4096 Nov 12 07:00 .
+drwxr-xr-x 3 runner runner  4096 Nov 12 06:59 ..
+-rw-r--r-- 1 runner runner  1759 Nov 12 07:00 philosophy_results.txt
+-rw-r--r-- 1 runner runner 23752 Nov 12 07:00 philosophy_steps.png
+Apple: reached steps=6
+Apple -&gt; Fruit -&gt; Botany -&gt; Natural_science -&gt; Empirical_science -&gt; Epistemology -&gt; Philosophy
+
+Banana: reached steps=6
+Banana -&gt; Fruit -&gt; Botany -&gt; Natural_science -&gt; Empirical_science -&gt; Epistemology -&gt; Philosophy
+
+Python_(programming_language): loop steps=11
+Python_(programming_language) -&gt; High-level_programming_language -&gt; Programming_language -&gt; Formal_language -&gt; Logic -&gt; Logical_reasoning -&gt; Thinking -&gt; Cognition -&gt; Knowledge -&gt; Descriptive_knowledge -&gt; Awareness -&gt; Cognitive
+
+Moon: loop steps=5
+Moon -&gt; Natural_satellite -&gt; Astronomical_object -&gt; Universe -&gt; Existence -&gt; Reality
+
+Love: loop steps=8
+Love -&gt; Mental_state -&gt; Mind -&gt; Thought -&gt; Cognition -&gt; Knowledge -&gt; Descriptive_knowledge -&gt; Awareness -&gt; Cognitive
+
+War: reached steps=10
+War -&gt; Military -&gt; Weapon -&gt; Death -&gt; Life -&gt; Matter -&gt; Outline_of_physical_science -&gt; Natural_science -&gt; Empirical_science -&gt; Epistemology -&gt; Philosophy
+
+Computer_science: loop steps=4
+Computer_science -&gt; Computation -&gt; Arithmetic -&gt; Mathematics -&gt; Number_theory
+
+Democracy: reached steps=15
+Democracy -&gt; Form_of_government -&gt; State_(polity) -&gt; Politics -&gt; Society -&gt; Social_group -&gt; Social_science -&gt; Branches_of_science -&gt; Basic_sciences -&gt; Scientific_research -&gt; Empirical_evidence -&gt; Evidence -&gt; Proposition -&gt; Meaning_(philosophy) -&gt; Event_(philosophy) -&gt; Philosophy
+
+Music: loop steps=9
+Music -&gt; Sound -&gt; Phenomenon -&gt; Observable -&gt; Physics -&gt; Science -&gt; Knowledge -&gt; Descriptive_knowledge -&gt; Awareness -&gt; Cognitive
+
+Bread: reached steps=10
+Bread -&gt; Baking -&gt; Oven -&gt; Tool -&gt; Physical_object -&gt; Natural_language -&gt; Spoken_language -&gt; Communication -&gt; Information -&gt; Abstract_and_concrete -&gt; Philosophy
+
+Summary: 5/10 reached Philosophy
+Min steps: 6, Max steps: 15, Avg: 9.40
+</pre></details></html>
