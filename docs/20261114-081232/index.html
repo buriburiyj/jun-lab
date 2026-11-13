@@ -1,0 +1,130 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>리눅스 터미널 데이터 시각화 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>리눅스 터미널 데이터 시각화 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 6번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 termgraph라는 터미널용 CSV 시각화 도구를 찾아서 직접 실험했습니다. pip로 termgraph를 설치하고 월별 매출과 방문자 수를 담은 샘플 CSV 파일을 만들었습니다. 처음에는 헤더가 있는 CSV와 --colors 옵션으로 오류가 났지만, 헤더를 제거하고 --color 옵션을 사용해 성공적으로 막대그래프를 그렸습니다. 결과는 ~/ws/out/termgraph_output.txt에 저장했습니다. 데이터는 1월부터 6월까지로 매출은 120에서 300으로, 방문자는 340에서 900으로 꾸준히 증가하는 추세를 터미널에서 색상 막대로 확인했습니다. 알게 된 점은 termgraph는 헤더 없는 CSV를 요구하며, --color로 여러 열에 색을 지정할 수 있고 터미널에서 바로 그래프를 볼 수 있어 SSH 환경이나 빠른 보고서에 유용하다는 점입니다. 다음에는 matplotlib를 이용해 같은 데이터를 PNG 파일로 저장하고 더 정교한 그래프를 만들어 볼 계획입니다.</p>
+<h2>결과 파일</h2><ul><li><a href="out/termgraph_output.txt">termgraph_output.txt</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting data analysis experiment ubuntu python terminal</summary><pre></pre><pre>1. GitHub - omshete96/Data-Analysis-Terminal: This Python-based terminal ...
+https://github.com/omshete96/Data-Analysis-Terminal
+This Python -based terminal project analyzes CSV/Excel files, generating statistical summaries and visualizations like histograms, correlation heatmaps, and pair plots. It provides clear insights into datasets using Pandas, Matplotlib, and Seaborn. - omshete96/ Data - Analysis - Terminal
+
+2. EDA - Exploratory Data Analysis in Python - GeeksforGeeks
+https://www.geeksforgeeks.org/data-analysis/exploratory-data-analysis-in-python/
+EDA is an essential step in data analysis that focuses on understanding patterns, relationships and distributions within a dataset using statistical methods and visualizations. Python libraries such as pandas, NumPy, plotly, matplotlib and seaborn make this process efficient and insightful. Some common EDA techniques are:
+
+3. Python for Data Analysis: A Practical Guide - Real Python
+https://realpython.com/python-for-data-analysis/
+In this tutorial, you&#x27;ll learn data analysis with Python by following a structured workflow with pandas, Matplotlib, and scikit-learn.
+
+4. Data Analysis with Python - GeeksforGeeks
+https://www.geeksforgeeks.org/data-analysis/data-analysis-with-python/
+NumPy is a Python library used for fast and efficient numerical computations. It provides multidimensional arrays and built in functions that simplify data analysis , mathematical operations and large scale data processing.
+
+5. Draw Graphs in Linux Terminal with Termgraph [Guide]
+https://computingforgeeks.com/draw-graphs-terminal-linux/
+Conclusion Termgraph turns CSV data into readable bar charts directly in the terminal with no external dependencies beyond Python 3. It fits well into shell scripts, cron job reports, and quick data analysis during SSH sessions. For more details and advanced usage, check the termgraph GitHub repository.
+
+6. Visualizing Data in the Terminal: A Simple Guide to Building a ...
+https://dev.to/timilehin-olusegun/visualizing-data-in-the-terminal-a-simple-guide-to-building-a-customized-data-visualization-tool-47lb
+In this article, we have demonstrated how to build a Python program to visualize data directly on the terminal . We handled input from the terminal using the argparse library, then processed and transformed both the parsed terminal input and API data for plotting.
+
+7. How to Perform Exploratory Data Analysis in Python (With Example)
+https://www.statology.org/how-to-perform-exploratory-data-analysis-in-python-with-example/
+That&#x27;s where Exploratory Data Analysis (EDA) comes in. Think of EDA as your detective toolkit for uncovering hidden patterns, spotting errors, and asking better questions about your data . In this article, I&#x27;ll walk you through a practical, step-by-step EDA process using Python .
+
+8. Data Analysis with Python: The Complete Guide (NumPy, Pandas ...
+https://openpython.org/articles/data-analysis-with-python
+Data analysis with Python means using Python and its core libraries NumPy, Pandas, and Matplotlib to load, clean, explore, and visualise data . Python has become the dominant language for data analysis because it combines readable syntax with a mature ecosystem of tools built specifically for working with structured data .</pre></details><details><summary>[2] shell cd ~/ws &amp;&amp; (which termgraph || pip install termgraph)</summary><pre></pre><pre>[종료코드 0]
+Collecting termgraph
+  Downloading termgraph-0.8.1-py3-none-any.whl.metadata (10 kB)
+Collecting colorama&gt;=0.4.6 (from termgraph)
+  Downloading colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+Downloading termgraph-0.8.1-py3-none-any.whl (20 kB)
+Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Installing collected packages: colorama, termgraph
+
+Successfully installed colorama-0.4.6 termgraph-0.8.1
+</pre></details><details><summary>[3] shell create sample csv and run termgraph</summary><pre>mkdir -p ~/ws/out
+cat &gt; ~/ws/data.csv &lt;&lt; &#x27;EOF&#x27;
+Month,Sales,Visitors
+Jan,120,340
+Feb,150,410
+Mar,180,520
+Apr,200,600
+May,240,750
+Jun,300,900
+EOF
+termgraph ~/ws/data.csv --title &quot;Monthly Sales and Visitors&quot; --colors red green --format &quot;{}&quot;</pre><pre>[종료코드 2]
+usage: termgraph [-h] [--title TITLE] [--width WIDTH] [--scale SCALE]
+                 [--format FORMAT] [--suffix SUFFIX] [--no-labels]
+                 [--no-values] [--space-between] [--color [COLOR ...]]
+                 [--vertical] [--stacked] [--histogram] [--bins BINS]
+                 [--different-scale] [--calendar] [--start-dt START_DT]
+                 [--custom-tick CUSTOM_TICK] [--delim DELIM] [--verbose]
+                 [--label-before] [--version] [--no-readable] [--percentage]
+                 [filename]
+termgraph: error: unrecognized arguments: --colors red green
+</pre></details><details><summary>[4] shell run termgraph with correct option</summary><pre>termgraph ~/ws/data.csv --title &quot;Monthly Sales and Visitors&quot; --color red green --format &quot;{}&quot;</pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/bin/termgraph&quot;, line 6, in &lt;module&gt;
+    sys.exit(main())
+             ^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/termgraph/termgraph.py&quot;, line 124, in main
+    _run()
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/termgraph/termgraph.py&quot;, line 145, in _run
+    data_obj = Data.from_file(args[&quot;filename&quot;], args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/termgraph/data.py&quot;, line 113, in from_file
+    return cls(data, labels, categories)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/termgraph/data.py&quot;, line 48, in __init__
+    self.dims = self._find_dims(data, labels)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/termgraph/data.py&quot;, line 125, in _find_dims
+    raise ValueError(
+ValueError: The inner dimensions of the data are different
+The dimensions of [] is different than the dimensions of [120.0, 340.0]
+</pre></details><details><summary>[5] shell create csv without header and run termgraph</summary><pre>cat &gt; ~/ws/data.csv &lt;&lt; &#x27;EOF&#x27;
+Jan,120,340
+Feb,150,410
+Mar,180,520
+Apr,200,600
+May,240,750
+Jun,300,900
+EOF
+termgraph ~/ws/data.csv --title &quot;Monthly Sales and Visitors&quot; --color red green --format &quot;{}&quot;</pre><pre>[종료코드 0]
+
+# Monthly Sales and Visitors
+
+Jan: [0m[91m▇▇▇▇▇▇[0m 120.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 340.0
+Feb: [0m[91m▇▇▇▇▇▇▇▇[0m 150.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 410.0
+Mar: [0m[91m▇▇▇▇▇▇▇▇▇▇[0m 180.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 520.0
+Apr: [0m[91m▇▇▇▇▇▇▇▇▇▇▇[0m 200.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 600.0
+May: [0m[91m▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 240.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 750.0
+Jun: [0m[91m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 300.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 900.0
+</pre></details><details><summary>[6] shell save termgraph output to file</summary><pre>termgraph ~/ws/data.csv --title &quot;Monthly Sales and Visitors&quot; --color red green --format &quot;{}&quot; &gt; ~/ws/out/termgraph_output.txt 2&gt;&amp;1
+cat ~/ws/out/termgraph_output.txt</pre><pre>[종료코드 0]
+
+# Monthly Sales and Visitors
+
+Jan: [0m[91m▇▇▇▇▇▇[0m 120.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 340.0
+Feb: [0m[91m▇▇▇▇▇▇▇▇[0m 150.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 410.0
+Mar: [0m[91m▇▇▇▇▇▇▇▇▇▇[0m 180.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 520.0
+Apr: [0m[91m▇▇▇▇▇▇▇▇▇▇▇[0m 200.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 600.0
+May: [0m[91m▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 240.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 750.0
+Jun: [0m[91m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 300.0
+     [0m[92m▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇[0m 900.0
+</pre></details></html>
