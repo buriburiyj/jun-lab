@@ -1,0 +1,161 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>이미지 속 문자 인식(OCR) 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>이미지 속 문자 인식(OCR) 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 19번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>Tesseract OCR 엔진과 한국어 언어팩, 나눔 글꼴을 Ubuntu에 설치했다. 영어 숫자 이미지 Hello OCR 12345를 생성해 OCR한 결과 Hello OCR 12345로 정확히 인식되었다. 한국어 이미지 안녕하세요 OCR 테스트 2025를 생성해 OCR한 결과 녕하세요 008 테스트 2025로 부분 인식되었다. 첫 글자 안은 008로 오인식되었고 영문 OCR은 인식되지 못했다. 알게 된 점은 Tesseract가 영어와 숫자에는 강하지만 한국어는 글꼴과 해상도에 따라 오인식이 발생하며 한글 초성 종성이 분리되어 인식될 수 있다는 점이다. 다음에 해 볼 것은 이미지 전처리 그레이스케일 이진화 노이즈 제거를 적용해 한국어 인식률을 높여보고 여러 글꼴과 크기로 비교 실험하는 것이다. 결과 이미지는 ~/ws/out에 저장했다.</p><img src="out/test_kor.png"><img src="out/test_ocr.png">
+<h2>결과 파일</h2><ul><li><a href="out/test_kor.png">test_kor.png</a></li><li><a href="out/test_ocr.png">test_ocr.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search GitHub API trending repositories list endpoint</summary><pre></pre><pre>1. Github-Trending-API
+https://github.com/NiklasTiede/Github-Trending-API
+GitHub Trending API is a small FastAPI service that scrapes GitHub Trending and returns JSON data for trending repositories and developers. It is based on the idea of huchenme/ github - trending - api , but implemented in Python. There is currently no hosted public instance of this API . Run it locally or use the Docker image.
+
+2. REST API endpoints for repositories - GitHub Docs
+https://docs.github.com/en/rest/repos
+Use the REST API to create, manage and control the workflow of public and private GitHub repositories .
+
+3. Github Unofficial Trending API
+https://github.com/huchenme/github-trending-api
+A simple API that returns number of Github trending repositories and developers.
+
+4. List trending GitHub repositories API - Crawlora API Docs
+https://crawlora.net/docs/github/github-trending
+Lists the repositories currently trending on GitHub . Filter by programming `language` (such as `go` or `python`) and choose the window with `since`.
+
+5. List trending GitHub repositories — Social Fetch
+https://www.socialfetch.dev/docs/api/v1/github/trending/repositories/get
+List trending GitHub repositories for a language and time window. Use `since` (`daily`, `weekly`, `monthly`) and optional `language` / `spokenLanguageCode` to narrow results. For trending developers instead of repositories , use the trending developers endpoint .
+
+6. GitHub Trending API Documentation
+https://www.searchapi.io/docs/github-trending-api
+Scrape GitHub Trending repositories and developers by language and date range as structured JSON, with stars gained in the period.
+
+7. How to get list of trending github repositories by github api?
+https://stackoverflow.com/questions/30525330/how-to-get-list-of-trending-github-repositories-by-github-api
+GitHub seems to use their API to write the trending page and don&#x27;t present it back as a particular API . You need to use the Repository Search API . I&#x27;ve followed the examples on this page, which could solve your needs by:
+
+8. List trending GitHub repositories · GitHub API - UnifAPI
+https://unifapi.com/apis/github/trending/repos/get
+Returns GitHub&#x27;s trending repositories for a time window (`daily`, `weekly`, `monthly`), optionally for one programming or spoken language, with stars gained in the window.</pre></details><details><summary>[2] shell curl -s &quot;https://api.github.com/search/repositories?q=created:%3E2024-01-01&amp;sort=stars&amp;order=desc&amp;pe</summary><pre></pre><pre>[종료코드 0]
+{
+  &quot;total_count&quot;: 98614516,
+  &quot;incomplete_results&quot;: true,
+  &quot;items&quot;: [
+    {
+      &quot;id&quot;: 850919564,
+      &quot;node_id&quot;: &quot;R_kgDOMrgAjA&quot;,
+      &quot;name&quot;: &quot;GOT-OCR2.0&quot;,
+      &quot;full_name&quot;: &quot;Ucas-HaoranWei/GOT-OCR2.0&quot;,
+      &quot;private&quot;: false,
+      &quot;owner&quot;: {
+        &quot;login&quot;: &quot;Ucas-HaoranWei&quot;,
+        &quot;id&quot;: 50487563,
+        &quot;node_id&quot;: &quot;MDQ6VXNlcjUwNDg3NTYz&quot;,
+        &quot;avatar_url&quot;: &quot;https://avatars.githubusercontent.com/u/50487563?v=4&quot;,
+        &quot;gravatar_id&quot;: &quot;&quot;,
+        &quot;url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei&quot;,
+        &quot;html_url&quot;: &quot;https://github.com/Ucas-HaoranWei&quot;,
+        &quot;followers_url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei/followers&quot;,
+        &quot;following_url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei/following{/other_user}&quot;,
+        &quot;gists_url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei/gists{/gist_id}&quot;,
+        &quot;starred_url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei/starred{/owner}{/repo}&quot;,
+        &quot;subscriptions_url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei/subscriptions&quot;,
+        &quot;organizations_url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei/orgs&quot;,
+        &quot;repos_url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei/repos&quot;,
+        &quot;events_url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei/events{/privacy}&quot;,
+        &quot;received_events_url&quot;: &quot;https://api.github.com/users/Ucas-HaoranWei/received_events&quot;,
+        &quot;type&quot;: &quot;User&quot;,
+        &quot;user_view_type&quot;: &quot;public&quot;,
+        &quot;site_admin&quot;: false
+      },
+      &quot;html_url&quot;: &quot;https://github.com/Ucas-HaoranWei/GOT-OCR2.0&quot;,
+      &quot;description&quot;: &quot;Official code implementation of General OCR Theory:  Towards OCR-2.0 via a Unified End-to-end Model&quot;,
+      &quot;fork&quot;: false,
+      &quot;url&quot;: &quot;https://api.github.com/repos/Ucas-HaoranWei/GOT-OCR2.0&quot;,
+      &quot;forks_url&quot;: &quot;https://api.github.com/repos/Ucas-HaoranWei/GOT-OCR2.0/forks&quot;,
+      &quot;keys_url&quot;: &quot;https://api.github.com/repos/Ucas-HaoranWei/GOT-OCR2.0/keys{/key_id}&quot;,
+      &quot;collaborators_url&quot;: &quot;https://api.github.com/repos/Ucas-HaoranWei/GOT-OCR2.0/collabora</pre></details><details><summary>[3] fetch https://raw.githubusercontent.com/Ucas-HaoranWei/GOT-OCR2.0/main/README.md</summary><pre></pre><pre>General OCR Theory: Towards OCR-2.0 via a Unified End-to-end Model [Haoran Wei*](https://scholar.google.com/citations?user=J4naK0MAAAAJ&amp;hl=en), Chenglong Liu*, Jinyue Chen, Jia Wang, Lingyu Kong, Yanming Xu, [Zheng Ge](https://joker316701882.github.io/), Liang Zhao, [Jianjian Sun](https://scholar.google.com/citations?user=MVZrGkYAAAAJ&amp;hl=en), [Yuang Peng](https://yuangpeng.com), Chunrui Han, [Xiangyu Zhang](https://scholar.google.com/citations?user=yuB-cfoAAAAJ&amp;hl=en) ## Release - [2025/2/1] 🚀🚀🚀 GOT-OCR2.0 is merged to [Huggingface-transformers](https://huggingface.co/stepfun-ai/GOT-OCR-2.0-hf)/[space](https://huggingface.co/spaces/yonigozlan/GOT-OCR-Transformers). It supports inference batched. Thanks to the MLE of Huggingface [Yoni](https://github.com/yonigozlan). - [2024/12/24] 🔥🔥🔥 My new work on system-2 perception is released [slow-perception](https://github.com/Ucas-HaoranWei/Slow-Perception). - [2024/12/18] 🚀🚀🚀 GOT-OCR2.0 is supported in [PaddleMIX](https://github.com/PaddlePaddle/PaddleMIX/tree/develop/paddlemix/examples/GOT_OCR_2_0) by Paddle Team. Thanks for the Paddle team! - [2024/12/8] 🔥🔥🔥 The model download has exceeded 1M on [Huggingface](https://huggingface.co/stepfun-ai/GOT-OCR2_0). - [2024/12/5] The seven wechat [group](https://github.com/Ucas-HaoranWei/GOT-OCR2.0/blob/main/assets/Wechat7.jpg). - [2024/11/4] The six wechat [group](https://github.com/Ucas-HaoranWei/GOT-OCR2.0/blob/main/assets/wechat6-2.jpg). - [2024/10/24] The previous four wechat groups are full, so we created a fifth [group](https://github.com/Ucas-HaoranWei/GOT-OCR2.0/blob/main/assets/wechat5.png). - [2024/10/11] Too many friends want to join the wechat group, so we created a fourth [group](https://github.com/Ucas-HaoranWei/GOT-OCR2.0/blob/main/assets/wechat4.jpg). - [2024/10/2] [onnx](https://github.com/BaofengZan/GOT-OCRv2-onnx) and [mnn](https://github.com/BaofengZan/mnn-llm-GOT-OCR2.0) versions of GOT-OCR2.0. - [2024/9/29]🔥🔥🔥 The community has implemented the first version of
+...(중략)...
+ttps://github.com/1694439208/GOT-OCR-Inference) ~ contributor: [@1694439208](https://github.com/1694439208) [Colab of GOT](https://colab.research.google.com/drive/1nmiNciZ5ugQVp4rFbL9ZWpEPd92Y9o7p?usp=sharing) ~ contributor: [@Zizhe Wang](https://github.com/PaperPlaneDeemo) [CPU version of GOT](https://github.com/ElvisClaros/GOT-OCR2.0) ~ contributor: [@ElvisClaros](https://github.com/ElvisClaros) [Online demo](https://huggingface.co/spaces/Tonic/GOT-OCR) ~ contributor: [@Joseph Pollack](https://huggingface.co/Tonic) [Dokcer &amp; client demo](https://github.com/QIN2DIM/GOT-OCR2.0) ~ contributor: [@QIN2DIM](https://github.com/QIN2DIM) [GUI of GOT](https://github.com/XJF2332/GOT-OCR-2-GUI) ~ contributor: [@XJF2332](https://github.com/XJF2332) ## Contents - [Install](#install) - [GOT Weights](#got-weights) - [Benchmarks](#benchmarks) - [Demo](#demo) - [Train](#train) - [Fine-tune](#fine-tune) - [Eval](#eval) *** Towards OCR-2.0 via a Unified End-to-end Model *** ## Install 0. Our environment is cuda11.8+torch2.0.1 1. Clone this repository and navigate to the GOT folder ```bash git clone https://github.com/Ucas-HaoranWei/GOT-OCR2.0.git cd &#x27;the GOT folder&#x27; ``` 2. Install Package ```Shell conda create -n got python=3.10 -y conda activate got pip install -e . ``` 3. Install Flash-Attention ``` pip install ninja pip install flash-attn --no-build-isolation ``` ## GOT Weights - [Huggingface](https://huggingface.co/ucaslcl/GOT-OCR2_0) - [Google Drive](https://drive.google.com/drive/folders/1OdDtsJ8bFJYlNUzCQG4hRkUL6V-qBQaN?usp=sharing) - [BaiduYun](https://pan.baidu.com/s/1G4aArpCOt6I_trHv_1SE2g) code: OCR2 ## Benchmarks - [Google Drive](https://drive.google.com/drive/folders/1OdDtsJ8bFJYlNUzCQG4hRkUL6V-qBQaN?usp=sharing) - [BaiduYun](https://pan.baidu.com/s/1G4aArpCOt6I_trHv_1SE2g) code: OCR2 ## Demo 1. plain texts OCR: ```Shell python3 GOT/demo/run_ocr_2.0.py --model-name /GOT_weights/ --image-file /an/image/file.png --type ocr ``` 2. format texts OCR: ```Shell python3 GOT/demo</pre></details><details><summary>[4] shell uname -a; echo &quot;---&quot;; nvidia-smi 2&gt;&amp;1 || echo &quot;no nvidia-smi&quot;; echo &quot;---&quot;; python3 --version; echo &quot;</summary><pre></pre><pre>[종료코드 0]
+Linux ip-10-0-138-86 7.0.0-1014-aws #14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+---
+bash: line 1: nvidia-smi: command not found
+no nvidia-smi
+---
+Python 3.12.16
+---
+no relevant python packages
+---
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       875Mi        13Gi        44Mi       899Mi        14Gi
+Swap:          3.0Gi          0B       3.0Gi
+---
+/dev/mapper/cow-root  145G   56G   89G  39% /
+</pre></details><details><summary>[5] shell apt-get update -qq &amp;&amp; apt-get install -y -qq tesseract-ocr tesseract-ocr-kor imagemagick 2&gt;&amp;1 | tail</summary><pre></pre><pre>[종료코드 100]
+E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)
+E: Unable to lock directory /var/lib/apt/lists/
+W: Problem unlinking the file /var/cache/apt/pkgcache.bin - RemoveCaches (13: Permission denied)
+W: Problem unlinking the file /var/cache/apt/srcpkgcache.bin - RemoveCaches (13: Permission denied)
+</pre></details><details><summary>[6] shell sudo apt-get update -qq &amp;&amp; sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-kor imagemagick 2</summary><pre></pre><pre>[종료코드 0]
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+</pre></details><details><summary>[7] shell which tesseract &amp;&amp; tesseract --version | head -1 &amp;&amp; pip3 install -q pytesseract pillow 2&gt;&amp;1 | tail -</summary><pre></pre><pre>[종료코드 0]
+/usr/bin/tesseract
+tesseract 5.3.4
+</pre></details><details><summary>[8] shell pip3 list 2&gt;/dev/null | grep -iE &quot;pytesseract|pillow&quot;; convert -size 800x200 xc:white -pointsize 40 </summary><pre></pre><pre>[종료코드 0]
+pillow      13.0.0
+pytesseract 0.3.13
+-rw-r--r-- 1 runner runner 3783 Nov 14 21:57 /home/runner/ws/test_ocr.png
+</pre></details><details><summary>[9] shell python3 -c &quot;</summary><pre></pre><pre>[종료코드 2]
+bash: -c: line 1: unexpected EOF while looking for matching `&quot;&#x27;
+</pre></details><details><summary>[10] write ~/ws/ocr_test.py</summary><pre>import pytesseract
+from PIL import Image
+
+img = Image.open(&#x27;/home/runner/ws/test_ocr.png&#x27;)
+print(&#x27;ENG:&#x27;, repr(pytesseract.image_to_string(img, lang=&#x27;eng&#x27;).strip()))
+print(&#x27;KOR:&#x27;, repr(pytesseract.image_to_string(img, lang=&#x27;kor&#x27;).strip()))
+</pre><pre>저장함: ocr_test.py (239자)</pre></details><details><summary>[11] shell python3 ~/ws/ocr_test.py</summary><pre></pre><pre>[종료코드 0]
+ENG: &#x27;Hello OCR 12345&#x27;
+KOR: &#x27;16110 003 12345&#x27;
+</pre></details><details><summary>[12] shell fc-list 2&gt;/dev/null | grep -iE &quot;nanum|unbatang|gulim|batang|dotum&quot; | head -5 || echo &quot;no korean font</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[13] shell sudo apt-get install -y -qq fonts-nanum 2&gt;&amp;1 | tail -3 &amp;&amp; fc-list | grep -i nanum | head -3</summary><pre></pre><pre>[종료코드 0]
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+/usr/share/fonts/truetype/nanum/NanumSquareRoundB.ttf: NanumSquareRound,나눔스퀘어라운드,NanumSquareRound Bold,나눔스퀘어라운드 Bold:style=Bold,Regular
+/usr/share/fonts/truetype/nanum/NanumGothicCodingBold.ttf: NanumGothicCoding,나눔고딕코딩:style=Bold
+/usr/share/fonts/truetype/nanum/NanumSquareRoundR.ttf: NanumSquareRound,나눔스퀘어라운드,NanumSquareRound Regular,나눔스퀘어라운드 Regular:style=Regular
+</pre></details><details><summary>[14] shell convert -size 800x200 xc:white -pointsize 40 -fill black -font NanumGothic -gravity center -annotate</summary><pre></pre><pre>[종료코드 2]
+bash: -c: line 1: unexpected EOF while looking for matching `&quot;&#x27;
+</pre></details><details><summary>[15] write ~/ws/ocr_kor_test.py</summary><pre>import pytesseract
+from PIL import Image
+
+for path in [&#x27;/home/runner/ws/test_kor.png&#x27;]:
+    img = Image.open(path)
+    for lang in [&#x27;eng&#x27;, &#x27;kor&#x27;]:
+        print(path, lang, repr(pytesseract.image_to_string(img, lang=lang).strip()))
+</pre><pre>저장함: ocr_kor_test.py (232자)</pre></details><details><summary>[16] shell python3 ~/ws/ocr_kor_test.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/ocr_kor_test.py&quot;, line 5, in &lt;module&gt;
+    img = Image.open(path)
+          ^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/PIL/Image.py&quot;, line 3654, in open
+    fp = builtins.open(filename, &quot;rb&quot;)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: &#x27;/home/runner/ws/test_kor.png&#x27;
+</pre></details><details><summary>[17] shell ls -la ~/ws/*.png; convert -size 800x200 xc:white -pointsize 40 -fill black -font /usr/share/fonts/t</summary><pre></pre><pre>[종료코드 0]
+-rw-r--r-- 1 runner runner 3783 Nov 14 21:57 /home/runner/ws/test_ocr.png
+-rw-r--r-- 1 runner runner 5470 Nov 14 21:57 /home/runner/ws/test_kor.png
+</pre></details><details><summary>[18] shell python3 ~/ws/ocr_kor_test.py</summary><pre></pre><pre>[종료코드 0]
+/home/runner/ws/test_kor.png eng &#x27;SEMIS OCR EAE 2025&#x27;
+/home/runner/ws/test_kor.png kor &#x27;녕하세요 008 테스트 2025&#x27;
+</pre></details><details><summary>[19] shell mkdir -p ~/ws/out &amp;&amp; cp ~/ws/test_ocr.png ~/ws/test_kor.png ~/ws/out/ &amp;&amp; ls -la ~/ws/out/</summary><pre></pre><pre>[종료코드 0]
+total 20
+drwxr-xr-x 2 runner runner 4096 Nov 14 21:58 .
+drwxr-xr-x 3 runner runner 4096 Nov 14 21:57 ..
+-rw-r--r-- 1 runner runner 5470 Nov 14 21:58 test_kor.png
+-rw-r--r-- 1 runner runner 3783 Nov 14 21:58 test_ocr.png
+</pre></details></html>
