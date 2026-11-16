@@ -1,0 +1,186 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>리눅스 압축 알고리즘 성능 비교 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>리눅스 압축 알고리즘 성능 비교 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 10번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>지금까지 한 일<br>- 리눅스 압축 알고리즘(gzip, zstd, bzip2, xz, lz4, pigz) 비교 정보를 검색하고, 위키피디아 데이터 압축 페이지를 curl로 가져옴.<br>- `~/ws/out` 디렉터리를 만들고 압축 도구들이 모두 설치되어 있음을 확인함.<br>- 테스트 파일 2개를 생성함: `test_random.bin`(1MB 랜덤 이진), `test_text.txt`(8.6MB 반복 텍스트).<br>- `bench.py`를 작성해 각 도구의 압축률과 소요 시간을 측정함(랜덤 파일은 거의 압축 안 되고, 반복 텍스트는 zstd가 가장 높은 압축률을 보임 등).<br>- `plot.py`를 작성하고 `matplotlib`를 설치해 결과 그래프 `compression_benchmark.png`(68K)를 저장함.<br><br>막힌 점 / 보완할 점<br>- `test_log.log` 생성 실패: Python에서 `&#x27;~/ws/test_log.log&#x27;`처럼 물결표(`~`)를 쓰니 경로 확장이 안 되어 `FileNotFoundError`가 발생함.<br>- `plot.py` 실행 마지막에 `NameError: name &#x27;EOF&#x27; is not defined` 오류가 나며 스크립트가 비정상 종료됨(그래프 파일은 저장됨).<br>- `bench.py`를 처음 here-document로 만들 때 EOF 구분자 오류가 있었으나, 이후 파일 저장은 성공함.</p><img src="out/compression_benchmark.png">
+<h2>결과 파일</h2><ul><li><a href="out/compression_benchmark.png">compression_benchmark.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search linux compression benchmark gzip zstd bzip2 xz lz4 comparison</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] shell curl -sL &quot;https://en.wikipedia.org/wiki/Data_compression&quot; | head -100</summary><pre></pre><pre>[종료코드 0]
+&lt;!DOCTYPE html&gt;
+&lt;html class=&quot;client-nojs vector-feature-language-in-header-enabled vector-feature-language-in-main-menu-disabled vector-feature-language-in-main-page-header-disabled vector-feature-page-tools-pinned-disabled vector-feature-toc-pinned-clientpref-1 vector-feature-main-menu-pinned-disabled vector-feature-limited-width-clientpref-1 vector-feature-limited-width-content-enabled vector-feature-custom-font-size-clientpref-1 vector-feature-appearance-pinned-clientpref-1 skin-theme-clientpref-day vector-sticky-header-enabled vector-toc-available skin-thumbsize-clientpref-standard skin-underline-clientpref-browser&quot; lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;Data compression - Wikipedia&lt;/title&gt;
+&lt;script&gt;(function(){var className=&quot;client-js vector-feature-language-in-header-enabled vector-feature-language-in-main-menu-disabled vector-feature-language-in-main-page-header-disabled vector-feature-page-tools-pinned-disabled vector-feature-toc-pinned-clientpref-1 vector-feature-main-menu-pinned-disabled vector-feature-limited-width-clientpref-1 vector-feature-limited-width-content-enabled vector-feature-custom-font-size-clientpref-1 vector-feature-appearance-pinned-clientpref-1 skin-theme-clientpref-day vector-sticky-header-enabled vector-toc-available skin-thumbsize-clientpref-standard skin-underline-clientpref-browser&quot;;var cookie=document.cookie.match(/(?:^|; )enwikimwclientpreferences=([^;]+)/);if(cookie){cookie[1].split(&#x27;%2C&#x27;).forEach(function(pref){className=className.replace(new RegExp(&#x27;(^| )&#x27;+pref.replace(/-clientpref-\w+$|[^\w-]+/g,&#x27;&#x27;)+&#x27;-clientpref-\\w+( |$)&#x27;),&#x27;$1&#x27;+pref+&#x27;$2&#x27;);});}document.documentElement.className=className;}());RLCONF={&quot;wgBreakFrames&quot;:false,&quot;wgSeparatorTransformTable&quot;:[&quot;&quot;,&quot;&quot;],&quot;wgDigitTransformTable&quot;:[&quot;&quot;,&quot;&quot;],&quot;wgDefaultDateFormat&quot;:&quot;dmy&quot;,&quot;wgMonthNames&quot;:[&quot;&quot;,&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;,&quot;August&quot;,&quot;September&quot;,&quot;October&quot;,&quot;November&quot;,&quot;December&quot;],&quot;wgRequestId&quot;:&quot;c370e2f7-0d35-44a4-9e29-ef7dcbd774a3&quot;,&quot;wgCa
+...(중략)...
+&quot; title=&quot;Guides to browsing Wikipedia&quot;&gt;&lt;span&gt;Contents&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;n-currentevents&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;/wiki/Portal:Current_events&quot; title=&quot;Articles related to current events&quot;&gt;&lt;span&gt;Current events&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;n-randompage&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;/wiki/Special:Random&quot; title=&quot;Visit a randomly selected article [x]&quot; accesskey=&quot;x&quot;&gt;&lt;span&gt;Random article&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;n-aboutsite&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;/wiki/Wikipedia:About&quot; title=&quot;Learn about Wikipedia and how it works&quot;&gt;&lt;span&gt;About Wikipedia&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;n-contactpage&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;//en.wikipedia.org/wiki/Wikipedia:Contact_us&quot; title=&quot;How to contact Wikipedia&quot;&gt;&lt;span&gt;Contact us&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+		&lt;/ul&gt;
+		
+	&lt;/div&gt;
+&lt;/div&gt;
+
+	
+&lt;div id=&quot;p-interaction&quot; class=&quot;vector-menu mw-portlet mw-portlet-interaction&quot;  &gt;
+	&lt;div class=&quot;vector-menu-heading&quot;&gt;
+		Contribute
+	&lt;/div&gt;
+	&lt;div class=&quot;vector-menu-content&quot;&gt;
+		
+		&lt;ul class=&quot;vector-menu-content-list&quot;&gt;
+			
+			&lt;li id=&quot;n-help&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;/wiki/Help:Contents&quot; title=&quot;Guidance on how to use and edit Wikipedia&quot;&gt;&lt;span&gt;Help&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;n-introduction&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;/wiki/Help:Introduction&quot; title=&quot;Learn how to edit Wikipedia&quot;&gt;&lt;span&gt;Learn to edit&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;n-portal&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;/wiki/Wikipedia:Community_portal&quot; title=&quot;The hub for editors&quot;&gt;&lt;span&gt;Community portal&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;n-recentchanges&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;/wiki/Special:RecentChanges&quot; title=&quot;A list of recent changes to Wikipedia [r]&quot; accesskey=&quot;r&quot;&gt;&lt;span&gt;Recent changes&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;n-upload&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;/wiki/Wikipedia:File_upload_wizard&quot; title=&quot;Add images or other media for use on Wikipedia&quot;&gt;&lt;span&gt;Upload file&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;n-specialpages&quot; class=&quot;mw-list-item&quot;&gt;&lt;a href=&quot;/wiki/Special:SpecialPages&quot; title=&quot;A list of all special pages [q]&quot; accesskey=&quot;q&quot;&gt;&lt;span&gt;Special pages&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+		&lt;/ul&gt;
+		
+	&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+				&lt;/div&gt;
+
+	&lt;/div&gt;
+</pre></details><details><summary>[3] shell mkdir -p ~/ws/out &amp;&amp; which gzip zstd bzip2 xz lz4 pigz 2&gt;/dev/null; head -c 1000000 /dev/urandom &gt; ~</summary><pre></pre><pre>[종료코드 0]
+/usr/bin/gzip
+/usr/local/bin/zstd
+/usr/bin/bzip2
+/usr/bin/xz
+/usr/bin/lz4
+/usr/bin/pigz
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+FileNotFoundError: [Errno 2] No such file or directory: &#x27;~/ws/test_log.log&#x27;
+-rw-r--r-- 1 runner runner 977K Nov 16 14:41 /home/runner/ws/test_random.bin
+-rw-r--r-- 1 runner runner 8.6M Nov 16 14:41 /home/runner/ws/test_text.txt
+</pre></details><details><summary>[4] shell cat &gt; ~/ws/bench.py &lt;&lt; &#x27;EOF&#x27;</summary><pre></pre><pre>[종료코드 0]
+bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted `EOF&#x27;)
+</pre></details><details><summary>[5] write ~/ws/bench.py</summary><pre>import subprocess, time, os, random
+
+files = [&#x27;test_random.bin&#x27;, &#x27;test_text.txt&#x27;, &#x27;test_log.log&#x27;]
+algos = {
+    &#x27;gzip&#x27;: [&#x27;gzip&#x27;, &#x27;-k&#x27;, &#x27;-f&#x27;],
+    &#x27;zstd&#x27;: [&#x27;zstd&#x27;, &#x27;-k&#x27;, &#x27;-f&#x27;],
+    &#x27;bzip2&#x27;: [&#x27;bzip2&#x27;, &#x27;-k&#x27;, &#x27;-f&#x27;],
+    &#x27;xz&#x27;: [&#x27;xz&#x27;, &#x27;-k&#x27;, &#x27;-f&#x27;],
+    &#x27;lz4&#x27;: [&#x27;lz4&#x27;, &#x27;-f&#x27;],
+    &#x27;pigz&#x27;: [&#x27;pigz&#x27;, &#x27;-k&#x27;, &#x27;-f&#x27;],
+}
+exts = {
+    &#x27;gzip&#x27;: &#x27;.gz&#x27;,
+    &#x27;zstd&#x27;: &#x27;.zst&#x27;,
+    &#x27;bzip2&#x27;: &#x27;.bz2&#x27;,
+    &#x27;xz&#x27;: &#x27;.xz&#x27;,
+    &#x27;lz4&#x27;: &#x27;.lz4&#x27;,
+    &#x27;pigz&#x27;: &#x27;.gz&#x27;,
+}
+
+ws = os.path.expanduser(&#x27;~/ws&#x27;)
+lines = [&#x27;2024-01-01 INFO request ok&#x27;, &#x27;2024-01-01 ERROR timeout&#x27;, &#x27;2024-01-02 WARN retry&#x27;, &#x27;2024-01-02 DEBUG cache miss&#x27;]
+open(os.path.join(ws, &#x27;test_log.log&#x27;), &#x27;w&#x27;).write(&#x27;\n&#x27;.join(random.choice(lines) for _ in range(200000)))
+
+for f in files:
+    path = os.path.join(ws, f)
+    orig = os.path.getsize(path)
+    print(&#x27;=== %s (%d bytes) ===&#x27; % (f, orig))
+    for name, cmd in algos.items():
+        out = path + exts[name]
+        t0 = time.time()
+        try:
+            subprocess.run(cmd + [path], check=True, capture_output=True, timeout=120)
+        except Exception as e:
+            print(&#x27;  %s: ERROR %s&#x27; % (name, e))
+            continue
+        t1 = time.time()
+        comp = os.path.getsize(out) if os.path.exists(out) else 0
+        ratio = orig / comp if comp else 0
+        print(&#x27;  %s: %d bytes, ratio=%.2fx, time=%.3fs&#x27; % (name, comp, ratio, t1 - t0))
+        if os.path.exists(out):
+            os.remove(out)
+EOF
+</pre><pre>저장함: bench.py (1398자)</pre></details><details><summary>[6] shell python3 ~/ws/bench.py</summary><pre></pre><pre>[종료코드 1]
+=== test_random.bin (1000000 bytes) ===
+  gzip: 1000189 bytes, ratio=1.00x, time=0.023s
+  zstd: 1000037 bytes, ratio=1.00x, time=0.004s
+  bzip2: 1005253 bytes, ratio=0.99x, time=0.127s
+  xz: 1000116 bytes, ratio=1.00x, time=0.300s
+  lz4: 1000019 bytes, ratio=1.00x, time=0.051s
+  pigz: 1000344 bytes, ratio=1.00x, time=0.056s
+=== test_text.txt (9000001 bytes) ===
+  gzip: 26272 bytes, ratio=342.57x, time=0.013s
+  zstd: 888 bytes, ratio=10135.14x, time=0.009s
+  bzip2: 2054 bytes, ratio=4381.69x, time=1.746s
+  xz: 1496 bytes, ratio=6016.04x, time=0.099s
+  lz4: 35486 bytes, ratio=253.62x, time=0.008s
+  pigz: 27682 bytes, ratio=325.12x, time=0.012s
+=== test_log.log (5099630 bytes) ===
+  gzip: 116194 bytes, ratio=43.89x, time=0.029s
+  zstd: 242544 bytes, ratio=21.03x, time=0.009s
+  bzip2: 55608 bytes, ratio=91.71x, time=1.154s
+  xz: 131960 bytes, ratio=38.65x, time=0.300s
+  lz4: 601188 bytes, ratio=8.48x, time=0.007s
+  pigz: 117244 bytes, ratio=43.50x, time=0.016s
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/bench.py&quot;, line 43, in &lt;module&gt;
+    EOF
+NameError: name &#x27;EOF&#x27; is not defined
+</pre></details><details><summary>[7] write ~/ws/plot.py</summary><pre>import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+import numpy as np
+
+algos = [&#x27;gzip&#x27;, &#x27;zstd&#x27;, &#x27;bzip2&#x27;, &#x27;xz&#x27;, &#x27;lz4&#x27;, &#x27;pigz&#x27;]
+files = [&#x27;random.bin&#x27;, &#x27;text.txt&#x27;, &#x27;log.log&#x27;]
+
+# compression ratio (higher = better)
+ratio = {
+    &#x27;random.bin&#x27;: [1.00, 1.00, 0.99, 1.00, 1.00, 1.00],
+    &#x27;text.txt&#x27;: [342.57, 10135.14, 4381.69, 6016.04, 253.62, 325.12],
+    &#x27;log.log&#x27;: [43.89, 21.03, 91.71, 38.65, 8.48, 43.50],
+}
+# time seconds (lower = better)
+tsec = {
+    &#x27;random.bin&#x27;: [0.023, 0.004, 0.127, 0.300, 0.051, 0.056],
+    &#x27;text.txt&#x27;: [0.013, 0.009, 1.746, 0.099, 0.008, 0.012],
+    &#x27;log.log&#x27;: [0.029, 0.009, 1.154, 0.300, 0.007, 0.016],
+}
+
+x = np.arange(len(algos))
+width = 0.25
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+for i, f in enumerate(files):
+    axes[0].bar(x + (i-1)*width, ratio[f], width, label=f)
+axes[0].set_xticks(x)
+axes[0].set_xticklabels(algos)
+axes[0].set_ylabel(&#x27;Compression ratio (x)&#x27;)
+axes[0].set_title(&#x27;Compression ratio by algorithm and file type&#x27;)
+axes[0].legend()
+axes[0].set_yscale(&#x27;log&#x27;)
+
+for i, f in enumerate(files):
+    axes[1].bar(x + (i-1)*width, tsec[f], width, label=f)
+axes[1].set_xticks(x)
+axes[1].set_xticklabels(algos)
+axes[1].set_ylabel(&#x27;Compress time (seconds)&#x27;)
+axes[1].set_title(&#x27;Compression time by algorithm and file type&#x27;)
+axes[1].legend()
+
+plt.tight_layout()
+plt.savefig(&#x27;/home/runner/ws/out/compression_benchmark.png&#x27;, dpi=150)
+print(&#x27;saved /home/runner/ws/out/compression_benchmark.png&#x27;)
+EOF
+</pre><pre>저장함: plot.py (1462자)</pre></details><details><summary>[8] shell python3 ~/ws/plot.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot.py&quot;, line 1, in &lt;module&gt;
+    import matplotlib
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[9] shell pip install matplotlib --quiet &amp;&amp; python3 ~/ws/plot.py</summary><pre></pre><pre>[종료코드 1]
+saved /home/runner/ws/out/compression_benchmark.png
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot.py&quot;, line 47, in &lt;module&gt;
+    EOF
+NameError: name &#x27;EOF&#x27; is not defined
+</pre></details><details><summary>[10] shell ls -lh ~/ws/out/compression_benchmark.png</summary><pre></pre><pre>[종료코드 0]
+-rw-r--r-- 1 runner runner 68K Nov 16 14:42 /home/runner/ws/out/compression_benchmark.png
+</pre></details></html>
