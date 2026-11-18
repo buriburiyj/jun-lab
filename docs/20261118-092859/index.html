@@ -1,0 +1,226 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>리눅스에서 압축 알고리즘 성능 비교 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>리눅스에서 압축 알고리즘 성능 비교 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 5번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>지금까지 한 일<br>- 리눅스/우분투에서 압축 알고리즘 벤치마크 실험 주제로 Zstandard(zstd)를 선택하고, 위키백과 페이지에서 정보를 확인함.<br>- 셸에서 zstd를 설치하고, 텍스트·혼합·랜덤 테스트 데이터를 생성함.<br>- zstd, gzip, bzip2, xz의 압축 비율과 소요 시간을 비교하는 벤치마크를 실행함.<br>- matplotlib 모듈이 없어 그래프 생성이 실패하자, matplotlib를 설치한 후 벤치마크를 다시 실행해 그래프와 결과 표를 생성함.<br>- zstd가 gzip/bzip2보다 압축 속도가 훨씬 빠르며, 압축률도 경쟁력 있는 결과를 얻음.<br><br>막혔던 점과 현재 상태<br>- 처음에 검색어가 적절하지 않아 검색이 막혔으나, 직접 위키 주소를 가져와 해결함.<br>- matplotlib 모듈 없음 오류로 그래프 출력이 안 되었으나, 설치 후 재실행하여 해결함.<br>- 현재는 특별한 막힘 없이 실험을 마친 상태다.</p><img src="out/benchmark_mixed.txt.png"><img src="out/benchmark_random.bin.png"><img src="out/benchmark_text.txt.png">
+<h2>결과 파일</h2><ul><li><a href="out/benchmark.csv">benchmark.csv</a></li><li><a href="out/benchmark_mixed.txt.png">benchmark_mixed.txt.png</a></li><li><a href="out/benchmark_random.bin.png">benchmark_random.bin.png</a></li><li><a href="out/benchmark_text.txt.png">benchmark_text.txt.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting computer science experiments Linux Ubuntu benchmark compression sorting algorithm</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] fetch https://en.wikipedia.org/wiki/Zstandard</summary><pre></pre><pre>zstd - Wikipedia Jump to content Main menu Main menu move to sidebar hide Navigation Main page Contents Current events Random article About Wikipedia Contact us Contribute Help Learn to edit Community portal Recent changes Upload file Special pages Search Search Appearance Donate Create account Log in Personal tools Donate Create account Log in Contents move to sidebar hide (Top) 1 Features 2 Design 3 Usage 4 License 5 See also 6 References 7 External links Toggle the table of contents zstd 15 languages کوردی Čeština Deutsch Español فارسی Suomi Français Bahasa Indonesia Italiano 日本語 한국어 Português Русский Українська 中文 Edit links Article Talk English Read Edit View history Save Tools Tools move to sidebar hide Actions Read Edit View history Save General What links here Related changes Upload file Permanent link Page information Cite this page Get shortened URL Switch to legacy parser Print/export Download as PDF Printable version In other projects Wikidata item Appearance move to sidebar hide From Wikipedia, the free encyclopedia (Redirected from Zstandard ) Lossless compression algorithm &quot;.zst&quot; redirects here. For the game console emulator also using this file extension, see ZSNES . {{cite web|title=Contributors to facebook/zstd |url=https://github.com/facebook/zstd/graphs/contributors |access-date=26 Jan 2021 |website=github.com}}&lt;/ref&gt;&quot;},&quot;operating system&quot;:{&quot;wt&quot;:&quot;[[Cross-platform]]&quot;},&quot;genre&quot;:{&quot;wt&quot;:&quot;[[Data compression]]&quot;},&quot;programming language&quot;:{&quot;wt&quot;:&quot;[[C (programming language)|C]]&quot;},&quot;license&quot;:{&quot;wt&quot;:&quot;[[BSD licenses#3-clause license (\&quot;BSD License 2.0\&quot;, \&quot;Revised BSD License\&quot;, \&quot;New BSD License\&quot;, or \&quot;Modified BSD License\&quot;)|BSD-3-Clause]] or [[GNU General Public License#Version 2|GPL-2.0-or-later]] (dual-licensed)&quot;},&quot;logo&quot;:{&quot;wt&quot;:&quot;Zstandard logo.png&quot;},&quot;logo_size&quot;:{&quot;wt&quot;:&quot;110px&quot;},&quot;released&quot;:{&quot;wt&quot;:&quot;{{Start date|2015|01|23|df=y}}&quot;},&quot;discontinued&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;latest release version&quot;:{&quot;wt&quot;:&quot;{{wikidata|property|preferred|references|edit|P348|P548=Q2804309}}&quot;},&quot;latest rel
+...(중략)...
+9 ] The Zstandard command-line has an &quot;adaptive&quot; ( --adapt ) mode that varies compression level depending on I/O conditions, mainly how fast it can write the output. Zstandard at its maximum compression level gives a compression ratio close to lzma , lzham, and ppmx . [ 10 ] [ 11 ] As of 2020, Zstandard reaches the Pareto frontier for decompression, as it produces original uncompressed data faster than any other open source algorithm with a similar or better compression ratio. [ 12 ] Dictionaries can have a large impact on the compression ratio of small files, so Zstandard can use a user-provided compression dictionary. It also offers a training mode, able to generate a dictionary from a set of samples. [ 13 ] [ 14 ] In particular, one dictionary can be loaded to process large sets of files with redundancy between files, but not necessarily within each file, such as for log files . Design [ edit ] Zstandard combines a dictionary-matching stage ( LZ77 ) with a large search window and a fast entropy-coding stage. It uses Huffman coding alongside finite-state entropy (FSE), a variant of tANS . [ 15 ] Usage [ edit ] .zst&lt;/code&gt;&lt;ref name=\&quot;RFC8878\&quot;&gt;\n {{cite IETF\n |title=Zstandard Compression and the application/zstd Media Type\n |rfc=8878\n |last1=Collet\n |first1=Yann\n |editor1-last=Kucherawy\n |editor1-first=Murray S.\n |editor1-link=Murray Kucherawy\n |date=February 2021\n |access-date=26 February 2023\n |series=Internet Engineering Task Force Request for Comments}}\n&lt;/ref&gt;&quot;},&quot;mime&quot;:{&quot;wt&quot;:&quot;&lt;code&gt;application/zstd&lt;/code&gt;&lt;ref name=\&quot;RFC8878\&quot;/&gt;&quot;},&quot;genre&quot;:{&quot;wt&quot;:&quot;[[Data compression]]&quot;},&quot;magic&quot;:{&quot;wt&quot;:&quot;&lt;code&gt;28 B5 2F FD&lt;/code&gt;&lt;ref name=\&quot;RFC8878\&quot;/&gt;&quot;},&quot;standard&quot;:{&quot;wt&quot;:&quot;{{IETF RFC|8878}}&quot;},&quot;url&quot;:{&quot;wt&quot;:&quot;{{URL|https://github.com/facebook/zstd/blob/dev/doc/zstd_compression_format.md}}&quot;}},&quot;i&quot;:0}}]}&#x27;&gt; Zstandard Filename extension .zst [ 16 ] Internet media type application/zstd [ 16 ] Magic number 28 B5 2F FD [ 16 ] Type of format Data compression Standard RFC 8878 Website git</pre></details><details><summary>[3] shell zstd 설치 및 테스트 데이터 생성</summary><pre>which zstd || (sudo apt-get update -qq &amp;&amp; sudo apt-get install -y -qq zstd)
+mkdir -p ~/ws/data ~/ws/out
+cd ~/ws
+python3 - &lt;&lt;&#x27;PY&#x27;
+import os, random
+with open(&#x27;data/text.txt&#x27;,&#x27;w&#x27;) as f:
+    for _ in range(150000):
+        f.write(&#x27;The quick brown fox jumps over the lazy dog. This is a test sentence for compression benchmarking.\n&#x27;)
+with open(&#x27;data/random.bin&#x27;,&#x27;wb&#x27;) as f:
+    f.write(os.urandom(3_000_000))
+with open(&#x27;data/mixed.txt&#x27;,&#x27;w&#x27;) as f:
+    for i in range(80000):
+        f.write(f&#x27;line {i}: &#x27; + &#x27;&#x27;.join(random.choice(&#x27;abcdefghijklmnopqrstuvwxyz0123456789 &#x27;) for _ in range(70)) + &#x27;\n&#x27;)
+PY
+ls -lh ~/ws/data</pre><pre>[종료코드 0]
+/usr/local/bin/zstd
+total 24M
+-rw-r--r-- 1 runner runner 6.4M Nov 18 00:29 mixed.txt
+-rw-r--r-- 1 runner runner 2.9M Nov 18 00:29 random.bin
+-rw-r--r-- 1 runner runner  15M Nov 18 00:29 text.txt
+</pre></details><details><summary>[4] shell zstd와 gzip/bzip2/xz 압축 성능 비교 벤치마크 실행 및 그래프 생성</summary><pre>cd ~/ws
+python3 - &lt;&lt;&#x27;PY&#x27;
+import subprocess, time, os, csv, shutil
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+files = {
+    &#x27;text.txt&#x27;: &#x27;data/text.txt&#x27;,
+    &#x27;mixed.txt&#x27;: &#x27;data/mixed.txt&#x27;,
+    &#x27;random.bin&#x27;: &#x27;data/random.bin&#x27;,
+}
+
+commands = {
+    &#x27;zstd-1&#x27;: [&#x27;zstd&#x27;,&#x27;-1&#x27;,&#x27;-f&#x27;],
+    &#x27;zstd-3&#x27;: [&#x27;zstd&#x27;,&#x27;-3&#x27;,&#x27;-f&#x27;],
+    &#x27;zstd-9&#x27;: [&#x27;zstd&#x27;,&#x27;-9&#x27;,&#x27;-f&#x27;],
+    &#x27;zstd-19&#x27;: [&#x27;zstd&#x27;,&#x27;-19&#x27;,&#x27;-f&#x27;],
+    &#x27;gzip&#x27;: [&#x27;gzip&#x27;,&#x27;-k&#x27;,&#x27;-f&#x27;],
+    &#x27;bzip2&#x27;: [&#x27;bzip2&#x27;,&#x27;-k&#x27;,&#x27;-f&#x27;],
+    &#x27;xz&#x27;: [&#x27;xz&#x27;,&#x27;-k&#x27;,&#x27;-f&#x27;],
+}
+
+results = []
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+
+for name, path in files.items():
+    orig = os.path.getsize(path)
+    for algo, cmd in commands.items():
+        work = f&#x27;/tmp/work_{name}&#x27;
+        if os.path.exists(work): os.remove(work)
+        shutil.copy(path, work)
+        out_ext = {&#x27;zstd&#x27;:&#x27;.zst&#x27;,&#x27;gzip&#x27;:&#x27;.gz&#x27;,&#x27;bzip2&#x27;:&#x27;.bz2&#x27;,&#x27;xz&#x27;:&#x27;.xz&#x27;}[algo.split(&#x27;-&#x27;)[0]]
+        comp = work + out_ext
+        if os.path.exists(comp): os.remove(comp)
+        if algo.startswith(&#x27;zstd&#x27;):
+            c = cmd + [work, &#x27;-o&#x27;, comp]
+        else:
+            c = cmd + [work]
+        t0 = time.perf_counter()
+        try:
+            subprocess.run(c, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except subprocess.CalledProcessError as e:
+            print(&#x27;failed&#x27;, algo, name, e)
+            continue
+        t1 = time.perf_counter()
+        if not os.path.exists(comp):
+            continue
+        size = os.path.getsize(comp)
+        ratio = orig / size
+        elapsed = t1 - t0
+        results.append({&#x27;file&#x27;:name,&#x27;algo&#x27;:algo,&#x27;orig&#x27;:orig,&#x27;comp&#x27;:size,&#x27;ratio&#x27;:ratio,&#x27;time&#x27;:elapsed})
+        for p in [comp, work]:
+            if os.path.exists(p): os.remove(p)
+
+with open(&#x27;out/benchmark.csv&#x27;,&#x27;w&#x27;,newline=&#x27;&#x27;) as f:
+    w = csv.DictWriter(f, fieldnames=[&#x27;file&#x27;,&#x27;algo&#x27;,&#x27;orig&#x27;,&#x27;comp&#x27;,&#x27;ratio&#x27;,&#x27;time&#x27;])
+    w.writeheader()
+    w.writerows(results)
+
+print(&#x27;=== 결과 ===&#x27;)
+for r in results:
+    print(f&quot;{r[&#x27;file&#x27;]:12s} {r[&#x27;algo&#x27;]:8s} ratio={r[&#x27;ratio&#x27;]:6.2f} time={r[&#x27;time&#x27;]:.3f}s comp={r[&#x27;comp&#x27;]:,}B&quot;)
+
+for name in files:
+    subset = [r for r in results if r[&#x27;file&#x27;]==name]
+    if not subset: continue
+    fig, ax = plt.subplots(figsize=(7,4))
+    ax.scatter([r[&#x27;time&#x27;] for r in subset], [r[&#x27;ratio&#x27;] for r in subset])
+    for r in subset:
+        ax.annotate(r[&#x27;algo&#x27;], (r[&#x27;time&#x27;], r[&#x27;ratio&#x27;]))
+    ax.set_xlabel(&#x27;Compression time (seconds)&#x27;)
+    ax.set_ylabel(&#x27;Compression ratio (original / compressed)&#x27;)
+    ax.set_title(f&#x27;Compression benchmark: {name}&#x27;)
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(f&#x27;out/benchmark_{name}.png&#x27;, dpi=150)
+    plt.close(fig)
+print(&#x27;그래프 저장 완료: ~/ws/out&#x27;)
+PY
+ls -lh ~/ws/out</pre><pre>[종료코드 0]
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 2, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+total 0
+</pre></details><details><summary>[5] shell matplotlib 설치 후 압축 벤치마크 재실행 및 그래프 생성</summary><pre>pip install -q matplotlib
+cd ~/ws
+python3 - &lt;&lt;&#x27;PY&#x27;
+import subprocess, time, os, csv, shutil
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+files = {
+    &#x27;text.txt&#x27;: &#x27;data/text.txt&#x27;,
+    &#x27;mixed.txt&#x27;: &#x27;data/mixed.txt&#x27;,
+    &#x27;random.bin&#x27;: &#x27;data/random.bin&#x27;,
+}
+
+commands = {
+    &#x27;zstd-1&#x27;: [&#x27;zstd&#x27;,&#x27;-1&#x27;,&#x27;-f&#x27;],
+    &#x27;zstd-3&#x27;: [&#x27;zstd&#x27;,&#x27;-3&#x27;,&#x27;-f&#x27;],
+    &#x27;zstd-9&#x27;: [&#x27;zstd&#x27;,&#x27;-9&#x27;,&#x27;-f&#x27;],
+    &#x27;zstd-19&#x27;: [&#x27;zstd&#x27;,&#x27;-19&#x27;,&#x27;-f&#x27;],
+    &#x27;gzip&#x27;: [&#x27;gzip&#x27;,&#x27;-k&#x27;,&#x27;-f&#x27;],
+    &#x27;bzip2&#x27;: [&#x27;bzip2&#x27;,&#x27;-k&#x27;,&#x27;-f&#x27;],
+    &#x27;xz&#x27;: [&#x27;xz&#x27;,&#x27;-k&#x27;,&#x27;-f&#x27;],
+}
+
+results = []
+os.makedirs(&#x27;out&#x27;, exist_ok=True)
+
+for name, path in files.items():
+    orig = os.path.getsize(path)
+    for algo, cmd in commands.items():
+        work = f&#x27;/tmp/work_{name}&#x27;
+        if os.path.exists(work): os.remove(work)
+        shutil.copy(path, work)
+        out_ext = {&#x27;zstd&#x27;:&#x27;.zst&#x27;,&#x27;gzip&#x27;:&#x27;.gz&#x27;,&#x27;bzip2&#x27;:&#x27;.bz2&#x27;,&#x27;xz&#x27;:&#x27;.xz&#x27;}[algo.split(&#x27;-&#x27;)[0]]
+        comp = work + out_ext
+        if os.path.exists(comp): os.remove(comp)
+        if algo.startswith(&#x27;zstd&#x27;):
+            c = cmd + [work, &#x27;-o&#x27;, comp]
+        else:
+            c = cmd + [work]
+        t0 = time.perf_counter()
+        try:
+            subprocess.run(c, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except subprocess.CalledProcessError as e:
+            print(&#x27;failed&#x27;, algo, name, e)
+            continue
+        t1 = time.perf_counter()
+        if not os.path.exists(comp):
+            continue
+        size = os.path.getsize(comp)
+        ratio = orig / size
+        elapsed = t1 - t0
+        results.append({&#x27;file&#x27;:name,&#x27;algo&#x27;:algo,&#x27;orig&#x27;:orig,&#x27;comp&#x27;:size,&#x27;ratio&#x27;:ratio,&#x27;time&#x27;:elapsed})
+        for p in [comp, work]:
+            if os.path.exists(p): os.remove(p)
+
+with open(&#x27;out/benchmark.csv&#x27;,&#x27;w&#x27;,newline=&#x27;&#x27;) as f:
+    w = csv.DictWriter(f, fieldnames=[&#x27;file&#x27;,&#x27;algo&#x27;,&#x27;orig&#x27;,&#x27;comp&#x27;,&#x27;ratio&#x27;,&#x27;time&#x27;])
+    w.writeheader()
+    w.writerows(results)
+
+print(&#x27;=== 결과 ===&#x27;)
+for r in results:
+    print(f&quot;{r[&#x27;file&#x27;]:12s} {r[&#x27;algo&#x27;]:8s} ratio={r[&#x27;ratio&#x27;]:6.2f} time={r[&#x27;time&#x27;]:.3f}s comp={r[&#x27;comp&#x27;]:,}B&quot;)
+
+for name in files:
+    subset = [r for r in results if r[&#x27;file&#x27;]==name]
+    if not subset: continue
+    fig, ax = plt.subplots(figsize=(7,4))
+    ax.scatter([r[&#x27;time&#x27;] for r in subset], [r[&#x27;ratio&#x27;] for r in subset])
+    for r in subset:
+        ax.annotate(r[&#x27;algo&#x27;], (r[&#x27;time&#x27;], r[&#x27;ratio&#x27;]))
+    ax.set_xlabel(&#x27;Compression time (seconds)&#x27;)
+    ax.set_ylabel(&#x27;Compression ratio (original / compressed)&#x27;)
+    ax.set_title(f&#x27;Compression benchmark: {name}&#x27;)
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(f&#x27;out/benchmark_{name}.png&#x27;, dpi=150)
+    plt.close(fig)
+print(&#x27;그래프 저장 완료: ~/ws/out&#x27;)
+PY
+ls -lh ~/ws/out</pre><pre>[종료코드 0]
+=== 결과 ===
+text.txt     zstd-1   ratio=10185.19 time=0.008s comp=1,458B
+text.txt     zstd-3   ratio=10143.44 time=0.011s comp=1,464B
+text.txt     zstd-9   ratio=10136.52 time=0.020s comp=1,465B
+text.txt     zstd-19  ratio=11016.32 time=0.048s comp=1,348B
+text.txt     gzip     ratio=293.99 time=0.020s comp=50,512B
+text.txt     bzip2    ratio=2793.45 time=2.751s comp=5,316B
+text.txt     xz       ratio=6208.19 time=0.189s comp=2,392B
+mixed.txt    zstd-1   ratio=  1.64 time=0.019s comp=4,050,292B
+mixed.txt    zstd-3   ratio=  1.62 time=0.036s comp=4,082,300B
+mixed.txt    zstd-9   ratio=  1.62 time=0.096s comp=4,083,959B
+mixed.txt    zstd-19  ratio=  1.63 time=1.834s comp=4,069,857B
+mixed.txt    gzip     ratio=  1.59 time=0.231s comp=4,168,393B
+mixed.txt    bzip2    ratio=  1.65 time=0.404s comp=4,007,989B
+mixed.txt    xz       ratio=  1.70 time=2.002s comp=3,890,516B
+random.bin   zstd-1   ratio=  1.00 time=0.006s comp=3,000,083B
+random.bin   zstd-3   ratio=  1.00 time=0.006s comp=3,000,083B
+random.bin   zstd-9   ratio=  1.00 time=0.010s comp=3,000,082B
+random.bin   zstd-19  ratio=  1.00 time=0.160s comp=3,000,082B
+random.bin   gzip     ratio=  1.00 time=0.066s comp=3,000,494B
+random.bin   bzip2    ratio=  1.00 time=0.234s comp=3,014,210B
+random.bin   xz       ratio=  1.00 time=0.424s comp=3,000,220B
+그래프 저장 완료: ~/ws/out
+total 148K
+-rw-r--r-- 1 runner runner 1.5K Nov 18 00:29 benchmark.csv
+-rw-r--r-- 1 runner runner  52K Nov 18 00:29 benchmark_mixed.txt.png
+-rw-r--r-- 1 runner runner  44K Nov 18 00:29 benchmark_random.bin.png
+-rw-r--r-- 1 runner runner  45K Nov 18 00:29 benchmark_text.txt.png
+</pre></details></html>
