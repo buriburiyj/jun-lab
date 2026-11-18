@@ -1,0 +1,60 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>프랙탈 만델브로트 집합 시각화 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>프랙탈 만델브로트 집합 시각화 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 7번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 프랙탈에 대해 위키백과로 알아보았다. 우분투 터미널에서 matplotlib를 설치하고 파이썬 스크립트를 작성해 만델브로트 집합을 계산했다. 해상도는 800x800, 반복 횟수는 256회, 복소수 범위는 실수부 -2.0에서 1.0, 허수부 -1.5에서 1.5까지다. 결과 이미지는 ~/ws/out/mandelbrot.png에 177KB 크기로 저장되었다. 프랙탈은 배율에 관계없이 비슷한 패턴이 반복되는 자기유사 도형이며, 만델브로트 집합의 경계는 하우스도르프 차원 2를 가진 프랙탈 곡선임을 확인했다. 다음에는 줄리아 집합이나 프랙탈 애니메이션을 만들어 볼 수 있다.</p><img src="out/mandelbrot.png">
+<h2>결과 파일</h2><ul><li><a href="out/mandelbrot.png">mandelbrot.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting python terminal visualization project ubuntu</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] search matplotlib animation python interesting example</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[3] fetch https://en.wikipedia.org/wiki/Fractal</summary><pre></pre><pre>Fractal - Wikipedia Jump to content Main menu Main menu move to sidebar hide Navigation Main page Contents Current events Random article About Wikipedia Contact us Contribute Help Learn to edit Community portal Recent changes Upload file Special pages Search Search Appearance Donate Create account Log in Personal tools Donate Create account Log in Contents move to sidebar hide (Top) 1 Etymology 2 Introduction 3 History 4 Definition and characteristics 5 Common techniques for generating fractals 6 Applications Toggle Applications subsection 6.1 Simulated fractals 6.2 Natural phenomena with fractal features 6.3 Fractals in cell biology 6.4 In creative works 6.5 Physiological responses: Fractal Fluency 6.6 Applications in technology 7 See also 8 Notes 9 References 10 Further reading 11 External links Toggle the table of contents Fractal 80 languages Afrikaans Alemannisch العربية Asturianu Azərbaycanca Башҡортса Беларуская Български বাংলা Bosanski Català کوردی Čeština Чӑвашла Cymraeg Dansk Deutsch Ελληνικά Esperanto Español Eesti Euskara فارسی Suomi Na Vosa Vakaviti Français Gaeilge Galego עברית हिन्दी Hrvatski Magyar Հայերեն Interlingua Bahasa Indonesia Ido Íslenska Italiano 日本語 ქართული Қазақша ಕನ್ನಡ 한국어 Latina Лезги Lietuvių Latviešu Malagasy മലയാളം Bahasa Melayu Nederlands Norsk nynorsk Norsk bokmål ਪੰਜਾਬੀ Polski Português Română Русский Саха тыла Sicilianu Srpskohrvatski / српскохрватски Simple English Slovenčina Slovenščina Shqip Српски / srpski Svenska தமிழ் ไทย Türkçe Татарча / tatarça Українська اردو Oʻzbekcha / ўзбекча Tiếng Việt 吴语 文言 粵語 中文 IsiZulu Edit links Article Talk English Read Edit View history Save Tools Tools move to sidebar hide Actions Read Edit View history Save General What links here Related changes Upload file Permanent link Page information Cite this page Get shortened URL Switch to legacy parser Print/export Download as PDF Printable version In other projects Wikimedia Commons Wikibooks Wikidata item Appearance move to sidebar hide From Wikip
+...(중략)...
+scal Huygens Minggatu Euler Sakabe Aida 1700s–1900s Gauss Lobachevsky Bolyai Riemann Klein Poincaré Hilbert Minkowski Cartan Veblen Coxeter Chern Present day Atiyah Gromov v t e Sierpiński carpet - infinite perimeter and zero area Highly magnified area on the boundary of the Mandelbrot set The Mandelbrot set : its boundary is a fractal curve with Hausdorff dimension 2. (Note that the colored sections of the image are not actually part of the Mandelbrot Set, but rather they are based on how quickly the function that produces it diverges.) Mandelbrot set with 12 encirclements Zooming into the boundary of the Mandelbrot set In mathematics , a fractal is a geometric shape containing detailed structure at arbitrarily small scales, usually having a fractal dimension strictly exceeding the topological dimension . Many fractals appear similar at various scales, as illustrated in successive magnifications of the Mandelbrot set . [ 1 ] [ 2 ] [ 3 ] [ 4 ] This exhibition of similar patterns at increasingly smaller scales is called self-similarity , also known as expanding symmetry or unfolding symmetry; if this replication is exactly the same at every scale, as in the Menger sponge , the shape is called affine self-similar. [ 5 ] Fractal geometry relates to the mathematical branch of measure theory by their Hausdorff dimension . One way that fractals are different from other geometric figures is how they scale . Doubling the edge lengths of a filled polygon multiplies its area by four, which is two (the ratio of the new to the old side length) raised to the power of two (the conventional dimension of the filled polygon). Likewise, if the radius of a filled sphere (or ball ) is doubled, its volume scales by eight, which is two (the ratio of the new to the old radius) to the power of three (the conventional dimension of the filled sphere). However, if a fractal&#x27;s one-dimensional lengths are all doubled, the spatial content of the fractal scales by a power that is not necessarily </pre></details><details><summary>[4] shell mkdir -p ~/ws/out &amp;&amp; python3 -c &quot;import matplotlib; print(&#x27;matplotlib&#x27;, matplotlib.__version__)&quot;</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[5] shell pip install matplotlib --quiet</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[6] write mandelbrot.py</summary><pre>import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+
+width, height = 800, 800
+x_min, x_max = -2.0, 1.0
+y_min, y_max = -1.5, 1.5
+max_iter = 256
+
+x = np.linspace(x_min, x_max, width)
+y = np.linspace(y_min, y_max, height)
+X, Y = np.meshgrid(x, y)
+C = X + 1j * Y
+
+Z = np.zeros_like(C, dtype=np.complex128)
+diverged = np.zeros(C.shape, dtype=bool)
+iter_count = np.zeros(C.shape, dtype=int)
+
+for i in range(max_iter):
+    Z[~diverged] = Z[~diverged] ** 2 + C[~diverged]
+    newly_diverged = (np.abs(Z) &gt; 2.0) &amp; (~diverged)
+    iter_count[newly_diverged] = i
+    diverged |= newly_diverged
+
+iter_count[diverged &amp; (iter_count == 0)] = max_iter
+
+out_dir = os.path.expanduser(&#x27;~/ws/out&#x27;)
+os.makedirs(out_dir, exist_ok=True)
+
+plt.figure(figsize=(8, 8))
+plt.imshow(iter_count, extent=[x_min, x_max, y_min, y_max], cmap=&#x27;inferno&#x27;, origin=&#x27;lower&#x27;)
+plt.colorbar(label=&#x27;Iterations&#x27;)
+plt.title(&#x27;Mandelbrot Set&#x27;)
+plt.xlabel(&#x27;Re(c)&#x27;)
+plt.ylabel(&#x27;Im(c)&#x27;)
+plt.tight_layout()
+plt.savefig(os.path.join(out_dir, &#x27;mandelbrot.png&#x27;), dpi=150)
+plt.close()
+print(&#x27;Saved&#x27;, os.path.join(out_dir, &#x27;mandelbrot.png&#x27;))</pre><pre>저장함: mandelbrot.py (1132자)</pre></details><details><summary>[7] shell cd ~/ws &amp;&amp; python3 mandelbrot.py &amp;&amp; ls -lh out/</summary><pre></pre><pre>[종료코드 0]
+Saved /home/runner/ws/out/mandelbrot.png
+total 180K
+-rw-r--r-- 1 runner runner 177K Nov 18 15:02 mandelbrot.png
+</pre></details></html>
