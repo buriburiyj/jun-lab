@@ -1,0 +1,204 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>서울 날씨 데이터 시각화 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>서울 날씨 데이터 시각화 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 15번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 날씨 API(wttr.in)를 찾아 서울 현재 날씨와 시간별 예보 JSON 데이터를 curl로 받아 ~/ws/out/seoul_weather.json에 저장했다. 현재 기온 4도, 체감 -1도, 맑음 구름 끼임, 풍속 20km/h 등을 확인했다. pip로 matplotlib를 설치하고 파이썬 스크립트로 시간별 기온, 습도, 풍속을 그래프로 그려 ~/ws/out/seoul_weather_plot.png에 저장했다. 알게 된 점은 wttr.in이 JSON 형식으로 날씨 데이터를 간단히 제공하며, 리눅스 터미널에서 cowsay와 figlet 같은 유틸리티로 재미있는 출력도 만들 수 있다는 점이다. 다음에는 여러 도시 날씨를 비교하거나, 일주일 예보 데이터를 받아 추세 분석을 해 볼 수 있다.</p><img src="out/seoul_weather_plot.png">
+<h2>결과 파일</h2><ul><li><a href="out/seoul_weather.json">seoul_weather.json</a></li><li><a href="out/seoul_weather_plot.png">seoul_weather_plot.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting linux command line experiments fun projects ubuntu</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] shell curl -s -I --max-time 10 https://example.com | head -5</summary><pre></pre><pre>[종료코드 0]
+HTTP/2 200 
+date: Thu, 19 Nov 2026 05:48:10 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+last-modified: Wed, 18 Nov 2026 17:47:37 GMT
+</pre></details><details><summary>[3] fetch https://wttr.in/Seoul?format=3</summary><pre></pre><pre>wttr.in — Weather Report Seoul: 🌤️ +39°F</pre></details><details><summary>[4] fetch https://api.open-meteo.com/v1/forecast?latitude=37.5665&amp;longitude=126.9996&amp;hourly=temperature_2m,rel</summary><pre></pre><pre>오류: &lt;urlopen error _ssl.c:994: The handshake operation timed out&gt;</pre></details><details><summary>[5] shell curl -s --max-time 15 &quot;https://api.open-meteo.com/v1/forecast?latitude=37.5665&amp;longitude=126.9996&amp;ho</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[6] shell which cowsay figlet fortune lolcat htop btop 2&gt;/dev/null; dpkg -l | grep -E &#x27;cowsay|figlet|fortune|p</summary><pre></pre><pre>[종료코드 0]
+/usr/bin/htop
+ii  python3-pip                           25.1.1+dfsg-1ubuntu2                       all          Python package installer
+ii  python3-pip-whl                       25.1.1+dfsg-1ubuntu2                       all          Python package installer (pip wheel)
+</pre></details><details><summary>[7] shell sudo apt-get update -qq &amp;&amp; sudo apt-get install -y -qq cowsay figlet 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+</pre></details><details><summary>[8] shell which cowsay figlet &amp;&amp; cowsay &quot;Hello Researcher&quot; | figlet -f small 2&gt;/dev/null | head -20</summary><pre></pre><pre>[종료코드 0]
+/usr/games/cowsay
+/usr/bin/figlet
+                                                                          
+                                                                          
+                                                                          
+  ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ 
+ |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+  __  _  _     _ _       ___                         _             __  
+ / / | || |___| | |___  | _ \___ ___ ___ __ _ _ _ __| |_  ___ _ _  \ \ 
+&lt; &lt;  | __ / -_) | / _ \ |   / -_|_-&lt;/ -_) _` | &#x27;_/ _| &#x27; \/ -_) &#x27;_|  &gt; &gt;
+ \_\ |_||_\___|_|_\___/ |_|_\___/__/\___\__,_|_| \__|_||_\___|_|   /_/ 
+                                                                       
+                                                                          
+  ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ 
+ |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+                                                                          
+                                                                          
+        __       /\      /\ 
+        \ \     |/\|    |/\|
+         \ \                
+          \_\      ___ ___  
+                  |___|___| 
+</pre></details><details><summary>[9] shell mkdir -p ~/ws/out &amp;&amp; curl -s --max-time 15 &quot;https://wttr.in/Seoul?format=j1&quot; -o ~/ws/out/seoul_weath</summary><pre></pre><pre>[종료코드 0]
+{
+  &quot;current_condition&quot;: [
+    {
+      &quot;FeelsLikeC&quot;: &quot;-1&quot;,
+      &quot;FeelsLikeF&quot;: &quot;31&quot;,
+      &quot;cloudcover&quot;: &quot;58&quot;,
+      &quot;humidity&quot;: &quot;43&quot;,
+      &quot;observation_time&quot;: &quot;05:44 AM&quot;,
+      &quot;precipInches&quot;: &quot;0.0&quot;,
+      &quot;precipMM&quot;: &quot;0.0&quot;,
+      &quot;pressure&quot;: &quot;1017&quot;,
+      &quot;pressureInches&quot;: &quot;30&quot;,
+      &quot;temp_C&quot;: &quot;4&quot;,
+      &quot;temp_F&quot;: &quot;39&quot;,
+      &quot;uvIndex&quot;: &quot;1&quot;,
+      &quot;visibility&quot;: &quot;10&quot;,
+      &quot;visibilityMiles&quot;: &quot;6&quot;,
+      &quot;weatherCode&quot;: &quot;116&quot;,
+      &quot;weatherDesc&quot;: [
+        {
+          &quot;value&quot;: &quot;Partly Cloudy &quot;
+        }
+      ],
+      &quot;weatherIconUrl&quot;: [
+        {
+          &quot;value&quot;: &quot;https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0002_sunny_intervals.png&quot;
+        }
+      ],
+      &quot;winddir16Point&quot;: &quot;NW&quot;,
+      &quot;winddirDegree&quot;: &quot;306&quot;,
+      &quot;windspeedKmph&quot;: &quot;20&quot;,
+      &quot;windspeedMiles&quot;: &quot;13&quot;
+    }
+  ],
+  &quot;nearest_area&quot;: [
+    {
+      &quot;areaName&quot;: [
+        {
+          &quot;value&quot;: &quot;Chongdong&quot;
+        }
+      ],
+      &quot;country&quot;: [
+        {
+          &quot;value&quot;: &quot;South Korea&quot;
+        }
+      ],
+      &quot;latitude&quot;: &quot;37.567&quot;,
+      &quot;longitude&quot;: &quot;126.967&quot;,
+      &quot;population&quot;: &quot;0&quot;,
+      &quot;region&quot;: [
+        {
+          &quot;value&quot;: &quot;&quot;
+        }
+      ],
+      &quot;weatherUrl&quot;: [
+        {
+          &quot;value&quot;: &quot;https://www.worldweatheronline.com/v2/weather.aspx?q=37.567,126.967&quot;
+        }
+      ]
+    }
+  ],
+  &quot;request&quot;: [
+    {
+      &quot;query&quot;: &quot;Lat 37.57 and Lon 126.98&quot;,
+      &quot;type&quot;: &quot;LatLon&quot;
+    }
+  ],
+  &quot;weather&quot;: [
+    {
+      &quot;astronomy&quot;: [
+        {
+          &quot;moon_illumination&quot;: &quot;65&quot;,
+      </pre></details><details><summary>[10] shell python3 -c &quot;import json; d=json.load(open(&#x27;/home/$(whoami)/ws/out/seoul_weather.json&#x27;)); print(list(</summary><pre></pre><pre>[종료코드 0]
+[&#x27;current_condition&#x27;, &#x27;nearest_area&#x27;, &#x27;request&#x27;, &#x27;weather&#x27;]
+weather keys: [&#x27;astronomy&#x27;, &#x27;avgtempC&#x27;, &#x27;avgtempF&#x27;, &#x27;date&#x27;, &#x27;hourly&#x27;, &#x27;maxtempC&#x27;, &#x27;maxtempF&#x27;, &#x27;mintempC&#x27;, &#x27;mintempF&#x27;, &#x27;sunHour&#x27;, &#x27;totalSnow_cm&#x27;, &#x27;uvIndex&#x27;]
+hourly count: 8
+</pre></details><details><summary>[11] shell python3 -c &quot;import matplotlib; print(matplotlib.__version__)&quot; 2&gt;&amp;1 || echo &quot;NOT_INSTALLED&quot;</summary><pre></pre><pre>[종료코드 0]
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+NOT_INSTALLED
+</pre></details><details><summary>[12] shell pip install --break-system-packages matplotlib 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: tzdata, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, python-dateutil, contourpy, matplotlib
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.5 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+</pre></details><details><summary>[13] write ~/ws/plot_weather.py</summary><pre>import json
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+from datetime import datetime
+
+path = &#x27;/home/$(whoami)/ws/out/seoul_weather.json&#x27;
+with open(path) as f:
+    data = json.load(f)
+
+hourly = data[&#x27;weather&#x27;][0][&#x27;hourly&#x27;]
+times = [h[&#x27;time&#x27;] for h in hourly]
+temps = [float(h[&#x27;tempC&#x27;]) for h in hourly]
+humids = [float(h[&#x27;humidity&#x27;]) for h in hourly]
+winds = [float(h[&#x27;windspeedKmph&#x27;]) for h in hourly]
+
+fig, axes = plt.subplots(2, 1, figsize=(8, 6), sharex=True)
+axes[0].plot(times, temps, marker=&#x27;o&#x27;, color=&#x27;tab:red&#x27;)
+axes[0].set_ylabel(&#x27;Temperature (C)&#x27;)
+axes[0].set_title(&#x27;Seoul Weather Forecast (Next Hours)&#x27;)
+axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(times, humids, marker=&#x27;s&#x27;, color=&#x27;tab:blue&#x27;, label=&#x27;Humidity (%)&#x27;)
+axes[1].plot(times, winds, marker=&#x27;^&#x27;, color=&#x27;tab:green&#x27;, label=&#x27;Wind (km/h)&#x27;)
+axes[1].set_ylabel(&#x27;Value&#x27;)
+axes[1].set_xlabel(&#x27;Time (HHMM)&#x27;)
+axes[1].legend()
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+out = &#x27;/home/$(whoami)/ws/out/seoul_weather_plot.png&#x27;
+plt.savefig(out, dpi=120)
+print(&#x27;saved&#x27;, out)</pre><pre>저장함: plot_weather.py (1061자)</pre></details><details><summary>[14] write ~/ws/plot_weather.py</summary><pre>import json
+import os
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+home = os.path.expanduser(&#x27;~&#x27;)
+path = home + &#x27;/ws/out/seoul_weather.json&#x27;
+with open(path) as f:
+    data = json.load(f)
+
+hourly = data[&#x27;weather&#x27;][0][&#x27;hourly&#x27;]
+times = [h[&#x27;time&#x27;] for h in hourly]
+temps = [float(h[&#x27;tempC&#x27;]) for h in hourly]
+humids = [float(h[&#x27;humidity&#x27;]) for h in hourly]
+winds = [float(h[&#x27;windspeedKmph&#x27;]) for h in hourly]
+
+fig, axes = plt.subplots(2, 1, figsize=(8, 6), sharex=True)
+axes[0].plot(times, temps, marker=&#x27;o&#x27;, color=&#x27;tab:red&#x27;)
+axes[0].set_ylabel(&#x27;Temperature (C)&#x27;)
+axes[0].set_title(&#x27;Seoul Weather Forecast (Next Hours)&#x27;)
+axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(times, humids, marker=&#x27;s&#x27;, color=&#x27;tab:blue&#x27;, label=&#x27;Humidity (%)&#x27;)
+axes[1].plot(times, winds, marker=&#x27;^&#x27;, color=&#x27;tab:green&#x27;, label=&#x27;Wind (km/h)&#x27;)
+axes[1].set_ylabel(&#x27;Value&#x27;)
+axes[1].set_xlabel(&#x27;Time (HHMM)&#x27;)
+axes[1].legend()
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+out = home + &#x27;/ws/out/seoul_weather_plot.png&#x27;
+plt.savefig(out, dpi=120)
+print(&#x27;saved&#x27;, out)</pre><pre>저장함: plot_weather.py (1056자)</pre></details><details><summary>[15] shell python3 ~/ws/plot_weather.py</summary><pre></pre><pre>[종료코드 0]
+saved /home/runner/ws/out/seoul_weather_plot.png
+</pre></details></html>
