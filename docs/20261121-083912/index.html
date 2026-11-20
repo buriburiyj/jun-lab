@@ -1,0 +1,178 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>인터넷 공개 API 데이터 시각화 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>인터넷 공개 API 데이터 시각화 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 8번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 흥미로운 주제로 JSONPlaceholder 공개 API의 게시글 데이터를 선택하여 직접 실험했습니다. 먼저 검색이 막혀서 직접 API 주소를 fetch로 가져왔고, 파이썬 라이브러리를 설치한 후 데이터를 분석했습니다. 총 게시글 100건, 사용자 10명을 확인했고, 사용자별 게시글 수는 모두 10건으로 동일했습니다. 제목 길이 평균은 39.52자, 최대 79자, 최소 12자였습니다. 사용자별 게시글 수 막대 그래프와 제목 길이 분포 히스토그램을 ~/ws/out 폴더에 PNG 파일로 저장했습니다. 다음에는 다른 공개 API나 실시간 데이터를 이용해 더 복잡한 시각화를 시도해 볼 수 있습니다.</p><img src="out/posts_per_user.png"><img src="out/title_length_hist.png">
+<h2>결과 파일</h2><ul><li><a href="out/posts_per_user.png">posts_per_user.png</a></li><li><a href="out/title_length_hist.png">title_length_hist.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting public JSON API dataset python example visualization</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] fetch https://jsonplaceholder.typicode.com/posts</summary><pre></pre><pre>[ { &quot;userId&quot;: 1, &quot;id&quot;: 1, &quot;title&quot;: &quot;sunt aut facere repellat provident occaecati excepturi optio reprehenderit&quot;, &quot;body&quot;: &quot;quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto&quot; }, { &quot;userId&quot;: 1, &quot;id&quot;: 2, &quot;title&quot;: &quot;qui est esse&quot;, &quot;body&quot;: &quot;est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla&quot; }, { &quot;userId&quot;: 1, &quot;id&quot;: 3, &quot;title&quot;: &quot;ea molestias quasi exercitationem repellat qui ipsa sit aut&quot;, &quot;body&quot;: &quot;et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut&quot; }, { &quot;userId&quot;: 1, &quot;id&quot;: 4, &quot;title&quot;: &quot;eum et est occaecati&quot;, &quot;body&quot;: &quot;ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit&quot; }, { &quot;userId&quot;: 1, &quot;id&quot;: 5, &quot;title&quot;: &quot;nesciunt quas odio&quot;, &quot;body&quot;: &quot;repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque&quot; }, { &quot;userId&quot;: 1, &quot;id&quot;: 6, &quot;title&quot;: &quot;dolorem eum magni eos aperiam quia&quot;, &quot;body&quot;: &quot;ut aspernatur corporis harum nihil quis provident sequi\nmollitia nobis aliquid molestiae\nperspiciatis et ea nemo ab reprehenderit accusantium quas\nvoluptate dolores velit et doloremque molestiae&quot; }, { &quot;userId&quot;: 1, &quot;id&quot;: 7, &quot;title&quot;: &quot;magnam facilis autem&quot;, &quot;body&quot;: &quot;dolore placeat quibusdam ea quo vitae\nmagni quis enim qui quis quo nemo aut saepe\nquidem repellat excepturi ut quia\nsunt ut sequi eos ea sed quas&quot; }, { &quot;userId&quot;: 1, &quot;id&quot;: 8, &quot;title&quot;: &quot;dolorem dolore est ipsam&quot;, &quot;body&quot;: &quot;dignissimos aperiam dolorem qui eum\nfacilis quibusdam animi sint suscipit qui sint possimus cum\nquaerat mag
+...(중략)...
+quia\nvoluptatem quis ullam qui in alias quia est\nconsequatur magni mollitia accusamus ea nisi voluptate dicta&quot; }, { &quot;userId&quot;: 2, &quot;id&quot;: 17, &quot;title&quot;: &quot;fugit voluptas sed molestias voluptatem provident&quot;, &quot;body&quot;: &quot;eos voluptas et aut odit natus earum\naspernatur fuga molestiae ullam\ndeserunt ratione qui eos\nqui nihil ratione nemo velit ut aut id quo&quot; }, { &quot;userId&quot;: 2, &quot;id&quot;: 18, &quot;title&quot;: &quot;voluptate et itaque vero tempora molestiae&quot;, &quot;body&quot;: &quot;eveniet quo quis\nlaborum totam consequatur non dolor\nut et est repudiandae\nest voluptatem vel debitis et magnam&quot; }, { &quot;userId&quot;: 2, &quot;id&quot;: 19, &quot;title&quot;: &quot;adipisci placeat illum aut reiciendis qui&quot;, &quot;body&quot;: &quot;illum quis cupiditate provident sit magnam\nea sed aut omnis\nveniam maiores ullam consequatur atque\nadipisci quo iste expedita sit quos voluptas&quot; }, { &quot;userId&quot;: 2, &quot;id&quot;: 20, &quot;title&quot;: &quot;doloribus ad provident suscipit at&quot;, &quot;body&quot;: &quot;qui consequuntur ducimus possimus quisquam amet similique\nsuscipit porro ipsam amet\neos veritatis officiis exercitationem vel fugit aut necessitatibus totam\nomnis rerum consequatur expedita quidem cumque explicabo&quot; }, { &quot;userId&quot;: 3, &quot;id&quot;: 21, &quot;title&quot;: &quot;asperiores ea ipsam voluptatibus modi minima quia sint&quot;, &quot;body&quot;: &quot;repellat aliquid praesentium dolorem quo\nsed totam minus non itaque\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\ntempora et tenetur expedita sunt&quot; }, { &quot;userId&quot;: 3, &quot;id&quot;: 22, &quot;title&quot;: &quot;dolor sint quo a velit explicabo quia nam&quot;, &quot;body&quot;: &quot;eos qui et ipsum ipsam suscipit aut\nsed omnis non odio\nexpedita earum mollitia molestiae aut atque rem suscipit\nnam impedit esse&quot; }, { &quot;userId&quot;: 3, &quot;id&quot;: 23, &quot;title&quot;: &quot;maxime id vitae nihil numquam&quot;, &quot;body&quot;: &quot;veritatis unde neque eligendi\nquae quod architecto quo neque vitae\nest illo sit tempora doloremque fugit quod\net et vel beatae sequi ullam sed tenetur perspiciatis&quot; }, { &quot;userId&quot;: 3, &quot;id&quot;: 24, &quot;title&quot;: &quot;autem hic labore sunt dolores incidunt&quot;, &quot;body&quot;: &quot;enim et ex nulla\nomnis voluptas quia qui\nvoluptatem consequatur </pre></details><details><summary>[3] shell mkdir -p ~/ws/out &amp;&amp; python3 -c &quot;import requests, pandas, matplotlib; print(&#x27;ok&#x27;)&quot; 2&gt;&amp;1 || echo &quot;mis</summary><pre></pre><pre>[종료코드 0]
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;requests&#x27;
+missing
+</pre></details><details><summary>[4] shell pip3 install requests pandas matplotlib 2&gt;&amp;1 | tail -5</summary><pre></pre><pre>[종료코드 0]
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: urllib3, tzdata, pyparsing, pillow, packaging, numpy, kiwisolver, idna, fonttools, cycler, charset_normalizer, certifi, requests, python-dateutil, contourpy, pandas, matplotlib
+
+Successfully installed certifi-2026.11.20 charset_normalizer-3.5.2 contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 idna-3.20 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.5 packaging-26.3 pandas-3.1.1 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 requests-2.34.2 tzdata-2026.6 urllib3-2.8.0
+</pre></details><details><summary>[5] write ~/ws/analyze_posts.py</summary><pre>import requests
+import pandas as pd
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+url = &quot;https://jsonplaceholder.typicode.com/posts&quot;
+resp = requests.get(url, timeout=10)
+resp.raise_for_status()
+data = resp.json()
+
+df = pd.DataFrame(data)
+
+print(&quot;총 게시글 수:&quot;, len(df))
+print(&quot;사용자 수:&quot;, df[&quot;userId&quot;].nunique())
+print(&quot;\n사용자별 게시글 수:&quot;)
+print(df[&quot;userId&quot;].value_counts().sort_index())
+
+# 사용자별 게시글 수 막대 그래프
+counts = df[&quot;userId&quot;].value_counts().sort_index()
+plt.figure(figsize=(8, 5))
+plt.bar(counts.index.astype(str), counts.values, color=&quot;steelblue&quot;)
+plt.xlabel(&quot;User ID&quot;)
+plt.ylabel(&quot;Number of Posts&quot;)
+plt.title(&quot;Number of Posts per User (JSONPlaceholder)&quot;)
+plt.tight_layout()
+plt.savefig(&quot;~/ws/out/posts_per_user.png&quot;)
+plt.close()
+
+# 제목 길이 분포 히스토그램
+df[&quot;title_length&quot;] = df[&quot;title&quot;].str.len()
+plt.figure(figsize=(8, 5))
+plt.hist(df[&quot;title_length&quot;], bins=20, color=&quot;seagreen&quot;, edgecolor=&quot;black&quot;)
+plt.xlabel(&quot;Title Length (characters)&quot;)
+plt.ylabel(&quot;Number of Posts&quot;)
+plt.title(&quot;Distribution of Post Title Lengths&quot;)
+plt.tight_layout()
+plt.savefig(&quot;~/ws/out/title_length_hist.png&quot;)
+plt.close()
+
+print(&quot;\n그래프 저장 완료: ~/ws/out/posts_per_user.png, ~/ws/out/title_length_hist.png&quot;)
+print(&quot;평균 제목 길이:&quot;, round(df[&quot;title_length&quot;].mean(), 2))
+print(&quot;최대 제목 길이:&quot;, df[&quot;title_length&quot;].max())
+print(&quot;최소 제목 길이:&quot;, df[&quot;title_length&quot;].min())</pre><pre>저장함: analyze_posts.py (1338자)</pre></details><details><summary>[6] shell cd ~/ws &amp;&amp; python3 analyze_posts.py &amp;&amp; ls -lh out/</summary><pre></pre><pre>[종료코드 1]
+총 게시글 수: 100
+사용자 수: 10
+
+사용자별 게시글 수:
+userId
+1     10
+2     10
+3     10
+4     10
+5     10
+6     10
+7     10
+8     10
+9     10
+10    10
+Name: count, dtype: int64
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/analyze_posts.py&quot;, line 27, in &lt;module&gt;
+    plt.savefig(&quot;~/ws/out/posts_per_user.png&quot;)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/pyplot.py&quot;, line 1346, in savefig
+    res = fig.savefig(fname, **kwargs)  # type: ignore[func-returns-value]
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/figure.py&quot;, line 3515, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backend_bases.py&quot;, line 2289, in print_figure
+    result = print_method(
+             ^^^^^^^^^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backend_bases.py&quot;, line 2146, in &lt;lambda&gt;
+    print_method = functools.wraps(meth)(lambda *args, **kwargs: meth(
+                                                                 ^^^^^
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backends/backend_agg.py&quot;, line 537, in print_png
+    self._print_pil(filename_or_obj, &quot;png&quot;, pil_kwargs, metadata)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/backends/backend_agg.py&quot;, line 486, in _print_pil
+    mpl.image.imsave(
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/matplotlib/image.py&quot;, line 1729, in imsave
+    image.save(fname, **pil_kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/PIL/Image.py&quot;, line 2707, in save
+    fp = builtins.open(filename, &quot;w+b&quot;)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: &#x27;~/ws/out/posts_per_user.png&#x27;
+</pre></details><details><summary>[7] write ~/ws/analyze_posts.py</summary><pre>import os
+import requests
+import pandas as pd
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+out_dir = os.path.expanduser(&quot;~/ws/out&quot;)
+os.makedirs(out_dir, exist_ok=True)
+
+url = &quot;https://jsonplaceholder.typicode.com/posts&quot;
+resp = requests.get(url, timeout=10)
+resp.raise_for_status()
+data = resp.json()
+
+df = pd.DataFrame(data)
+
+print(&quot;총 게시글 수:&quot;, len(df))
+print(&quot;사용자 수:&quot;, df[&quot;userId&quot;].nunique())
+print(&quot;\n사용자별 게시글 수:&quot;)
+print(df[&quot;userId&quot;].value_counts().sort_index())
+
+# 사용자별 게시글 수 막대 그래프
+counts = df[&quot;userId&quot;].value_counts().sort_index()
+plt.figure(figsize=(8, 5))
+plt.bar(counts.index.astype(str), counts.values, color=&quot;steelblue&quot;)
+plt.xlabel(&quot;User ID&quot;)
+plt.ylabel(&quot;Number of Posts&quot;)
+plt.title(&quot;Number of Posts per User (JSONPlaceholder)&quot;)
+plt.tight_layout()
+plt.savefig(os.path.join(out_dir, &quot;posts_per_user.png&quot;))
+plt.close()
+
+# 제목 길이 분포 히스토그램
+df[&quot;title_length&quot;] = df[&quot;title&quot;].str.len()
+plt.figure(figsize=(8, 5))
+plt.hist(df[&quot;title_length&quot;], bins=20, color=&quot;seagreen&quot;, edgecolor=&quot;black&quot;)
+plt.xlabel(&quot;Title Length (characters)&quot;)
+plt.ylabel(&quot;Number of Posts&quot;)
+plt.title(&quot;Distribution of Post Title Lengths&quot;)
+plt.tight_layout()
+plt.savefig(os.path.join(out_dir, &quot;title_length_hist.png&quot;))
+plt.close()
+
+print(&quot;\n그래프 저장 완료:&quot;, out_dir)
+print(&quot;평균 제목 길이:&quot;, round(df[&quot;title_length&quot;].mean(), 2))
+print(&quot;최대 제목 길이:&quot;, df[&quot;title_length&quot;].max())
+print(&quot;최소 제목 길이:&quot;, df[&quot;title_length&quot;].min())</pre><pre>저장함: analyze_posts.py (1403자)</pre></details><details><summary>[8] shell cd ~/ws &amp;&amp; python3 analyze_posts.py &amp;&amp; ls -lh out/</summary><pre></pre><pre>[종료코드 0]
+총 게시글 수: 100
+사용자 수: 10
+
+사용자별 게시글 수:
+userId
+1     10
+2     10
+3     10
+4     10
+5     10
+6     10
+7     10
+8     10
+9     10
+10    10
+Name: count, dtype: int64
+
+그래프 저장 완료: /home/runner/ws/out
+평균 제목 길이: 39.52
+최대 제목 길이: 79
+최소 제목 길이: 12
+total 40K
+-rw-r--r-- 1 runner runner 17K Nov 20 23:39 posts_per_user.png
+-rw-r--r-- 1 runner runner 20K Nov 20 23:39 title_length_hist.png
+</pre></details></html>
