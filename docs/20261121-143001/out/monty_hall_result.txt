@@ -1,0 +1,4 @@
+Trials: 100000
+Stay win rate: 0.33240
+Switch win rate: 0.66793
+Difference: 0.33553
