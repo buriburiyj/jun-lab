@@ -1,0 +1,120 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>서울 날씨 데이터 시각화 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>서울 날씨 데이터 시각화 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 10번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>지금까지 한 일:<br>- Open-Meteo API로 서울 날씨 데이터를 JSON으로 받아 저장함 (curl)<br>- Python으로 JSON을 읽어 현재 온도·습도·풍속·시간대 출력함<br>- matplotlib를 설치하고, 7일간 기온·습도 그래프를 PNG로 저장함 (`/home/runner/ws/out/weather_forecast.png`)<br>- 최저/최고 기온, 평균 습도, 최대 강수 확률 등 요약 통계를 출력함<br><br>막힌 점:<br>- 초반에 API 요청 시간 초과, 파일 경로 오류(`/root` vs `/home/runner`), matplotlib 미설치 오류가 있었으나 모두 해결됨.<br>- 현재 막힌 점은 없음.</p><img src="out/weather_forecast.png">
+<h2>결과 파일</h2><ul><li><a href="out/weather_forecast.png">weather_forecast.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting data science project Ubuntu terminal Python beginner</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] shell curl -s &quot;https://api.open-meteo.com/v1/forecast?latitude=37.5665&amp;longitude=126.9780&amp;current=temperat</summary><pre>curl -s &quot;https://api.open-meteo.com/v1/forecast?latitude=37.5665&amp;longitude=126.9780&amp;current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&amp;hourly=temperature_2m,relative_humidity_2m,precipitation_probability&amp;timezone=Asia%2FSeoul&quot; -o ~/ws/weather.json &amp;&amp; head -c 1000 ~/ws/weather.json</pre><pre>[종료코드 -9]
+
+[5분 시간 초과로 멈춤]</pre></details><details><summary>[3] shell curl -s --max-time 10 &quot;https://example.com&quot; -o ~/ws/test.html &amp;&amp; head -c 200 ~/ws/test.html</summary><pre>curl -s --max-time 10 &quot;https://example.com&quot; -o ~/ws/test.html &amp;&amp; head -c 200 ~/ws/test.html</pre><pre>[종료코드 0]
+&lt;!doctype html&gt;&lt;html lang=en&gt;&lt;head&gt;&lt;meta charset=utf-8&gt;&lt;link rel=icon href=data:,&gt;&lt;meta name=viewport content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Example Domain&lt;/title&gt;&lt;style&gt;html{color-scheme</pre></details><details><summary>[4] shell curl -s --max-time 10 &quot;https://api.open-meteo.com/v1/forecast?latitude=37.5665&amp;longitude=126.9780&amp;cu</summary><pre>curl -s --max-time 10 &quot;https://api.open-meteo.com/v1/forecast?latitude=37.5665&amp;longitude=126.9780&amp;current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&amp;hourly=temperature_2m,relative_humidity_2m,precipitation_probability&amp;timezone=Asia%2FSeoul&quot; -o ~/ws/weather.json &amp;&amp; head -c 1500 ~/ws/weather.json</pre><pre>[종료코드 0]
+{&quot;latitude&quot;:37.55,&quot;longitude&quot;:127.0,&quot;generationtime_ms&quot;:0.44727325439453125,&quot;utc_offset_seconds&quot;:32400,&quot;timezone&quot;:&quot;Asia/Seoul&quot;,&quot;timezone_abbreviation&quot;:&quot;GMT+9&quot;,&quot;elevation&quot;:34.0,&quot;current_units&quot;:{&quot;time&quot;:&quot;iso8601&quot;,&quot;interval&quot;:&quot;seconds&quot;,&quot;temperature_2m&quot;:&quot;°C&quot;,&quot;relative_humidity_2m&quot;:&quot;%&quot;,&quot;weather_code&quot;:&quot;wmo code&quot;,&quot;wind_speed_10m&quot;:&quot;km/h&quot;},&quot;current&quot;:{&quot;time&quot;:&quot;2026-11-22T14:00&quot;,&quot;interval&quot;:900,&quot;temperature_2m&quot;:3.9,&quot;relative_humidity_2m&quot;:52,&quot;weather_code&quot;:0,&quot;wind_speed_10m&quot;:4.7},&quot;hourly_units&quot;:{&quot;time&quot;:&quot;iso8601&quot;,&quot;temperature_2m&quot;:&quot;°C&quot;,&quot;relative_humidity_2m&quot;:&quot;%&quot;,&quot;precipitation_probability&quot;:&quot;%&quot;},&quot;hourly&quot;:{&quot;time&quot;:[&quot;2026-11-22T00:00&quot;,&quot;2026-11-22T01:00&quot;,&quot;2026-11-22T02:00&quot;,&quot;2026-11-22T03:00&quot;,&quot;2026-11-22T04:00&quot;,&quot;2026-11-22T05:00&quot;,&quot;2026-11-22T06:00&quot;,&quot;2026-11-22T07:00&quot;,&quot;2026-11-22T08:00&quot;,&quot;2026-11-22T09:00&quot;,&quot;2026-11-22T10:00&quot;,&quot;2026-11-22T11:00&quot;,&quot;2026-11-22T12:00&quot;,&quot;2026-11-22T13:00&quot;,&quot;2026-11-22T14:00&quot;,&quot;2026-11-22T15:00&quot;,&quot;2026-11-22T16:00&quot;,&quot;2026-11-22T17:00&quot;,&quot;2026-11-22T18:00&quot;,&quot;2026-11-22T19:00&quot;,&quot;2026-11-22T20:00&quot;,&quot;2026-11-22T21:00&quot;,&quot;2026-11-22T22:00&quot;,&quot;2026-11-22T23:00&quot;,&quot;2026-11-23T00:00&quot;,&quot;2026-11-23T01:00&quot;,&quot;2026-11-23T02:00&quot;,&quot;2026-11-23T03:00&quot;,&quot;2026-11-23T04:00&quot;,&quot;2026-11-23T05:00&quot;,&quot;2026-11-23T06:00&quot;,&quot;2026-11-23T07:00&quot;,&quot;2026-11-23T08:00&quot;,&quot;2026-11-23T09:00&quot;,&quot;2026-11-23T10:00&quot;,&quot;2026-11-23T11:00&quot;,&quot;2026-11-23T12:00&quot;,&quot;2026-11-23T13:00&quot;,&quot;2026-11-23T14:00&quot;,&quot;2026-11-23T15:00&quot;,&quot;2026-11-23T16:00&quot;,&quot;2026-11-23T17:00&quot;,&quot;2026-11-23T18:00&quot;,&quot;2026-11-23T19:00&quot;,&quot;2026-11-23T20:00&quot;,&quot;2026-11-23T21:00&quot;,&quot;2026-11-23T22:00&quot;,&quot;20</pre></details><details><summary>[5] shell mkdir -p ~/ws/out &amp;&amp; python3 -c &quot;import json; d=json.load(open(&#x27;/root/ws/weather.json&#x27;)); print(&#x27;현재 </summary><pre>mkdir -p ~/ws/out &amp;&amp; python3 -c &quot;import json; d=json.load(open(&#x27;/root/ws/weather.json&#x27;)); print(&#x27;현재 온도:&#x27;, d[&#x27;current&#x27;][&#x27;temperature_2m&#x27;], &#x27;°C&#x27;); print(&#x27;현재 습도:&#x27;, d[&#x27;current&#x27;][&#x27;relative_humidity_2m&#x27;], &#x27;%&#x27;); print(&#x27;현재 풍속:&#x27;, d[&#x27;current&#x27;][&#x27;wind_speed_10m&#x27;], &#x27;km/h&#x27;); print(&#x27;시간대:&#x27;, d[&#x27;timezone&#x27;]); print(&#x27;데이터 시간 수:&#x27;, len(d[&#x27;hourly&#x27;][&#x27;time&#x27;]))&quot;</pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+PermissionError: [Errno 13] Permission denied: &#x27;/root/ws/weather.json&#x27;
+</pre></details><details><summary>[6] shell ls -la ~/ws/ &amp;&amp; file ~/ws/weather.json &amp;&amp; head -c 500 ~/ws/weather.json</summary><pre>ls -la ~/ws/ &amp;&amp; file ~/ws/weather.json &amp;&amp; head -c 500 ~/ws/weather.json</pre><pre>[종료코드 0]
+total 24
+drwxr-xr-x  3 runner runner 4096 Nov 22 05:00 .
+drwxr-x--- 12 runner runner 4096 Nov 22 04:55 ..
+drwxr-xr-x  2 runner runner 4096 Nov 22 04:55 out
+-rw-r--r--  1 runner runner  577 Nov 22 05:00 test.html
+-rw-r--r--  1 runner runner 5477 Nov 22 05:00 weather.json
+/home/runner/ws/weather.json: JSON text data
+{&quot;latitude&quot;:37.55,&quot;longitude&quot;:127.0,&quot;generationtime_ms&quot;:0.44727325439453125,&quot;utc_offset_seconds&quot;:32400,&quot;timezone&quot;:&quot;Asia/Seoul&quot;,&quot;timezone_abbreviation&quot;:&quot;GMT+9&quot;,&quot;elevation&quot;:34.0,&quot;current_units&quot;:{&quot;time&quot;:&quot;iso8601&quot;,&quot;interval&quot;:&quot;seconds&quot;,&quot;temperature_2m&quot;:&quot;°C&quot;,&quot;relative_humidity_2m&quot;:&quot;%&quot;,&quot;weather_code&quot;:&quot;wmo code&quot;,&quot;wind_speed_10m&quot;:&quot;km/h&quot;},&quot;current&quot;:{&quot;time&quot;:&quot;2026-11-22T14:00&quot;,&quot;interval&quot;:900,&quot;temperature_2m&quot;:3.9,&quot;relative_humidity_2m&quot;:52,&quot;weather_code&quot;:0,&quot;wind_speed_10m&quot;:4.7},&quot;hourly_units&quot;:{&quot;time&quot;:&quot;iso860</pre></details><details><summary>[7] shell python3 -c &quot;import json; d=json.load(open(&#x27;/home/runner/ws/weather.json&#x27;)); print(&#x27;현재 온도:&#x27;, d[&#x27;curre</summary><pre>python3 -c &quot;import json; d=json.load(open(&#x27;/home/runner/ws/weather.json&#x27;)); print(&#x27;현재 온도:&#x27;, d[&#x27;current&#x27;][&#x27;temperature_2m&#x27;], &#x27;°C&#x27;); print(&#x27;현재 습도:&#x27;, d[&#x27;current&#x27;][&#x27;relative_humidity_2m&#x27;], &#x27;%&#x27;); print(&#x27;현재 풍속:&#x27;, d[&#x27;current&#x27;][&#x27;wind_speed_10m&#x27;], &#x27;km/h&#x27;); print(&#x27;시간대:&#x27;, d[&#x27;timezone&#x27;]); print(&#x27;데이터 시간 수:&#x27;, len(d[&#x27;hourly&#x27;][&#x27;time&#x27;]))&quot;</pre><pre>[종료코드 0]
+현재 온도: 3.9 °C
+현재 습도: 52 %
+현재 풍속: 4.7 km/h
+시간대: Asia/Seoul
+데이터 시간 수: 168
+</pre></details><details><summary>[8] shell python3 -c &quot;
+import json
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+fro</summary><pre>python3 -c &quot;
+import json
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+from datetime import datetime
+
+d = json.load(open(&#x27;/home/runner/ws/weather.json&#x27;))
+times = [datetime.fromisoformat(t) for t in d[&#x27;hourly&#x27;][&#x27;time&#x27;]]
+temps = d[&#x27;hourly&#x27;][&#x27;temperature_2m&#x27;]
+hums = d[&#x27;hourly&#x27;][&#x27;relative_humidity_2m&#x27;]
+probs = d[&#x27;hourly&#x27;][&#x27;precipitation_probability&#x27;]
+
+fig, axes = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+axes[0].plot(times, temps, color=&#x27;tab:red&#x27;, linewidth=1.5)
+axes[0].set_ylabel(&#x27;Temperature (°C)&#x27;)
+axes[0].set_title(&#x27;Seoul Weather Forecast (Next 7 Days)&#x27;)
+axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(times, hums, color=&#x27;tab:blue&#x27;, linewidth=1.5)
+axes[1].set_ylabel(&#x27;Humidity (%)&#x27;)
+axes[1].grid(True, alpha=0.3)
+
+axes[2].plot(times, probs, color=&#x27;tab:purple&#x27;, linewidth=1.5)
+axes[2].set_ylabel(&#x27;Precipitation Probability (%)&#x27;)
+axes[2].set_xlabel(&#x27;Time&#x27;)
+axes[2].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig(&#x27;/home/runner/ws/out/weather_forecast.png&#x27;, dpi=150)
+print(&#x27;Graph saved to /home/runner/ws/out/weather_forecast.png&#x27;)
+print(&#x27;Min temp:&#x27;, min(temps), &#x27;Max temp:&#x27;, max(temps))
+print(&#x27;Avg humidity:&#x27;, round(sum(hums)/len(hums), 1), &#x27;%&#x27;)
+print(&#x27;Max precipitation prob:&#x27;, max(probs), &#x27;%&#x27;)
+&quot;</pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 3, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[9] shell pip install matplotlib --quiet &amp;&amp; echo &quot;matplotlib installed&quot;</summary><pre>pip install matplotlib --quiet &amp;&amp; echo &quot;matplotlib installed&quot;</pre><pre>[종료코드 0]
+matplotlib installed
+</pre></details><details><summary>[10] shell python3 -c &quot;
+import json
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+fro</summary><pre>python3 -c &quot;
+import json
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+from datetime import datetime
+
+d = json.load(open(&#x27;/home/runner/ws/weather.json&#x27;))
+times = [datetime.fromisoformat(t) for t in d[&#x27;hourly&#x27;][&#x27;time&#x27;]]
+temps = d[&#x27;hourly&#x27;][&#x27;temperature_2m&#x27;]
+hums = d[&#x27;hourly&#x27;][&#x27;relative_humidity_2m&#x27;]
+probs = d[&#x27;hourly&#x27;][&#x27;precipitation_probability&#x27;]
+
+fig, axes = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+axes[0].plot(times, temps, color=&#x27;tab:red&#x27;, linewidth=1.5)
+axes[0].set_ylabel(&#x27;Temperature (°C)&#x27;)
+axes[0].set_title(&#x27;Seoul Weather Forecast (Next 7 Days)&#x27;)
+axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(times, hums, color=&#x27;tab:blue&#x27;, linewidth=1.5)
+axes[1].set_ylabel(&#x27;Humidity (%)&#x27;)
+axes[1].grid(True, alpha=0.3)
+
+axes[2].plot(times, probs, color=&#x27;tab:purple&#x27;, linewidth=1.5)
+axes[2].set_ylabel(&#x27;Precipitation Probability (%)&#x27;)
+axes[2].set_xlabel(&#x27;Time&#x27;)
+axes[2].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig(&#x27;/home/runner/ws/out/weather_forecast.png&#x27;, dpi=150)
+print(&#x27;Graph saved to /home/runner/ws/out/weather_forecast.png&#x27;)
+print(&#x27;Min temp:&#x27;, min(temps), &#x27;Max temp:&#x27;, max(temps))
+print(&#x27;Avg humidity:&#x27;, round(sum(hums)/len(hums), 1), &#x27;%&#x27;)
+print(&#x27;Max precipitation prob:&#x27;, max(probs), &#x27;%&#x27;)
+&quot;</pre><pre>[종료코드 0]
+Graph saved to /home/runner/ws/out/weather_forecast.png
+Min temp: -4.2 Max temp: 14.5
+Avg humidity: 71.3 %
+Max precipitation prob: 100 %
+</pre></details></html>
