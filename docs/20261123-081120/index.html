@@ -1,0 +1,282 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>리눅스 압축 알고리즘 성능 비교 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>리눅스 압축 알고리즘 성능 비교 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 13번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>위키피디아에서 데이터 압축 원리를 확인한 후, Ubuntu에서 gzip, bzip2, xz, zstd, pigz 다섯 가지 압축 도구를 직접 실험했습니다. 테스트 파일은 반복 텍스트, 랜덤 텍스트, 랜덤 이진, 영(0) 이진 각 약 1MB씩 생성했고, 압축 비율과 압축 시간을 3회 측정해 평균을 내었습니다.<br><br>결과: 반복 텍스트는 zstd가 0.000 비율로 가장 작게 압축했고, bzip2와 xz도 0.000으로 우수했습니다. 랜덤 텍스트는 모든 알고리즘이 0.724~0.732로 비슷했으며, zstd가 0.0179초로 가장 빨랐습니다. 랜덤 이진은 압축이 불가능해 1.000에 가까웠고, zstd와 pigz가 가장 빨랐습니다. 영 이진은 bzip2와 zstd가 0.000으로 극도로 압축했습니다.<br><br>알게 된 점: 데이터 특성에 따라 최적 압축 알고리즘이 다릅니다. zstd는 압축률과 속도의 균형이 가장 좋았고, 랜덤 데이터는 어떤 알고리즘으로도 압축할 수 없었습니다. 그래프는 ~/ws/out/compression_benchmark.png에 저장했습니다.<br><br>다음에 해 볼 것: 압축 해제 속도 측정, 더 큰 파일로 실험, 실시간 스트림 압축 테스트.</p><img src="out/compression_benchmark.png">
+<h2>결과 파일</h2><ul><li><a href="out/compression_benchmark.png">compression_benchmark.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search linux compression benchmark gzip bzip2 xz zstd comparison text binary files</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] fetch https://en.wikipedia.org/wiki/Data_compression</summary><pre></pre><pre>Data compression - Wikipedia Jump to content Main menu Main menu move to sidebar hide Navigation Main page Contents Current events Random article About Wikipedia Contact us Contribute Help Learn to edit Community portal Recent changes Upload file Special pages Search Search Appearance Donate Create account Log in Personal tools Donate Create account Log in Contents move to sidebar hide (Top) 1 Lossless 2 Lossy 3 Theory Toggle Theory subsection 3.1 Machine learning 3.2 Data differencing 4 Uses Toggle Uses subsection 4.1 Image 4.2 Audio 4.2.1 Lossy audio compression 4.2.1.1 Coding methods 4.2.1.2 Speech encoding 4.2.2 History 4.3 Video 4.3.1 Encoding theory 4.3.1.1 Inter-frame coding 4.3.2 Hybrid block-based transform formats 4.3.3 History 4.4 Genetics 5 Outlook and currently unused potential 6 Data compression algorithms Toggle Data compression algorithms subsection 6.1 Lossless 6.2 Lossy 7 See also 8 References 9 External links Toggle the table of contents Data compression 66 languages Alemannisch العربية Asturianu Azərbaycanca Беларуская (тарашкевіца) Български বাংলা Bosanski Català کوردی Čeština Чӑвашла Dansk Deutsch Ελληνικά Esperanto Español Eesti Euskara فارسی Suomi Français Gaeilge Galego עברית हिन्दी Hrvatski Magyar Հայերեն Bahasa Indonesia Italiano 日本語 Jawa Қазақша ភាសាខ្មែរ 한국어 Kurdî Кыргызча Latina Lietuvių Latviešu Bahasa Melayu Nederlands Norsk nynorsk Norsk bokmål Polski Piemontèis پښتو Português Română Русский Srpskohrvatski / српскохрватски Simple English Slovenčina Shqip Српски / srpski Svenska Kiswahili ไทย Türkçe Українська اردو Tiếng Việt 吴语 粵語 中文 Edit links Article Talk English Read Edit View history Save Tools Tools move to sidebar hide Actions Read Edit View history Save General What links here Related changes Upload file Permanent link Page information Cite this page Get shortened URL Switch to legacy parser Print/export Download as PDF Printable version In other projects Wikimedia Commons Wikibooks Wikidata item Appearance move to sidebar hid
+...(중략)...
+s compression is possible because most real-world data exhibits statistical redundancy. For example, an image may have areas of color that do not change over several pixels; instead of coding &quot;red pixel, red pixel, ...&quot; the data may be encoded as &quot;279 red pixels&quot;. This is a basic example of run-length encoding ; there are many schemes to reduce file size by eliminating redundancy. The Lempel–Ziv (LZ) compression methods are among the most popular algorithms for lossless storage. [ 6 ] DEFLATE is a variation on LZ optimized for decompression speed and compression ratio, [ 7 ] but compression can be slow. In the mid-1980s, following work by Terry Welch , the Lempel–Ziv–Welch (LZW) algorithm rapidly became the method of choice for most general-purpose compression systems. LZW is used in GIF images, programs such as PKZIP , and hardware devices such as modems. [ 8 ] LZ methods use a table-based compression model where table entries are substituted for repeated strings of data. For most LZ methods, this table is generated dynamically from earlier data in the input. The table itself is often Huffman encoded . Grammar-based codes like this can compress highly repetitive input extremely effectively, for instance, a biological data collection of the same or closely related species, a huge versioned document collection, internet archival, etc. The basic task of grammar-based codes is constructing a context-free grammar deriving a single string. Other practical grammar compression algorithms include Sequitur and Re-Pair . The strongest modern lossless compressors use probabilistic models, such as prediction by partial matching . The Burrows–Wheeler transform can also be viewed as an indirect form of statistical modelling. [ citation needed ] In a further refinement of the direct use of probabilistic modelling , statistical estimates can be coupled to an algorithm called arithmetic coding . Arithmetic coding is a more modern coding technique that uses the mathematical calculati</pre></details><details><summary>[3] shell which gzip bzip2 xz zstd pigz 2&gt;/dev/null; echo &quot;---&quot;; df -h ~ | tail -1; echo &quot;---&quot;; nproc</summary><pre></pre><pre>[종료코드 0]
+/usr/bin/gzip
+/usr/bin/bzip2
+/usr/bin/xz
+/usr/local/bin/zstd
+/usr/bin/pigz
+---
+/dev/root       145G   58G   88G  40% /
+---
+4
+</pre></details><details><summary>[4] shell mkdir -p ~/ws/out; cd ~/ws; python3 -c &quot;print(&#x27;Hello World! &#x27;*100000)&quot; &gt; text_repeat.txt; python3 -c</summary><pre></pre><pre>[종료코드 0]
+-rw-r--r-- 1 runner runner 977K Nov 22 23:11 bin_random.bin
+-rw-r--r-- 1 runner runner 977K Nov 22 23:11 bin_zero.bin
+-rw-r--r-- 1 runner runner 977K Nov 22 23:11 text_random.txt
+-rw-r--r-- 1 runner runner 1.3M Nov 22 23:11 text_repeat.txt
+</pre></details><details><summary>[5] shell cd ~/ws; for f in text_repeat.txt text_random.txt bin_random.bin bin_zero.bin; do echo &quot;=== $f ===&quot;;</summary><pre></pre><pre>[종료코드 0]
+=== text_repeat.txt ===
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   gzip: 0.00 sec, 1808 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   bzip2: 0.13 sec, 8860 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   xz: 0.02 sec, 15132 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   zstd: 0.02 sec, 15828 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   pigz: 0.01 sec, 3856 KB
+=== text_random.txt ===
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   gzip: 0.03 sec, 2000 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   bzip2: 0.05 sec, 7956 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   xz: 0.25 sec, 77524 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   zstd: 0.01 sec, 16428 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   pigz: 0.01 sec, 4628 KB
+=== bin_random.bin ===
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   gzip: 0.03 sec, 2068 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   bzip2: 0.09 sec, 7964 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   xz: 0.29 sec, 78932 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   zstd: 0.01 sec, 17160 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   pigz: 0.01 sec, 4892 KB
+=== bin_zero.bin ===
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   gzip: 0.00 sec, 1748 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   bzip2: 0.00 sec, 1948 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   xz: 0.01 sec, 12124 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   zstd: 0.00 sec, 15192 KB
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#x27;comp&#x27; is not defined
+    ratio=   pigz: 0.00 sec, 3624 KB
+</pre></details><details><summary>[6] write ~/ws/bench.py</summary><pre>import subprocess, os, time, statistics
+
+files = [&quot;text_repeat.txt&quot;, &quot;text_random.txt&quot;, &quot;bin_random.bin&quot;, &quot;bin_zero.bin&quot;]
+compressors = [&quot;gzip&quot;, &quot;bzip2&quot;, &quot;xz&quot;, &quot;zstd&quot;, &quot;pigz&quot;]
+
+results = []
+
+for f in files:
+    orig = os.path.getsize(f)
+    for c in compressors:
+        times = []
+        comp_size = None
+        for run in range(3):
+            t0 = time.time()
+            with open(f, &quot;rb&quot;) as fin, open(&quot;/tmp/out&quot;, &quot;wb&quot;) as fout:
+                p = subprocess.run([c, &quot;-c&quot;, &quot;-9&quot;], stdin=fin, stdout=fout)
+            t1 = time.time()
+            if p.returncode != 0:
+                break
+            comp_size = os.path.getsize(&quot;/tmp/out&quot;)
+            times.append(t1 - t0)
+        if comp_size is None:
+            continue
+        ratio = comp_size / orig
+        avg_t = statistics.mean(times)
+        results.append((f, c, orig, comp_size, ratio, avg_t))
+        print(f&quot;{f:20s} {c:6s} orig={orig:8d} comp={comp_size:8d} ratio={ratio:.3f} time={avg_t:.4f}s&quot;)
+
+print(&quot;\nDone.&quot;)
+</pre><pre>저장함: bench.py (990자)</pre></details><details><summary>[7] shell cd ~/ws &amp;&amp; python3 bench.py</summary><pre></pre><pre>[종료코드 0]
+text_repeat.txt      gzip   orig= 1300001 comp=    2573 ratio=0.002 time=0.0036s
+text_repeat.txt      bzip2  orig= 1300001 comp=     174 ratio=0.000 time=0.1408s
+text_repeat.txt      xz     orig= 1300001 comp=     344 ratio=0.000 time=0.0253s
+text_repeat.txt      zstd   orig= 1300001 comp=     134 ratio=0.000 time=0.0256s
+text_repeat.txt      pigz   orig= 1300001 comp=    2753 ratio=0.002 time=0.0076s
+text_random.txt      gzip   orig= 1000001 comp=  730475 ratio=0.730 time=0.0389s
+text_random.txt      bzip2  orig= 1000001 comp=  724341 ratio=0.724 time=0.0712s
+text_random.txt      xz     orig= 1000001 comp=  731596 ratio=0.732 time=0.3047s
+text_random.txt      zstd   orig= 1000001 comp=  723851 ratio=0.724 time=0.0179s
+text_random.txt      pigz   orig= 1000001 comp=  731102 ratio=0.731 time=0.0192s
+bin_random.bin       gzip   orig= 1000000 comp= 1000173 ratio=1.000 time=0.0257s
+bin_random.bin       bzip2  orig= 1000000 comp= 1004743 ratio=1.005 time=0.0766s
+bin_random.bin       xz     orig= 1000000 comp= 1000116 ratio=1.000 time=0.2897s
+bin_random.bin       zstd   orig= 1000000 comp= 1000034 ratio=1.000 time=0.0161s
+bin_random.bin       pigz   orig= 1000000 comp= 1000328 ratio=1.000 time=0.0155s
+bin_zero.bin         gzip   orig= 1000000 comp=    1003 ratio=0.001 time=0.0076s
+bin_zero.bin         bzip2  orig= 1000000 comp=      48 ratio=0.000 time=0.0090s
+bin_zero.bin         xz     orig= 1000000 comp=     284 ratio=0.000 time=0.0254s
+bin_zero.bin         zstd   orig= 1000000 comp=      50 ratio=0.000 time=0.0136s
+bin_zero.bin         pigz   orig= 1000000 comp=    1114 ratio=0.001 time=0.0096s
+
+Done.
+</pre></details><details><summary>[8] write ~/ws/plot.py</summary><pre>import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import os
+
+files = [&quot;text_repeat.txt&quot;, &quot;text_random.txt&quot;, &quot;bin_random.bin&quot;, &quot;bin_zero.bin&quot;]
+compressors = [&quot;gzip&quot;, &quot;bzip2&quot;, &quot;xz&quot;, &quot;zstd&quot;, &quot;pigz&quot;]
+
+data = {}
+with open(&quot;/tmp/bench_raw.txt&quot;) as f:
+    pass
+
+# bench.py 출력을 다시 수집하기 위해 저장된 결과 재생성 없이 하드코딩 대신 파일에서 읽기
+# 간단하게 bench.py를 수정해 CSV로 저장하지 않았으므로, 여기서는 수집된 값을 그대로 사용
+ratios = {
+    &quot;text_repeat.txt&quot;: {&quot;gzip&quot;:0.002,&quot;bzip2&quot;:0.000,&quot;xz&quot;:0.000,&quot;zstd&quot;:0.000,&quot;pigz&quot;:0.002},
+    &quot;text_random.txt&quot;: {&quot;gzip&quot;:0.730,&quot;bzip2&quot;:0.724,&quot;xz&quot;:0.732,&quot;zstd&quot;:0.724,&quot;pigz&quot;:0.731},
+    &quot;bin_random.bin&quot;:  {&quot;gzip&quot;:1.000,&quot;bzip2&quot;:1.005,&quot;xz&quot;:1.000,&quot;zstd&quot;:1.000,&quot;pigz&quot;:1.000},
+    &quot;bin_zero.bin&quot;:    {&quot;gzip&quot;:0.001,&quot;bzip2&quot;:0.000,&quot;xz&quot;:0.000,&quot;zstd&quot;:0.000,&quot;pigz&quot;:0.001},
+}
+times = {
+    &quot;text_repeat.txt&quot;: {&quot;gzip&quot;:0.0036,&quot;bzip2&quot;:0.1408,&quot;xz&quot;:0.0253,&quot;zstd&quot;:0.0256,&quot;pigz&quot;:0.0076},
+    &quot;text_random.txt&quot;: {&quot;gzip&quot;:0.0389,&quot;bzip2&quot;:0.0712,&quot;xz&quot;:0.3047,&quot;zstd&quot;:0.0179,&quot;pigz&quot;:0.0192},
+    &quot;bin_random.bin&quot;:  {&quot;gzip&quot;:0.0257,&quot;bzip2&quot;:0.0766,&quot;xz&quot;:0.2897,&quot;zstd&quot;:0.0161,&quot;pigz&quot;:0.0155},
+    &quot;bin_zero.bin&quot;:    {&quot;gzip&quot;:0.0076,&quot;bzip2&quot;:0.0090,&quot;xz&quot;:0.0254,&quot;zstd&quot;:0.0136,&quot;pigz&quot;:0.0096},
+}
+
+os.makedirs(&quot;out&quot;, exist_ok=True)
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+x = range(len(files))
+width = 0.15
+for i, c in enumerate(compressors):
+    r = [ratios[f][c] for f in files]
+    t = [times[f][c] for f in files]
+    axes[0].bar([j + i*width for j in x], r, width, label=c)
+    axes[1].bar([j + i*width for j in x], t, width, label=c)
+
+axes[0].set_ylabel(&quot;compressed size / original size&quot;)
+axes[0].set_title(&quot;Compression ratio (lower is better)&quot;)
+axes[0].set_xticks([j + width*2 for j in x])
+axes[0].set_xticklabels(files, rotation=15)
+axes[0].legend()
+
+axes[1].set_ylabel(&quot;time (seconds)&quot;)
+axes[1].set_title(&quot;Compression time (lower is faster)&quot;)
+axes[1].set_xticks([j + width*2 for j in x])
+axes[1].set_xticklabels(files, rotation=15)
+axes[1].legend()
+
+plt.tight_layout()
+plt.savefig(&quot;out/compression_benchmark.png&quot;, dpi=150)
+print(&quot;saved out/compression_benchmark.png&quot;)
+</pre><pre>저장함: plot.py (2044자)</pre></details><details><summary>[9] shell cd ~/ws &amp;&amp; python3 plot.py &amp;&amp; ls -lh out/</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot.py&quot;, line 1, in &lt;module&gt;
+    import matplotlib
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[10] shell pip install matplotlib 2&gt;&amp;1 | tail -3</summary><pre></pre><pre>[종료코드 0]
+Installing collected packages: tzdata, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, python-dateutil, contourpy, matplotlib
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.5 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+</pre></details><details><summary>[11] shell cd ~/ws &amp;&amp; python3 plot.py &amp;&amp; ls -lh out/</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/plot.py&quot;, line 10, in &lt;module&gt;
+    with open(&quot;/tmp/bench_raw.txt&quot;) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: &#x27;/tmp/bench_raw.txt&#x27;
+</pre></details><details><summary>[12] write ~/ws/plot.py</summary><pre>import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import os
+
+files = [&quot;text_repeat.txt&quot;, &quot;text_random.txt&quot;, &quot;bin_random.bin&quot;, &quot;bin_zero.bin&quot;]
+compressors = [&quot;gzip&quot;, &quot;bzip2&quot;, &quot;xz&quot;, &quot;zstd&quot;, &quot;pigz&quot;]
+
+ratios = {
+    &quot;text_repeat.txt&quot;: {&quot;gzip&quot;:0.002,&quot;bzip2&quot;:0.000,&quot;xz&quot;:0.000,&quot;zstd&quot;:0.000,&quot;pigz&quot;:0.002},
+    &quot;text_random.txt&quot;: {&quot;gzip&quot;:0.730,&quot;bzip2&quot;:0.724,&quot;xz&quot;:0.732,&quot;zstd&quot;:0.724,&quot;pigz&quot;:0.731},
+    &quot;bin_random.bin&quot;:  {&quot;gzip&quot;:1.000,&quot;bzip2&quot;:1.005,&quot;xz&quot;:1.000,&quot;zstd&quot;:1.000,&quot;pigz&quot;:1.000},
+    &quot;bin_zero.bin&quot;:    {&quot;gzip&quot;:0.001,&quot;bzip2&quot;:0.000,&quot;xz&quot;:0.000,&quot;zstd&quot;:0.000,&quot;pigz&quot;:0.001},
+}
+times = {
+    &quot;text_repeat.txt&quot;: {&quot;gzip&quot;:0.0036,&quot;bzip2&quot;:0.1408,&quot;xz&quot;:0.0253,&quot;zstd&quot;:0.0256,&quot;pigz&quot;:0.0076},
+    &quot;text_random.txt&quot;: {&quot;gzip&quot;:0.0389,&quot;bzip2&quot;:0.0712,&quot;xz&quot;:0.3047,&quot;zstd&quot;:0.0179,&quot;pigz&quot;:0.0192},
+    &quot;bin_random.bin&quot;:  {&quot;gzip&quot;:0.0257,&quot;bzip2&quot;:0.0766,&quot;xz&quot;:0.2897,&quot;zstd&quot;:0.0161,&quot;pigz&quot;:0.0155},
+    &quot;bin_zero.bin&quot;:    {&quot;gzip&quot;:0.0076,&quot;bzip2&quot;:0.0090,&quot;xz&quot;:0.0254,&quot;zstd&quot;:0.0136,&quot;pigz&quot;:0.0096},
+}
+
+os.makedirs(&quot;out&quot;, exist_ok=True)
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+x = range(len(files))
+width = 0.15
+for i, c in enumerate(compressors):
+    r = [ratios[f][c] for f in files]
+    t = [times[f][c] for f in files]
+    axes[0].bar([j + i*width for j in x], r, width, label=c)
+    axes[1].bar([j + i*width for j in x], t, width, label=c)
+
+axes[0].set_ylabel(&quot;compressed size / original size&quot;)
+axes[0].set_title(&quot;Compression ratio (lower is better)&quot;)
+axes[0].set_xticks([j + width*2 for j in x])
+axes[0].set_xticklabels(files, rotation=15)
+axes[0].legend()
+
+axes[1].set_ylabel(&quot;time (seconds)&quot;)
+axes[1].set_title(&quot;Compression time (lower is faster)&quot;)
+axes[1].set_xticks([j + width*2 for j in x])
+axes[1].set_xticklabels(files, rotation=15)
+axes[1].legend()
+
+plt.tight_layout()
+plt.savefig(&quot;out/compression_benchmark.png&quot;, dpi=150)
+print(&quot;saved out/compression_benchmark.png&quot;)
+</pre><pre>저장함: plot.py (1873자)</pre></details><details><summary>[13] shell cd ~/ws &amp;&amp; python3 plot.py &amp;&amp; ls -lh out/</summary><pre></pre><pre>[종료코드 0]
+saved out/compression_benchmark.png
+total 80K
+-rw-r--r-- 1 runner runner 78K Nov 22 23:12 compression_benchmark.png
+</pre></details></html>
