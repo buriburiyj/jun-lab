@@ -1,0 +1,155 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>영어 위키백과 무작위 문서 100개 제목·도입부 길이 분석</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>영어 위키백과 무작위 문서 100개 제목·도입부 길이 분석</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 10번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 영어 위키백과 무작위 문서를 주제로 직접 실험했다. 위키백과 API를 통해 무작위 문서 100개의 제목과 도입부 추출본을 가져와 제목 단어 수와 도입부 문자 수를 분석하고 그래프로 그렸다. 결과: 문서 100개, 제목 단어 수 평균 2.8개(최소 1, 최대 7), 도입부 문자 수 평균 465.6자(최소 47, 최대 2125). 그래프 파일은 ~/ws/out/wiki_random.png에 저장했다. 알게 된 점: 위키백과 무작위 문서는 제목이 비교적 짧고 도입부 길이는 문서 종류에 따라 크게 차이 난다. 다음에 해 볼 것: 특정 카테고리나 주제로 문서를 필터링해 비교 분석해 보는 것.</p><img src="out/wiki_random.png">
+<h2>결과 파일</h2><ul><li><a href="out/wiki_random.png">wiki_random.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search 흥미로운 무료 공개 API 데이터 시각화 파이썬</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] fetch https://api.open-notify.org/astros.json</summary><pre></pre><pre>오류: &lt;urlopen error [Errno 111] Connection refused&gt;</pre></details><details><summary>[3] shell curl -s -I https://www.google.com --max-time 10 | head -5; echo &quot;---&quot;; curl -s http://example.com --</summary><pre></pre><pre>[종료코드 0]
+HTTP/2 200 
+content-type: text/html; charset=ISO-8859-1
+content-security-policy-report-only: object-src &#x27;none&#x27;;base-uri &#x27;self&#x27;;script-src &#x27;nonce-So4qcrnm_X7f_ngPlrZNcw&#x27; &#x27;strict-dynamic&#x27; &#x27;report-sample&#x27; &#x27;unsafe-eval&#x27; &#x27;unsafe-inline&#x27; https: http:;report-uri https://csp.withgoogle.com/csp/gws/other-hp
+accept-ch: Sec-CH-Prefers-Color-Scheme
+p3p: CP=&quot;This is not a P3P policy! See g.co/p3phelp for more info.&quot;
+---
+&lt;!doctype html&gt;&lt;html lang=en&gt;&lt;head&gt;&lt;meta charset=utf-8&gt;&lt;link rel=icon href=data:,&gt;&lt;meta name=viewport content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Example Domain&lt;/title&gt;&lt;style&gt;html{color-scheme:light dark;background:light-dark(#eee,#222)}body{font:16px/1.6 system-ui,sans-serif;max-width:26em;margin:auto;padding:25vh 2em 2em;text-align:center}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.&lt;/p&gt;&lt;script src=/s.js&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</pre></details><details><summary>[4] fetch https://en.wikipedia.org/wiki/Special:Random</summary><pre></pre><pre>Goobertown, Arkansas - Wikipedia Jump to content Main menu Main menu move to sidebar hide Navigation Main page Contents Current events Random article About Wikipedia Contact us Contribute Help Learn to edit Community portal Recent changes Upload file Special pages Search Search Appearance Donate Create account Log in Personal tools Donate Create account Log in Contents move to sidebar hide (Top) 1 History 2 References Toggle the table of contents Goobertown, Arkansas Add languages Add links Article Talk English Read Edit View history Save Tools Tools move to sidebar hide Actions Read Edit View history Save General What links here Related changes Upload file Permanent link Page information Cite this page Get shortened URL Switch to legacy parser Print/export Download as PDF Printable version In other projects Wikidata item Appearance move to sidebar hide Coordinates : 35°57′05″N 90°34′32″W ﻿ / ﻿ 35.95139°N 90.57556°W ﻿ / 35.95139; -90.57556 From Wikipedia, the free encyclopedia &quot;},&quot;image&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;image_size&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;caption&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;image_flag&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;image_seal&quot;:{&quot;wt&quot;:&quot;&lt;!-- Maps --&gt;&quot;},&quot;image_map&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;map_size&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;map_caption&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;image_map1&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;map_size1&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;map_caption1&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;pushpin_map&quot;:{&quot;wt&quot;:&quot;Arkansas#USA\n\n&lt;!-- Location --&gt;&quot;},&quot;subdivision_type&quot;:{&quot;wt&quot;:&quot;Country&quot;},&quot;subdivision_name&quot;:{&quot;wt&quot;:&quot;United States&quot;},&quot;subdivision_type1&quot;:{&quot;wt&quot;:&quot;[[U.S. state|State]]&quot;},&quot;subdivision_name1&quot;:{&quot;wt&quot;:&quot;[[Arkansas]]&quot;},&quot;subdivision_type2&quot;:{&quot;wt&quot;:&quot;[[List of counties in Arkansas|County]]&quot;},&quot;subdivision_name2&quot;:{&quot;wt&quot;:&quot;[[Craighead County, Arkansas|Craighead]]\n\n&lt;!-- Government --&gt;&quot;},&quot;government_footnotes&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;government_type&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;leader_title&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;leader_name&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;leader_title1&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;leader_name1&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;established_title&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;established_date&quot;:{&quot;wt&quot;:&quot;&lt;!-- Area --&gt;&quot;},&quot;unit_pref&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;area_footnotes&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;area_magnitude&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;area_total_km2&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;area_land_km2&quot;:{&quot;wt&quot;:&quot;
+...(중략)...
+556 [[Geographic coordinate system|Coordinates]]: {{#parsoid\u0000fragment:12}}&lt;span class=\&quot;plainlinks nourlexpansion\&quot;&gt;[https://geohack.toolforge.org/geohack.php?pagename=Goobertown,_Arkansas&amp;params=35_57_05_N_90_34_32_W_region:US-AR_type:city &lt;span class=\&quot;geo-default\&quot;&gt;&lt;span class=\&quot;geo-dms\&quot; title=\&quot;Maps, aerial photos, and other data for this location\&quot;&gt;&lt;span class=\&quot;latitude\&quot;&gt;35°57′05″N&lt;/span&gt; &lt;span class=\&quot;longitude\&quot;&gt;90°34′32″W&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=\&quot;geo-multi-punct\&quot;&gt;&amp;#xfeff; / &amp;#xfeff;&lt;/span&gt;&lt;span class=\&quot;geo-nondefault\&quot;&gt;&lt;span class=\&quot;geo-dec\&quot; title=\&quot;Maps, aerial photos, and other data for this location\&quot;&gt;35.95139°N 90.57556°W&lt;/span&gt;&lt;span style=\&quot;display:none\&quot;&gt;&amp;#xfeff; / &lt;span class=\&quot;geo\&quot;&gt;35.95139; -90.57556&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;]&lt;/span&gt;[[Category:Pages using gadget WikiMiniAtlas]]&lt;/span&gt;&quot;}}&#x27;/&gt; Country United States State Arkansas County Craighead Elevation [ 1 ] 312 ft (95 m) Time zone UTC-6 ( Central (CST) ) • Summer ( DST ) UTC-5 (CDT) Area code 870 GNIS feature ID 77034 [ 1 ] Goobertown is an unincorporated community located in Craighead County , Arkansas , United States. Goobertown is located on U.S. Route 49 , 10.4 miles (16.7 km) northeast from Jonesboro . [ 2 ] History [ edit ] Goobertown was settled by Confederate war veterans, who decided to name their community Goobertown after the crops they grew around the area: peanuts , contemporarily referred to as &quot;goobers&quot;. [ 3 ] References [ edit ] 1 2 U.S. Geological Survey Geographic Names Information System: Goobertown, Arkansas ↑ Craighead County, Arkansas General Highway Map (PDF) (Map). Arkansas State Highway and Transportation Department . 2009. Archived from the original (PDF) on September 2, 2011 . Retrieved September 19, 2012 . ↑ Zakrzewski, Katie (October 27, 2022). &quot;How Goobertown, Arkansas Got Its Name&quot; . AY Magazine . Archived from the original on September 8, 2024 . Retrieved September 8, 2024 . v t e Municipalities and communities of Craighead County, Arkansas , United S</pre></details><details><summary>[5] shell mkdir -p ~/ws/out &amp;&amp; curl -s &quot;https://en.wikipedia.org/w/api.php?action=query&amp;list=random&amp;rnnamespac</summary><pre></pre><pre>[종료코드 0]
+{&quot;batchcomplete&quot;:&quot;&quot;,&quot;continue&quot;:{&quot;rncontinue&quot;:&quot;0.559290508551|0.559291283352|11440132|0&quot;,&quot;continue&quot;:&quot;-||&quot;},&quot;query&quot;:{&quot;random&quot;:[{&quot;id&quot;:62249497,&quot;ns&quot;:0,&quot;title&quot;:&quot;2019\u201320 Real Zaragoza season&quot;},{&quot;id&quot;:35854067,&quot;ns&quot;:0,&quot;title&quot;:&quot;Semana Santa (2002 film)&quot;},{&quot;id&quot;:39523319,&quot;ns&quot;:0,&quot;title&quot;:&quot;Abby Mavers&quot;},{&quot;id&quot;:74400520,&quot;ns&quot;:0,&quot;title&quot;:&quot;Mid Tyrone (District Electoral Area)&quot;},{&quot;id&quot;:80399794,&quot;ns&quot;:0,&quot;title&quot;:&quot;Jeong Yun-ho&quot;}]}}</pre></details><details><summary>[6] shell curl -s &quot;https://en.wikipedia.org/w/api.php?action=query&amp;list=random&amp;rnnamespace=0&amp;rnlimit=50&amp;format</summary><pre></pre><pre>[종료코드 0]
+EN 50090
+Twilight Train
+Biglerville, Pennsylvania
+VMFA-232
+Chelapsalta myoporae
+Cape Barrow
+Anita Gupta
+László Hódi (diver)
+Palmas Altas, Barceloneta, Puerto Rico
+Timothée Houssin
+Aakash Chand
+Siddharth Lama
+Vidra, Ilfov
+LG enV (VX9900)
+Aghur
+Sanford USD Medical Center
+Mand Dhun
+2013–14 ISU Speed Skating World Cup – Women&#x27;s 1500 metres
+Petar Karadzhov
+Cymatodera flavosignata
+Charette family
+Nell Whitley Smith
+All-Time All Star Award (hurling)
+Ignacy Mościcki
+Jean Simmons
+Gambasca
+Omakase! Miracle Cat-dan
+Milton, Dorset
+124 Horseferry Road
+Vanguardia
+Les Ferres
+Athletics at the 1993 Summer Universiade – Women&#x27;s 4 × 400 metres relay
+Prodiame
+Aubonne, Doubs
+NGC 261
+Armando Shashoua
+Oleksandr Zakharov
+Xcrawl
+Vic Mignogna
+There and Back Again (Phil Lesh album)
+Martin Heath
+Hyperolius nienokouensis
+Ennio Capasa
+Ian Mitchell (footballer)
+Ludlow Tonson, 3rd Baron Riversdale
+Juana Wrightington
+Ivana Hong
+Historical European Martial Arts in Australia
+Badminton at the 2026 Summer Youth Olympics – Men&#x27;s singles
+Brodmann area 31
+</pre></details><details><summary>[7] write ~/ws/analyze_wiki.py</summary><pre>import json, urllib.request, urllib.parse, re
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+def api_get(params):
+    url = &quot;https://en.wikipedia.org/w/api.php?&quot; + urllib.parse.urlencode(params)
+    req = urllib.request.Request(url, headers={&quot;User-Agent&quot;: &quot;research-script/1.0&quot;})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        return json.loads(r.read().decode())
+
+# 1) 무작위 문서 100개 제목 가져오기
+data = api_get({
+    &quot;action&quot;: &quot;query&quot;, &quot;list&quot;: &quot;random&quot;, &quot;rnnamespace&quot;: 0,
+    &quot;rnlimit&quot;: 100, &quot;format&quot;: &quot;json&quot;
+})
+titles = [item[&quot;title&quot;] for item in data[&quot;query&quot;][&quot;random&quot;]]
+
+# 2) 각 문서의 도입부 추출본 가져오기
+extracts = {}
+for i in range(0, len(titles), 20):
+    chunk = titles[i:i+20]
+    data = api_get({
+        &quot;action&quot;: &quot;query&quot;, &quot;prop&quot;: &quot;extracts&quot;, &quot;exintro&quot;: 1,
+        &quot;explaintext&quot;: 1, &quot;titles&quot;: &quot;|&quot;.join(chunk),
+        &quot;format&quot;: &quot;json&quot;
+    })
+    for page in data[&quot;query&quot;][&quot;pages&quot;].values():
+        extracts[page[&quot;title&quot;]] = page.get(&quot;extract&quot;, &quot;&quot;)
+
+# 3) 분석: 제목 단어 수, 추출본 문자 수
+title_lens = [len(t.split()) for t in titles]
+extract_lens = [len(extracts.get(t, &quot;&quot;)) for t in titles]
+
+print(&quot;문서 수:&quot;, len(titles))
+print(&quot;제목 단어 수 - 평균: %.1f, 최소: %d, 최대: %d&quot; % (sum(title_lens)/len(title_lens), min(title_lens), max(title_lens)))
+print(&quot;추출본 문자 수 - 평균: %.1f, 최소: %d, 최대: %d&quot; % (sum(extract_lens)/len(extract_lens), min(extract_lens), max(extract_lens)))
+
+# 4) 그래프 저장
+import os
+os.makedirs(&quot;~/ws/out&quot;.replace(&quot;~&quot;, os.path.expanduser(&quot;~&quot;)), exist_ok=True)
+outdir = os.path.expanduser(&quot;~/ws/out&quot;)
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+axes[0].hist(title_lens, bins=range(1, max(title_lens)+2), color=&quot;steelblue&quot;, edgecolor=&quot;black&quot;)
+axes[0].set_xlabel(&quot;words in title&quot;)
+axes[0].set_ylabel(&quot;number of articles&quot;)
+axes[0].set_title(&quot;Wikipedia random articles: title length&quot;)
+
+axes[1].hist(extract_lens, bins=20, color=&quot;tomato&quot;, edgecolor=&quot;black&quot;)
+axes[1].set_xlabel(&quot;characters in lead extract&quot;)
+axes[1].set_ylabel(&quot;number of articles&quot;)
+axes[1].set_title(&quot;Wikipedia random articles: lead length&quot;)
+
+plt.tight_layout()
+plt.savefig(os.path.join(outdir, &quot;wiki_random.png&quot;), dpi=150)
+print(&quot;saved&quot;, os.path.join(outdir, &quot;wiki_random.png&quot;))
+
+# 샘플 제목 출력
+print(&quot;\n샘플 제목 10개:&quot;)
+for t in titles[:10]:
+    print(&quot;-&quot;, t)</pre><pre>저장함: analyze_wiki.py (2241자)</pre></details><details><summary>[8] shell cd ~/ws &amp;&amp; python3 analyze_wiki.py</summary><pre></pre><pre>[종료코드 1]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/analyze_wiki.py&quot;, line 2, in &lt;module&gt;
+    import matplotlib
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+</pre></details><details><summary>[9] shell pip install matplotlib --quiet</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[10] shell cd ~/ws &amp;&amp; python3 analyze_wiki.py</summary><pre></pre><pre>[종료코드 0]
+문서 수: 100
+제목 단어 수 - 평균: 2.8, 최소: 1, 최대: 7
+추출본 문자 수 - 평균: 465.6, 최소: 47, 최대: 2125
+saved /home/runner/ws/out/wiki_random.png
+
+샘플 제목 10개:
+- Todd Glickman
+- List of Portuguese women artists
+- J. Shimon &amp; J. Lindemann
+- Salbardi
+- Calosoma sycophanta
+- Call signs in Asia
+- Aarne (producer)
+- Intentionally blank page
+- Simone Arena
+- 2025–26 Big Ten Conference ice hockey season
+</pre></details></html>
