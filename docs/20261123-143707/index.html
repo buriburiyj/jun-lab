@@ -1,0 +1,101 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>전 세계 도시 실시간 날씨 비교 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>전 세계 도시 실시간 날씨 비교 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 5번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>인터넷에서 실시간 날씨 API를 찾아 6개 주요 도시(서울, 뉴욕, 런던, 도쿄, 시드니, 상파울루)의 현재 기온, 풍속, 습도를 수집하고 막대그래프로 비교했습니다. 수집 결과: 서울 10.9도, 뉴욕 14.7도, 런던 5.2도, 도쿄 13.3도, 시드니 31.2도, 상파울루 21.7도. 시드니가 가장 더웠고 런던이 가장 추웠습니다. matplotlib이 처음에 설치되어 있지 않아 pip로 설치한 후 실행했습니다. 결과 그래프는 ~/ws/out/weather_comparison.png에 저장했습니다. 다음에는 여러 날짜의 기온 변화를 선 그래프로 그려보는 확장을 해 볼 수 있습니다.</p><img src="out/weather_comparison.png">
+<h2>결과 파일</h2><ul><li><a href="out/weather_comparison.png">weather_comparison.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search Ubuntu 리눅스에서 직접 해 볼 수 있는 흥미로운 데이터 실험 주제 추천</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] shell 환경 및 인터넷 연결 확인</summary><pre>pwd
+ls -la
+curl -sI --max-time 10 https://example.com | head -5
+</pre><pre>[종료코드 0]
+/home/runner/ws
+total 12
+drwxr-xr-x  3 runner runner 4096 Nov 23 05:37 .
+drwxr-x--- 12 runner runner 4096 Nov 23 05:37 ..
+drwxr-xr-x  2 runner runner 4096 Nov 23 05:37 out
+HTTP/2 200 
+date: Mon, 23 Nov 2026 05:37:16 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+last-modified: Thu, 19 Nov 2026 22:11:52 GMT
+</pre></details><details><summary>[3] write ~/ws/weather_exp.py</summary><pre>import urllib.request
+import json
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+cities = {
+    &quot;Seoul&quot;: (37.5665, 126.9780),
+    &quot;New York&quot;: (40.7128, -74.0060),
+    &quot;London&quot;: (51.5074, -0.1278),
+    &quot;Tokyo&quot;: (35.6762, 139.6503),
+    &quot;Sydney&quot;: (-33.8688, 151.2093),
+    &quot;Sao Paulo&quot;: (-23.5505, -46.6333),
+}
+
+results = []
+for name, (lat, lon) in cities.items():
+    url = (
+        f&quot;https://api.open-meteo.com/v1/forecast?&quot;
+        f&quot;latitude={lat}&amp;longitude={lon}&quot;
+        f&quot;&amp;current=temperature_2m,wind_speed_10m,relative_humidity_2m&quot;
+        f&quot;&amp;timezone=auto&quot;
+    )
+    try:
+        with urllib.request.urlopen(url, timeout=15) as r:
+            data = json.loads(r.read().decode())
+        cur = data[&quot;current&quot;]
+        results.append({
+            &quot;city&quot;: name,
+            &quot;temp&quot;: cur[&quot;temperature_2m&quot;],
+            &quot;wind&quot;: cur[&quot;wind_speed_10m&quot;],
+            &quot;humidity&quot;: cur[&quot;relative_humidity_2m&quot;],
+        })
+        print(f&quot;{name}: temp={cur[&#x27;temperature_2m&#x27;]}C, wind={cur[&#x27;wind_speed_10m&#x27;]}km/h, hum={cur[&#x27;relative_humidity_2m&#x27;]}%&quot;)
+    except Exception as e:
+        print(f&quot;{name} 실패: {e}&quot;)
+
+if results:
+    names = [r[&quot;city&quot;] for r in results]
+    temps = [r[&quot;temp&quot;] for r in results]
+    fig, ax = plt.subplots(figsize=(8, 5))
+    bars = ax.bar(names, temps, color=&#x27;skyblue&#x27;, edgecolor=&#x27;navy&#x27;)
+    ax.set_ylabel(&#x27;Temperature (°C)&#x27;)
+    ax.set_title(&#x27;Current Temperature in Major Cities&#x27;)
+    ax.grid(axis=&#x27;y&#x27;, alpha=0.3)
+    for bar, t in zip(bars, temps):
+        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.3,
+                f&#x27;{t}°C&#x27;, ha=&#x27;center&#x27;, va=&#x27;bottom&#x27;, fontsize=10)
+    plt.tight_layout()
+    plt.savefig(&#x27;out/weather_comparison.png&#x27;, dpi=150)
+    print(&quot;그래프 저장 완료: out/weather_comparison.png&quot;)
+</pre><pre>저장함: weather_exp.py (1765자)</pre></details><details><summary>[4] shell 날씨 데이터 수집 스크립트 실행 및 결과 확인</summary><pre>cd ~/ws
+python3 weather_exp.py
+ls -la out/
+</pre><pre>[종료코드 0]
+Traceback (most recent call last):
+  File &quot;/home/runner/ws/weather_exp.py&quot;, line 3, in &lt;module&gt;
+    import matplotlib
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+total 8
+drwxr-xr-x 2 runner runner 4096 Nov 23 05:37 .
+drwxr-xr-x 3 runner runner 4096 Nov 23 05:37 ..
+</pre></details><details><summary>[5] shell matplotlib 설치 후 스크립트 재실행</summary><pre>pip install matplotlib --quiet
+cd ~/ws
+python3 weather_exp.py
+ls -la out/
+</pre><pre>[종료코드 0]
+Seoul: temp=10.9C, wind=10.9km/h, hum=93%
+New York: temp=14.7C, wind=6.8km/h, hum=89%
+London: temp=5.2C, wind=4.7km/h, hum=91%
+Tokyo: temp=13.3C, wind=5.9km/h, hum=51%
+Sydney: temp=31.2C, wind=11.4km/h, hum=46%
+Sao Paulo: temp=21.7C, wind=5.6km/h, hum=87%
+그래프 저장 완료: out/weather_comparison.png
+total 48
+drwxr-xr-x 2 runner runner  4096 Nov 23 05:37 .
+drwxr-xr-x 3 runner runner  4096 Nov 23 05:37 ..
+-rw-r--r-- 1 runner runner 40902 Nov 23 05:37 weather_comparison.png
+</pre></details></html>
