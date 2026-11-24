@@ -1,0 +1,254 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>우분투 리눅스 재미있는 명령어 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>우분투 리눅스 재미있는 명령어 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 13번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>우분투 26.04 LTS에서 재미있는 리눅스 명령어 네 가지를 설치하고 직접 실험했다. cowsay와 figlet은 스크립트 환경에서도 정상적으로 작동하여 ASCII 아트 소와 대형 배너 텍스트를 출력했다. sl(증기 기관차)과 cmatrix(매트릭스 효과)는 ncurses 기반 전체 화면 애니메이션으로, 비대화형 터미널에서는 원시 ANSI 이스케이프 코드만 출력되고 시각적 효과는 나타나지 않았다. 이는 대화형 터미널($TERM 설정과 실제 tty)이 필요하기 때문이다. 실험 결과와 요약 보고서는 ~/ws/out/experiment_results.txt와 ~/ws/out/summary.txt에 저장했다. 다음에는 대화형 터미널에서 sl과 cmatrix를 직접 실행해 시각 효과를 확인해 볼 수 있다.</p>
+<h2>결과 파일</h2><ul><li><a href="out/experiment_results.txt">experiment_results.txt</a></li><li><a href="out/summary.txt">summary.txt</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting linux ubuntu experiment command line</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] shell curl -s https://example.com | head -20</summary><pre></pre><pre>[종료코드 0]
+&lt;!doctype html&gt;&lt;html lang=en&gt;&lt;head&gt;&lt;meta charset=utf-8&gt;&lt;link rel=icon href=data:,&gt;&lt;meta name=viewport content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Example Domain&lt;/title&gt;&lt;style&gt;html{color-scheme:light dark;background:light-dark(#eee,#222)}body{font:16px/1.6 system-ui,sans-serif;max-width:26em;margin:auto;padding:25vh 2em 2em;text-align:center}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.&lt;/p&gt;&lt;script src=/s.js&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</pre></details><details><summary>[3] fetch https://www.tecmint.com/funny-commands-in-linux/</summary><pre></pre><pre>오류: HTTP Error 404: Not Found</pre></details><details><summary>[4] shell curl -s &quot;https://duckduckgo.com/html/?q=interesting+linux+command+line+experiments&quot; | grep -oE &#x27;&lt;a r</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[5] shell curl -sL &quot;https://www.google.com/search?q=interesting+linux+commands&quot; | grep -oP &#x27;&lt;h3[^&gt;]*&gt;.*?&lt;/h3&gt;&#x27;</summary><pre></pre><pre>[종료코드 0]
+</pre></details><details><summary>[6] fetch https://en.wikipedia.org/wiki/Linux</summary><pre></pre><pre>Linux - Wikipedia Jump to content Main menu Main menu move to sidebar hide Navigation Main page Contents Current events Random article About Wikipedia Contact us Contribute Help Learn to edit Community portal Recent changes Upload file Special pages Search Search Appearance Donate Create account Log in Personal tools Donate Create account Log in Contents move to sidebar hide (Top) 1 Overview 2 History Toggle History subsection 2.1 Precursors 2.2 Creation 2.3 Copyright, trademark, and naming 2.3.1 Naming 2.4 Commercial and popular uptake 2.5 Development 3 Usage Toggle Usage subsection 3.1 Market share and uptake 4 Design Toggle Design subsection 4.1 User interface 4.2 Video input infrastructure 5 Development Toggle Development subsection 5.1 Community 5.2 Programming on Linux 5.3 Graphics and graphics design 6 Hardware support 7 Security 8 See also 9 Notes 10 References 11 External links Toggle the table of contents Linux 166 languages Acèh Afrikaans Alemannisch አማርኛ Aragonés अंगिका العربية ܐܪܡܝܐ الدارجة مصرى অসমীয়া Asturianu Azərbaycanca تۆرکجه Башҡортса Boarisch Žemaitėška Bikol Central Беларуская (тарашкевіца) Беларуская Български भोजपुरी বাংলা Brezhoneg Bosanski Basa Ugi Català 閩東語 / Mìng-dĕ̤ng-ngṳ̄ Cebuano کوردی Corsu Čeština Kaszëbsczi Cymraeg Dansk Deutsch Zazaki Dolnoserbski Ελληνικά Esperanto Español Eesti Euskara فارسی Suomi Võro Français Frysk Gaeilge Galego Avañe&#x27;ẽ 客家語 / Hak-kâ-ngî עברית हिन्दी Hrvatski Hornjoserbsce Kreyòl ayisyen Magyar Հայերեն Արեւմտահայերէն Interlingua Bahasa Indonesia Interlingue Ido Íslenska Medžuslovjansky Italiano 日本語 La .lojban. Jawa ქართული Qaraqalpaqsha Taqbaylit Қазақша ភាសាខ្មែរ ಕನ್ನಡ 한국어 کٲشُر Ripoarisch Kurdî Коми Кыргызча Latina Lëtzebuergesch Lingua Franca Nova Ligure Lombard Lingála ລາວ Lietuvių Latviešu मगही Basa Banyumasan Malagasy Māori Македонски Монгол मराठी Bahasa Melayu မြန်မာဘာသာ Nedersaksies Plattdüütsch नेपाली नेपाल भाषा Nederlands Norsk nynorsk Norsk bokmål Occitan ଓଡ଼ିଆ Ирон ਪੰਜਾਬੀ Polski Piemontèis پنجابی پ
+...(중략)...
+ing state&quot;:{&quot;wt&quot;:&quot;Current&quot;},&quot;source model&quot;:{&quot;wt&quot;:&quot;[[Open source]] ([[Linux kernel|kernel]])&quot;},&quot;released&quot;:{&quot;wt&quot;:&quot;{{start date and age|1991|9|17|df=yes}} (kernel)&lt;ref&gt;{{Cite web|url=https://www.zdnet.com/article/linus-torvalds-reveals-the-true-30th-anniversary-of-linux-code/|title=Linus Torvalds reveals the &#x27;true&#x27; anniversary of Linux code |website=[[ZDNet]] |date=September 20, 2021 |access-date=August 29, 2025}}&lt;/ref&gt;&quot;},&quot;latest release version&quot;:{&quot;wt&quot;:&quot;&lt;!-- The kernel version is displayed on the \&quot;Linux kernel\&quot; article; please don&#x27;t insert it here, as this article covers Linux kernel + userland combos. --&gt;&quot;},&quot;latest release date&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;latest preview version&quot;:{&quot;wt&quot;:&quot;&lt;!-- The kernel version is displayed on the \&quot;Linux kernel\&quot; article; please don&#x27;t insert it here, as this article covers Linux kernel + userland combos. --&gt;&quot;},&quot;latest preview date&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;marketing target&quot;:{&quot;wt&quot;:&quot;General-purpose{{efn|[[Cloud computing]], [[embedded device]]s, [[mainframe computer]]s, [[mobile device]]s, [[personal computer]]s, [[server (computing)|servers]], and [[supercomputer]]s}}&quot;},&quot;language&quot;:{&quot;wt&quot;:&quot;Multilingual&quot;},&quot;updatemodel&quot;:{&quot;wt&quot;:&quot;&quot;},&quot;supported platforms&quot;:{&quot;wt&quot;:&quot;Various{{efn|[[DEC Alpha|Alpha]], [[ARC (processor)|ARC]], [[ARM architecture|ARM]], [[M·CORE|C-Sky]], [[Qualcomm Hexagon|Hexagon]], [[Loongson|LoongArch]], [[m68k]], [[Microblaze]], [[MIPS architecture|MIPS]], [[Nios II]], [[OpenRISC]], [[PA-RISC]], [[PowerPC]], [[Power ISA]], [[RISC-V]], [[ESA/390]], [[z/Architecture]], [[SuperH]], [[SPARC]], [[x86]], and [[Xtensa]]}} &lt;!-- Please do not include 64-bit extensions of 32-bit ISAs, e.g. sparc64, ppc64, x86-64, etc.; z/Architecture is an exception, as there&#x27;s no page for all flavors of the ISA from S/360 to z/Architecture --&gt;&quot;},&quot;kernel type&quot;:{&quot;wt&quot;:&quot;[[Monolithic kernel|Monolithic]] with [[loadable kernel module|dynamically loadable modules]]&quot;},&quot;influenced by&quot;:{&quot;wt&quot;:&quot;[[Unix]] and [[Minix]]&quot;},&quot;userland&quot;:{&quot;wt&quot;:&quot;Typically [[util-linux]]{{efn|util-linux is the standard set</pre></details><details><summary>[7] shell check and install fun linux utilities</summary><pre>which cmatrix sl cowsay figlet neofetch 2&gt;/dev/null || true
+sudo apt-get update -y &amp;&amp; sudo apt-get install -y cmatrix sl cowsay figlet neofetch</pre><pre>[종료코드 100]
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+Get:6 https://packages.microsoft.com/ubuntu/26.04/prod resolute InRelease [3964 B]
+Hit:2 http://azure.archive.ubuntu.com/ubuntu resolute InRelease
+Get:3 http://azure.archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+Get:7 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main arm64 Packages [173 kB]
+Get:4 http://azure.archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+Get:5 http://azure.archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+Get:8 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main amd64 Packages [186 kB]
+Get:9 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 Packages [916 kB]
+Get:10 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main Translation-en [202 kB]
+Get:11 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 Packages [397 kB]
+Get:12 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe Translation-en [126 kB]
+Get:13 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted amd64v3 Packages [640 kB]
+Get:14 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted Translation-en [132 kB]
+Get:15 http://azure.archive.ubuntu.com/ubuntu resolute-security/main amd64v3 Packages [753 kB]
+Get:16 http://azure.archive.ubuntu.com/ubuntu resolute-security/main Translation-en [162 kB]
+Get:17 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe amd64v3 Packages [224 kB]
+Get:18 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe Translation-en [73.2 kB]
+Get:19 http://azure.archive.ubuntu.com/ubuntu resolute-security/restricted amd64v3 Packages [618 kB]
+Get:20 http://azure.archive.ubuntu.com/ubuntu resolute-security/restricted Translation-en [128 kB]
+Fetched 5147 kB in 0s (13.0 MB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+E: Unable to locate package neofetch
+</pre></details><details><summary>[8] shell install fun linux utilities except neofetch</summary><pre>sudo apt-get install -y cmatrix sl cowsay figlet</pre><pre>[종료코드 0]
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Solving dependencies...
+Suggested packages:
+  cmatrix-xfont filters cowsay-off
+The following NEW packages will be installed:
+  cmatrix cowsay figlet sl
+0 upgraded, 4 newly installed, 0 to remove and 60 not upgraded.
+Need to get 204 kB of archives.
+After this operation, 982 kB of additional disk space will be used.
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+Get:2 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 cmatrix amd64 2.0-6build1 [34.0 kB]
+Get:3 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 cowsay all 3.03+dfsg2-8build1 [18.1 kB]
+Get:4 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 figlet amd64 2.2.5-3.1 [139 kB]
+Get:5 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 sl amd64 5.02-1build1 [12.9 kB]
+Fetched 204 kB in 0s (1186 kB/s)
+Selecting previously unselected package cmatrix.
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 214296 files and directories currently installed.)
+Preparing to unpack .../cmatrix_2.0-6build1_amd64v3.deb ...
+Unpacking cmatrix (2.0-6build1) ...
+Selecting previously unselected package cowsay.
+Preparing to unpack .../cowsay_3.03+dfsg2-8build1_all.deb ...
+Unpacking cowsay (3.03+dfsg2-8build1) ...
+Selecting previously unselected package figlet.
+Preparing to unpack .../figlet_2.2.5-3.1_amd64v3.deb ...
+Unpacking figlet (2.2.5-3.1) ...
+Selecting previously unselected package sl.
+Preparing to unpack .../sl_5.02-1build1_amd64v3.deb ...
+Unpacking sl (5.02-1build1) ...
+Setting up sl (5.02-1build1) ...
+Setting up cmatrix (2.0-6build1) ...
+Setting up figlet (2.2.5-3.1) ...
+update-alternatives: using /usr/bin/figlet-utf8 to provide /usr/bin/figlet (figlet) in auto mode
+Setting up cowsay (3.03+dfsg2-8build1) ...
+Processing triggers for man-db (2.13.1-1build1) ...
+Not building database; man-db/auto-update is not &#x27;true&#x27;.
+Processing triggers for hicolor-icon-theme (0.18-2build1) ...
+
+Running kernel seems to be up-to-date.
+
+Restarting services...
+
+Service restarts being deferred:
+ systemctl restart hosted-compute-agent.service
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+</pre></details><details><summary>[9] shell run fun linux command experiments and save output</summary><pre>mkdir -p ~/ws/out
+{
+echo &quot;=== Linux Fun Commands Experiment ===&quot;
+echo &quot;Date: $(date)&quot;
+echo &quot;Host: $(hostname)&quot;
+echo &quot;OS: $(lsb_release -d 2&gt;/dev/null | cut -f2-)&quot;
+echo &quot;&quot;
+echo &quot;=== cowsay ===&quot;
+cowsay &quot;Hello from Ubuntu Linux!&quot;
+echo &quot;&quot;
+echo &quot;=== figlet ===&quot;
+figlet &quot;Linux&quot;
+echo &quot;&quot;
+echo &quot;=== sl (steam locomotive) ===&quot;
+timeout 3s sl
+echo &quot;&quot;
+echo &quot;=== cmatrix (3 seconds, sparse) ===&quot;
+timeout 3s cmatrix -s
+} &gt; ~/ws/out/experiment_results.txt 2&gt;&amp;1
+echo &quot;Saved to ~/ws/out/experiment_results.txt&quot;
+wc -l ~/ws/out/experiment_results.txt</pre><pre>[종료코드 0]
+Saved to ~/ws/out/experiment_results.txt
+28 /home/runner/ws/out/experiment_results.txt
+</pre></details><details><summary>[10] shell view experiment results file</summary><pre>cat ~/ws/out/experiment_results.txt</pre><pre>[종료코드 0]
+=== Linux Fun Commands Experiment ===
+Date: Tue Nov 24 16:58:48 UTC 2026
+Host: runnervm0hi8g
+OS: Ubuntu 26.04.1 LTS
+
+=== cowsay ===
+ __________________________
+&lt; Hello from Ubuntu Linux! &gt;
+ --------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+=== figlet ===
+ _     _                  
+| |   (_)_ __  _   ___  __
+| |   | | &#x27;_ \| | | \ \/ /
+| |___| | | | | |_| |&gt;  &lt; 
+|_____|_|_| |_|\__,_/_/\_\
+                          
+
+=== sl (steam locomotive) ===
+ncurses: cannot initialize terminal type ($TERM=&quot;unknown&quot;); exiting
+
+=== cmatrix (3 seconds, sparse) ===
+ncurses: cannot initialize terminal type ($TERM=&quot;unknown&quot;); exiting
+</pre></details><details><summary>[11] shell retry sl and cmatrix with TERM set</summary><pre>export TERM=xterm
+{
+echo &quot;=== sl retry ===&quot;
+timeout 3s sl 2&gt;&amp;1 || true
+echo &quot;&quot;
+echo &quot;=== cmatrix retry ===&quot;
+timeout 3s cmatrix -s 2&gt;&amp;1 || true
+} &gt;&gt; ~/ws/out/experiment_results.txt 2&gt;&amp;1
+echo &quot;done&quot;
+wc -l ~/ws/out/experiment_results.txt</pre><pre>[종료코드 0]
+done
+32 /home/runner/ws/out/experiment_results.txt
+</pre></details><details><summary>[12] shell view full experiment results</summary><pre>cat ~/ws/out/experiment_results.txt</pre><pre>[종료코드 0]
+=== Linux Fun Commands Experiment ===
+Date: Tue Nov 24 16:58:48 UTC 2026
+Host: runnervm0hi8g
+OS: Ubuntu 26.04.1 LTS
+
+=== cowsay ===
+ __________________________
+&lt; Hello from Ubuntu Linux! &gt;
+ --------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+=== figlet ===
+ _     _                  
+| |   (_)_ __  _   ___  __
+| |   | | &#x27;_ \| | | \ \/ /
+| |___| | | | | |_| |&gt;  &lt; 
+|_____|_|_| |_|\__,_/_/\_\
+                          
+
+=== sl (steam locomotive) ===
+ncurses: cannot initialize terminal type ($TERM=&quot;unknown&quot;); exiting
+
+=== cmatrix (3 seconds, sparse) ===
+ncurses: cannot initialize terminal type ($TERM=&quot;unknown&quot;); exiting
+=== sl retry ===
+[?1049h[22;0;0t[1;24r(B[m[4l[?7h[?25l[H[2J[15;80H_[15;79H_[16d|[9;80H_[12;80H|[13;80H|[14;80H|[15;78H__/[16;79H|/[17;80H\[9;79H_D[10;80H|[11;80H/[12;79H|[K[13d|[K[14d|/[15;1H[1P[16;78H|/-[17;79H\_[9;1H[1P[10;79H|([11;79H/[K[12d|[K[13d| _[14;1H[1P[15;76H__/ =[16;77H|/-=[17;78H\_/[9;77H_D _[10;78H|(_[11;78H/[K[12d|[K[13d| _[14;77H|/ |[15;75H__/ =|[16;76H|/-=|[17;1H[1P[8;80H=[9;76H_D _|[10;77H|(_)[11;77H/[K[12d|[K[13d| _
+[14d[1P[15d[1P[16;75H|/-=|_[17;1H[1P[8;79H=
+[9d[1P[10;76H|(_)-[11;76H/[K[12d|[K[13d| _
+[14d[1P[15;73H__/ =| o[16;74H|/-=|_
+[17d[1P[8;78H=
+[9d[1P[10;75H|(_)-[11;75H/[K[12d|[K[13d| _
+[14d[1P[15d[1P[16;73H|/-=|_
+[17d[1P[8;77H=[9;73H_D _|  |[10;74H|(_)-[11;74H/     |[12;73H|      |[13;73H| _[14;73H|/ |   |[15;71H__/ =| o |[16;72H|/-=|___|[17;1H[1P[5;79H(@[7;77H(
+[8d[1P[9;72H_D _|  |_[10;1H[1P[11d[1P[12d[1P[13;72H| _[14;72H|/ |   |-[15;70H__/ =| o |=[16;71H|/-=|___|=[17;1H[1P[8d[1P[9;71H_D _|  |_
+[10d[1P[11d[1P[12d[1P[13;71H| _[14;71H|/ |   |-[15;69H__/ =| o |=-[16;70H|/-=|___|=O[17;71H\_/      \[8;1H[1P[9;70H_D _|  |_[10;71H|(_)---  |[11;71H/     |  |[12;70H
+...(중략)...
+H[37m![39m(B[m [32m [21;55H[37mJ[22;29H[32my[39m(B[m [32m [39m(B[m [32mA[39m(B[m [32m [22;49Ho[22;61H [23;29H[37m7[23;49H&gt;[77G[32m_[24;3Ht[24;17H\[24;37Hk[24;53H [77G[37mo[39m(B[m[1;17H[32m [1;53H[37mB[2;21H[32m)[2;33H=[2;49H [39m(B[m [32m [2;67H*
+[3d [9G [3;21H[37mz[3;31H[32m [39m(B[m [37mQ[3;65H[32m [39m(B[m [37mP[4;3H[32mw[4;59H [5;3H[37mQ[6;23H[32m2[6;69H8[7;23H[37mY[7;47H[32mo[7;61H.[39m(B[m [32mD[39m(B[m [32mH[39m(B[m [32m [39m(B[m [37md[8;47Hk[8;61Hf[39m(B[m [32mZ[39m(B[m [37mO[9;5H[32mE[13GP[10;5H[37m)[39m(B[m [32m&gt;[39m(B[m [32mv[39m(B[m [32mH[39m(B[m [37m6[39m(B[m [32m&gt;[39m(B[m [32m1[39m(B[m [32m [39m(B[m [32m [39m(B[m [32m [39m(B[m [32m [39m(B[m [32ml[73Gf[11;3H [39m(B[m [32m [39m(B[m [37mJ[39m(B[m [37me[39m(B[m [32m5[39m(B[m [32m [39m(B[m [37me[11;27HZ[39m(B[m [32m [39m(B[m [32m\[11;55H [11;67H [39m(B[m [32m [39m(B[m [32m+[39m(B[m [37mX[39m(B[m [32m [39m(B[m [32m [12;17HH[12;31H[37m5[12;41H[32mM[12;59H0[12;71HH[13;5H [13;17H[37m8[39m(B[m [32mA[39m(B[m [32m [13;41H[37m^[13;57H[32m.[39m(B[m [37mL[13;71H:[14;43H[32mx[14;57H[37m%[75G[32m [15;11HX[15;43H[37m?[39m(B[m [32m [16;11H[37mm[16;35H[32mT[39m(B[m [32m [39m(B[m [32mk[39m(B[m [32m [16;67H6[17;5H7[17;35H[37mV[17;67HA[18;5Hp[13G[32m [21Gw[18;39Hh[18;51HF[73G [39m(B[m [32my[39m(B[m [32mx[39m(B[m [32m [19;17H [39m(B[m [32m@[39m(B[m [37mT[19;33H[32m [39m(B[m [32m [39m(B[m [32m [39m(B[m [37m^[19;51H@[19;63H[32ml[39m(B[m [32m [20;9H [20;19H[37mL[20;63HO[21;25H[32m![21;55HJ[22;25H[37mA[39m(B[m [32m [22;55H[37m*[23;29H[32m7[39m(B[m [32m [39m(B[m [32m3[39m(B[m [32m [23;49H&gt;[23;61H [24;29H[37m0[24;49H)[77G[32mo[39m(B[m[24;1H[?12l[?25h[?1049l[23;0;0t
+[?1l&gt;</pre></details><details><summary>[13] shell create clean summary report</summary><pre>cat &gt; ~/ws/out/summary.txt &lt;&lt; &#x27;EOF&#x27;
+Linux Fun Commands Experiment Summary
+======================================
+Environment: Ubuntu 26.04.1 LTS, host runnervm0hi8g
+Date: 2026-11-24
+
+Commands tested:
+1. cowsay - SUCCESS: displays ASCII cow with speech bubble
+2. figlet - SUCCESS: displays large ASCII banner text
+3. sl (steam locomotive) - PARTIAL: runs but outputs raw ANSI escape codes in non-interactive terminal; requires interactive terminal for visual animation
+4. cmatrix - PARTIAL: runs but outputs raw ANSI escape codes in non-interactive terminal; requires interactive terminal for visual Matrix effect
+
+Key finding: Text-based fun commands (cowsay, figlet) work perfectly in scripted/non-interactive shells. Full-screen ncurses animations (sl, cmatrix) need an interactive terminal ($TERM set and a real tty) to display properly; in batch mode they emit raw escape sequences.
+
+All output saved to ~/ws/out/experiment_results.txt
+EOF
+cat ~/ws/out/summary.txt</pre><pre>[종료코드 0]
+Linux Fun Commands Experiment Summary
+======================================
+Environment: Ubuntu 26.04.1 LTS, host runnervm0hi8g
+Date: 2026-11-24
+
+Commands tested:
+1. cowsay - SUCCESS: displays ASCII cow with speech bubble
+2. figlet - SUCCESS: displays large ASCII banner text
+3. sl (steam locomotive) - PARTIAL: runs but outputs raw ANSI escape codes in non-interactive terminal; requires interactive terminal for visual animation
+4. cmatrix - PARTIAL: runs but outputs raw ANSI escape codes in non-interactive terminal; requires interactive terminal for visual Matrix effect
+
+Key finding: Text-based fun commands (cowsay, figlet) work perfectly in scripted/non-interactive shells. Full-screen ncurses animations (sl, cmatrix) need an interactive terminal ($TERM set and a real tty) to display properly; in batch mode they emit raw escape sequences.
+
+All output saved to ~/ws/out/experiment_results.txt
+</pre></details></html>

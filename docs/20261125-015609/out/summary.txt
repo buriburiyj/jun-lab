@@ -1,0 +1,14 @@
+Linux Fun Commands Experiment Summary
+======================================
+Environment: Ubuntu 26.04.1 LTS, host runnervm0hi8g
+Date: 2026-11-24
+
+Commands tested:
+1. cowsay - SUCCESS: displays ASCII cow with speech bubble
+2. figlet - SUCCESS: displays large ASCII banner text
+3. sl (steam locomotive) - PARTIAL: runs but outputs raw ANSI escape codes in non-interactive terminal; requires interactive terminal for visual animation
+4. cmatrix - PARTIAL: runs but outputs raw ANSI escape codes in non-interactive terminal; requires interactive terminal for visual Matrix effect
+
+Key finding: Text-based fun commands (cowsay, figlet) work perfectly in scripted/non-interactive shells. Full-screen ncurses animations (sl, cmatrix) need an interactive terminal ($TERM set and a real tty) to display properly; in batch mode they emit raw escape sequences.
+
+All output saved to ~/ws/out/experiment_results.txt
