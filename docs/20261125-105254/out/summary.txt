@@ -1,0 +1,12 @@
+JSONPlaceholder API Analysis
+============================
+Total posts: 100
+Total comments: 500
+Total users: 10
+
+Posts per user: {1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10, 7: 10, 8: 10, 9: 10, 10: 10}
+Average comments per post: 5.00
+Most commented post: ID 1 with 5 comments
+Average title length: 39.5 chars
+Average body length: 160.6 chars
+Most active user: 1 with 10 posts
