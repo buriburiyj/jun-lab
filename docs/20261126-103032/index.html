@@ -1,0 +1,176 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>콘웨이의 라이프 게임 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>콘웨이의 라이프 게임 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 7번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>위키백과에서 콘웨이의 라이프 게임(Cellular Automaton) 규칙을 확인하고, 우분투 터미널에서 직접 시뮬레이션을 구현해 실행했습니다. numpy와 matplotlib을 설치해 격자 기반 세포 자동마타를 구현했고, 네 가지 패턴으로 실험했습니다.<br><br>결과:<br>- 글라이더: 150 스텝 후 생존 세포 5개. 대각선으로 이동하며 격자 밖으로 나감.<br>- 블링커: 50 스텝 후 생존 세포 3개. 가로 세로로 진동하는 발진기 동작 확인.<br>- 블록: 50 스텝 후 생존 세포 4개. 변하지 않는 정지 생명체(Still life) 동작 확인.<br>- 혼합(글라이더+블링커): 150 스텝 후 생존 세포 0개. 두 패턴이 상호작용하며 모두 소멸.<br><br>출력 파일은 ~/ws/out 폴더에 저장했으며, 각 스텝별 상태 이미지와 시간에 따른 생존 세포 수 그래프(PNG)를 생성했습니다. 알게 된 점은 단순한 지역 규칙만으로도 이동, 진동, 안정, 소멸 등 복잡한 거동이 나타난다는 점입니다. 다음에는 고스퍼 글라이더 건 같은 더 큰 패턴이나, 규칙 변형(B3/S23 외 다른 규칙)을 실험해 볼 수 있습니다.</p><img src="out/blinker_population.png"><img src="out/blinker_step_000.png"><img src="out/blinker_step_010.png"><img src="out/blinker_step_020.png"><img src="out/blinker_step_030.png"><img src="out/blinker_step_040.png"><img src="out/blinker_step_049.png"><img src="out/block_population.png"><img src="out/block_step_000.png"><img src="out/block_step_010.png"><img src="out/block_step_020.png"><img src="out/block_step_030.png"><img src="out/block_step_040.png"><img src="out/block_step_049.png"><img src="out/glider_population.png"><img src="out/glider_step_000.png"><img src="out/glider_step_015.png"><img src="out/glider_step_030.png"><img src="out/glider_step_045.png"><img src="out/glider_step_060.png"><img src="out/glider_step_075.png"><img src="out/glider_step_090.png"><img src="out/glider_step_105.png"><img src="out/glider_step_120.png"><img src="out/glider_step_135.png"><img src="out/glider_step_149.png"><img src="out/mixed_population.png"><img src="out/mixed_step_000.png"><img src="out/mixed_step_015.png"><img src="out/mixed_step_030.png"><img src="out/mixed_step_045.png"><img src="out/mixed_step_060.png"><img src="out/mixed_step_075.png"><img src="out/mixed_step_090.png"><img src="out/mixed_step_105.png"><img src="out/mixed_step_120.png"><img src="out/mixed_step_135.png"><img src="out/mixed_step_149.png">
+<h2>결과 파일</h2><ul><li><a href="out/blinker_population.png">blinker_population.png</a></li><li><a href="out/blinker_step_000.png">blinker_step_000.png</a></li><li><a href="out/blinker_step_010.png">blinker_step_010.png</a></li><li><a href="out/blinker_step_020.png">blinker_step_020.png</a></li><li><a href="out/blinker_step_030.png">blinker_step_030.png</a></li><li><a href="out/blinker_step_040.png">blinker_step_040.png</a></li><li><a href="out/blinker_step_049.png">blinker_step_049.png</a></li><li><a href="out/block_population.png">block_population.png</a></li><li><a href="out/block_step_000.png">block_step_000.png</a></li><li><a href="out/block_step_010.png">block_step_010.png</a></li><li><a href="out/block_step_020.png">block_step_020.png</a></li><li><a href="out/block_step_030.png">block_step_030.png</a></li><li><a href="out/block_step_040.png">block_step_040.png</a></li><li><a href="out/block_step_049.png">block_step_049.png</a></li><li><a href="out/glider_population.png">glider_population.png</a></li><li><a href="out/glider_step_000.png">glider_step_000.png</a></li><li><a href="out/glider_step_015.png">glider_step_015.png</a></li><li><a href="out/glider_step_030.png">glider_step_030.png</a></li><li><a href="out/glider_step_045.png">glider_step_045.png</a></li><li><a href="out/glider_step_060.png">glider_step_060.png</a></li><li><a href="out/glider_step_075.png">glider_step_075.png</a></li><li><a href="out/glider_step_090.png">glider_step_090.png</a></li><li><a href="out/glider_step_105.png">glider_step_105.png</a></li><li><a href="out/glider_step_120.png">glider_step_120.png</a></li><li><a href="out/glider_step_135.png">glider_step_135.png</a></li><li><a href="out/glider_step_149.png">glider_step_149.png</a></li><li><a href="out/mixed_population.png">mixed_population.png</a></li><li><a href="out/mixed_step_000.png">mixed_step_000.png</a></li><li><a href="out/mixed_step_015.png">mixed_step_015.png</a></li><li><a href="out/mixed_step_030.png">mixed_step_030.png</a></li><li><a href="out/mixed_step_045.png">mixed_step_045.png</a></li><li><a href="out/mixed_step_060.png">mixed_step_060.png</a></li><li><a href="out/mixed_step_075.png">mixed_step_075.png</a></li><li><a href="out/mixed_step_090.png">mixed_step_090.png</a></li><li><a href="out/mixed_step_105.png">mixed_step_105.png</a></li><li><a href="out/mixed_step_120.png">mixed_step_120.png</a></li><li><a href="out/mixed_step_135.png">mixed_step_135.png</a></li><li><a href="out/mixed_step_149.png">mixed_step_149.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting python experiment ubuntu terminal data visualization</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] fetch https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life</summary><pre></pre><pre>Conway&#x27;s Game of Life - Wikipedia Jump to content Main menu Main menu move to sidebar hide Navigation Main page Contents Current events Random article About Wikipedia Contact us Contribute Help Learn to edit Community portal Recent changes Upload file Special pages Search Search Appearance Donate Create account Log in Personal tools Donate Create account Log in Contents move to sidebar hide (Top) 1 Rules 2 History 3 Analysis Toggle Analysis subsection 3.1 Pattern taxonomy 3.1.1 Oblique spaceships 3.1.2 Self-replication 3.2 Computability theory 3.3 Other disciplines 4 Simulation Toggle Simulation subsection 4.1 History 4.2 Algorithms 4.3 Modern programs 5 Variations 6 In popular culture 7 See also 8 Notes 9 References 10 External links Toggle the table of contents Conway&#x27;s Game of Life 39 languages العربية Azərbaycanca تۆرکجه Български Català Čeština Cymraeg Deutsch Ελληνικά Esperanto Español Euskara فارسی Suomi Français עברית Magyar Interlingua Italiano 日本語 한국어 Latina Lietuvių Latviešu Nederlands Norsk bokmål Polski Português Română Русский Simple English Slovenčina Svenska Türkçe Українська Tiếng Việt Volapük 粵語 中文 Edit links Article Talk English Read Edit View history Save Tools Tools move to sidebar hide Actions Read Edit View history Save General What links here Related changes Upload file Permanent link Page information Cite this page Get shortened URL Switch to legacy parser Print/export Download as PDF Printable version In other projects Wikimedia Commons Wikidata item Appearance move to sidebar hide From Wikipedia, the free encyclopedia Two-dimensional cellular automaton &quot;Conway game&quot; redirects here. For Conway&#x27;s surreal number game theory, see Surreal number . A single Gosper glider gun creating gliders A screenshot of a puffer-type breeder (red) that leaves glider guns (green) in its wake, which in turn create gliders (blue) ( animation ) The Game of Life , also known as Conway&#x27;s Game of Life (sometimes abbreviated as CGoL ) or simply Life , is a cellular 
+...(중략)...
+live cell with more than three live neighbours dies, as if by overpopulation. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction. [ 3 ] [ 4 ] : 3 This makes it described by the rulestring B3/S23, [ nb 1 ] where the numbers before the slash signify conditions for dead cells becoming alive, and the ones after it signifying survival conditions for cells that are already alive. [ 4 ] : 5 The initial pattern constitutes the seed of the system. The first generation is created by applying the above rules simultaneously to every cell in the seed, live or dead; births and deaths occur simultaneously, and the discrete moment at which this happens is sometimes called a tick . {{cite web|title=NaiveLife Emulated: A reading-order simulation of Life|url=https://conwaylife.com/forums/viewtopic.php?f=11&amp;t=4523&amp;p=128919|website=ConwayLife.com|access-date=29 November 2021|language=en|date=24 May 2020}}&lt;/ref&gt;&lt;ref&gt;{{cite web|last1=Goucher|first1=Adam|title=Re: Thread For Your Accidental Discoveries|url=https://conwaylife.com/forums/viewtopic.php?f=2&amp;t=279&amp;p=13168#p13168|website=ConwayLife.com|access-date=29 November 2021|language=en|archive-date=29 November 2021|archive-url=https://web.archive.org/web/20211129154301/https://www.conwaylife.com/forums/viewtopic.php?f=2&amp;t=279&amp;p=13168#p13168|url-status=live}}&lt;/ref&gt; because it is a common beginners&#x27; mistake among people attempting to program Conway&#x27;s Game of Life.&lt;ref&gt;{{cite web|author1=((Ian07))|title=Re: Strange spaceship that is supposed to be impossible and infinite cell spread|url=https://conwaylife.com/forums/viewtopic.php?f=9&amp;t=4288&amp;p=88701#p88701|archive-date=29 November 2021|archive-url=https://web.archive.org/web/20211129164454/https://conwaylife.com/forums/viewtopic.php?f=9&amp;t=4288&amp;p=88701#p88701|website=ConwayLife.com|access-date=29 November 2021|language=en|quote=&#x27;&#x27;I&#x27;m pretty sure this is because you&#x27;ve accidentally created an implementation of what&#x27;s sometimes known as NaiveLife (as it&#x27;s</pre></details><details><summary>[3] shell mkdir and check python packages</summary><pre>mkdir -p ~/ws/out
+python3 -c &quot;import matplotlib; print(&#x27;MPL&#x27;, matplotlib.__version__)&quot; 2&gt;&amp;1 || echo &quot;NO_MPL&quot;
+python3 -c &quot;import numpy; print(&#x27;NUMPY&#x27;, numpy.__version__)&quot; 2&gt;&amp;1 || echo &quot;NO_NUMPY&quot;</pre><pre>[종료코드 0]
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+NO_MPL
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;numpy&#x27;
+NO_NUMPY
+</pre></details><details><summary>[4] shell install numpy and matplotlib</summary><pre>pip3 install --user numpy matplotlib 2&gt;&amp;1 | tail -n 5</pre><pre>[종료코드 0]
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: tzdata, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, python-dateutil, contourpy, matplotlib
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.69.1 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.5 packaging-26.4 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+</pre></details><details><summary>[5] write ~/ws/game_of_life.py</summary><pre>import numpy as np
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+import os
+
+def step(grid):
+    # Count neighbors using shifts
+    neighbors = (
+        np.roll(grid, (0, 1), axis=(0,1)) +
+        np.roll(grid, (0, -1), axis=(0,1)) +
+        np.roll(grid, (1, 0), axis=(0,1)) +
+        np.roll(grid, (-1, 0), axis=(0,1)) +
+        np.roll(grid, (1, 1), axis=(0,1)) +
+        np.roll(grid, (1, -1), axis=(0,1)) +
+        np.roll(grid, (-1, 1), axis=(0,1)) +
+        np.roll(grid, (-1, -1), axis=(0,1))
+    )
+    new_grid = np.zeros_like(grid)
+    new_grid[(grid == 1) &amp; ((neighbors == 2) | (neighbors == 3))] = 1
+    new_grid[(grid == 0) &amp; (neighbors == 3)] = 1
+    return new_grid
+
+def glider(x, y):
+    pattern = np.array([
+        [0, 1, 0],
+        [0, 0, 1],
+        [1, 1, 1]
+    ])
+    return pattern, x, y
+
+def blinker(x, y):
+    pattern = np.array([
+        [1],
+        [1],
+        [1]
+    ])
+    return pattern, x, y
+
+def block(x, y):
+    pattern = np.array([
+        [1, 1],
+        [1, 1]
+    ])
+    return pattern, x, y
+
+def place(grid, pattern, x, y):
+    h, w = pattern.shape
+    grid[x:x+h, y:y+w] = pattern
+
+def run_experiment(name, patterns, grid_size=60, steps=100, save_every=10):
+    grid = np.zeros((grid_size, grid_size), dtype=int)
+    for pattern, x, y in patterns:
+        place(grid, pattern, x, y)
+    
+    os.makedirs(&#x27;out&#x27;, exist_ok=True)
+    counts = []
+    
+    for t in range(steps):
+        counts.append(int(grid.sum()))
+        if t % save_every == 0 or t == steps - 1:
+            plt.figure(figsize=(5, 5))
+            plt.imshow(grid, cmap=&#x27;binary&#x27;, interpolation=&#x27;nearest&#x27;)
+            plt.title(f&#x27;{name} - Step {t} - Cells: {counts[-1]}&#x27;)
+            plt.axis(&#x27;off&#x27;)
+            plt.tight_layout()
+            plt.savefig(f&#x27;out/{name}_step_{t:03d}.png&#x27;, dpi=100)
+            plt.close()
+        grid = step(grid)
+    
+    # Save population plot
+    plt.figure(figsize=(6, 4))
+    plt.plot(counts, color=&#x27;blue&#x27;, linewidth=1.5)
+    plt.title(f&#x27;{name} - Live Cell Count Over Time&#x27;)
+    plt.xlabel(&#x27;Step&#x27;)
+    plt.ylabel(&#x27;Live Cells&#x27;)
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(f&#x27;out/{name}_population.png&#x27;, dpi=100)
+    plt.close()
+    
+    return counts
+
+if __name__ == &#x27;__main__&#x27;:
+    # Experiment 1: Glider
+    g, gx, gy = glider(10, 10)
+    counts1 = run_experiment(&#x27;glider&#x27;, [(g, gx, gy)], grid_size=60, steps=150, save_every=15)
+    
+    # Experiment 2: Blinker
+    b, bx, by = blinker(30, 30)
+    counts2 = run_experiment(&#x27;blinker&#x27;, [(b, bx, by)], grid_size=60, steps=50, save_every=10)
+    
+    # Experiment 3: Block (still life)
+    bl, blx, bly = block(15, 40)
+    counts3 = run_experiment(&#x27;block&#x27;, [(bl, blx, bly)], grid_size=60, steps=50, save_every=10)
+    
+    # Experiment 4: Glider + Blinker interaction
+    counts4 = run_experiment(&#x27;mixed&#x27;, [(g, 10, 10), (b, 30, 30)], grid_size=60, steps=150, save_every=15)
+    
+    print(&#x27;Experiments complete.&#x27;)
+    print(f&#x27;Glider final cells: {counts1[-1</pre><pre>저장함: game_of_life.py (3147자)</pre></details><details><summary>[6] shell run the Game of Life experiment script</summary><pre>cd ~/ws &amp;&amp; python3 game_of_life.py 2&gt;&amp;1</pre><pre>[종료코드 0]
+Experiments complete.
+Glider final cells: 5
+Blinker final cells: 3
+Block final cells: 4
+Mixed final cells: 0
+</pre></details><details><summary>[7] shell list output files to verify results</summary><pre>ls -la ~/ws/out/ 2&gt;&amp;1</pre><pre>[종료코드 0]
+total 356
+drwxr-xr-x 2 runner runner  4096 Nov 26 01:31 .
+drwxr-xr-x 3 runner runner  4096 Nov 26 01:31 ..
+-rw-r--r-- 1 runner runner 16991 Nov 26 01:31 blinker_population.png
+-rw-r--r-- 1 runner runner  5419 Nov 26 01:31 blinker_step_000.png
+-rw-r--r-- 1 runner runner  5407 Nov 26 01:31 blinker_step_010.png
+-rw-r--r-- 1 runner runner  5599 Nov 26 01:31 blinker_step_020.png
+-rw-r--r-- 1 runner runner  5346 Nov 26 01:31 blinker_step_030.png
+-rw-r--r-- 1 runner runner  5521 Nov 26 01:31 blinker_step_040.png
+-rw-r--r-- 1 runner runner  5562 Nov 26 01:31 blinker_step_049.png
+-rw-r--r-- 1 runner runner 18728 Nov 26 01:31 block_population.png
+-rw-r--r-- 1 runner runner  5249 Nov 26 01:31 block_step_000.png
+-rw-r--r-- 1 runner runner  5345 Nov 26 01:31 block_step_010.png
+-rw-r--r-- 1 runner runner  5537 Nov 26 01:31 block_step_020.png
+-rw-r--r-- 1 runner runner  5564 Nov 26 01:31 block_step_030.png
+-rw-r--r-- 1 runner runner  5300 Nov 26 01:31 block_step_040.png
+-rw-r--r-- 1 runner runner  5336 Nov 26 01:31 block_step_049.png
+-rw-r--r-- 1 runner runner 14903 Nov 26 01:31 glider_population.png
+-rw-r--r-- 1 runner runner  5261 Nov 26 01:31 glider_step_000.png
+-rw-r--r-- 1 runner runner  4987 Nov 26 01:31 glider_step_015.png
+-rw-r--r-- 1 runner runner  5491 Nov 26 01:31 glider_step_030.png
+-rw-r--r-- 1 runner runner  5102 Nov 26 01:31 glider_step_045.png
+-rw-r--r-- 1 runner runner  5525 Nov 26 01:31 glider_step_060.png
+-rw-r--r-- 1 runner runner  5079 Nov 26 01:31 glider_step_075.png
+-rw-r--r-- 1 runner runner  5516 Nov 26 01:31 glider_step_090.png
+-rw-r--r-- 1 runner runner  5364 Nov 26 01:31 glider_step_105.png
+-rw-r--r-- 1 runner runner  5617 Nov 26 01:31 glider_step_120.png
+-rw-r--r-- 1 runner runner  5324 Nov 26 01:31 glider_step_135.png
+-rw-r--r-- 1 runner runner  5585 Nov 26 01:31 glider_step_149.png
+-rw-r--r-- 1 runner runner 19590 Nov 26 01:31 mixed_population.png
+-rw-r--r-- 1 runner runner  5845 Nov 26 01:31 mixed_step_000.png
+-rw-r--r-- 1 runner runner  5775 Nov 26 01:31 mixed_step_015.png
+-rw-r--r-- 1 runner runner  5971 Nov 26 01:31 mixed_step_030.png
+-rw-r--r-- 1 runner runner  5862 Nov 26 01:31 mixed_step_045.png
+-rw-r--r-- 1 runner runner  6030 Nov 26 01:31 mixed_step_060.png
+-rw-r--r-- 1 runner runner  5909 Nov 26 01:31 mixed_step_075.png
+-rw-r--r-- 1 runner runner  5693 Nov 26 01:31 mixed_step_090.png
+-rw-r--r-- 1 runner runner  5718 Nov 26 01:31 mixed_step_105.png
+-rw-r--r-- 1 runner runner  5762 Nov 26 01:31 mixed_step_120.png
+-rw-r--r-- 1 runner runner  5965 Nov 26 01:31 mixed_step_135.png
+-rw-r--r-- 1 runner runner  5981 Nov 26 01:31 mixed_step_149.png
+</pre></details></html>
