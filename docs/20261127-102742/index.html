@@ -1,0 +1,79 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>몬테카를로 방법으로 파이 추정하기</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>몬테카를로 방법으로 파이 추정하기</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 5번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>지금까지 한 일:<br>- 우분투 개인 PC에서 컴퓨터 과학 실험 주제를 인터넷으로 찾으려 했으나 검색이 막힘.<br>- python3 확인 (3.12.16). matplotlib이 없어서 pip로 설치 완료.<br>- 몬테카를로 방식으로 원주율(π)을 추정하는 `monte_carlo_pi.py`를 작성해 저장.<br>- 스크립트 실행: 점 개수 100부터 1,000,000까지 실험하고, `out/monte_carlo_pi.png` 그래프 저장. 100만 점 기준 추정값 3.140464 (실제값 3.141593).<br><br>막힌 점 / 현재 상태:<br>- 처음 인터넷 검색 단계가 막혔으나, 직접 로컬에서 몬테카를로 파이 실험을 수행함으로써 우회함.<br>- 현재 특별한 막힘은 없으며 실험은 완료된 상태임. 다음 단계로 결과 분석이나 새로운 주제 실험을 진행할 수 있음.</p><img src="out/monte_carlo_pi.png">
+<h2>결과 파일</h2><ul><li><a href="out/monte_carlo_pi.png">monte_carlo_pi.png</a></li></ul><h2>작업 기록</h2><details><summary>[1] search interesting computer science experiments to run on Linux Ubuntu personal computer</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] shell check python3 and matplotlib availability</summary><pre>python3 --version
+python3 -c &quot;import matplotlib; print(&#x27;matplotlib&#x27;, matplotlib.__version__)&quot; 2&gt;&amp;1 || echo &quot;matplotlib not found&quot;
+</pre><pre>[종료코드 0]
+Python 3.12.16
+Traceback (most recent call last):
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named &#x27;matplotlib&#x27;
+matplotlib not found
+</pre></details><details><summary>[3] shell install matplotlib for plotting</summary><pre>pip install matplotlib 2&gt;&amp;1 | tail -5
+</pre><pre>[종료코드 0]
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: tzdata, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, python-dateutil, contourpy, matplotlib
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.69.1 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.5 packaging-26.4 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 tzdata-2026.6
+</pre></details><details><summary>[4] write monte_carlo_pi.py</summary><pre>import random
+import math
+import matplotlib
+matplotlib.use(&#x27;Agg&#x27;)
+import matplotlib.pyplot as plt
+
+def estimate_pi(n):
+    inside = 0
+    for _ in range(n):
+        x = random.random()
+        y = random.random()
+        if x*x + y*y &lt;= 1.0:
+            inside += 1
+    return 4.0 * inside / n
+
+random.seed(42)
+sample_sizes = [100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000]
+estimates = []
+errors = []
+
+for n in sample_sizes:
+    pi_est = estimate_pi(n)
+    estimates.append(pi_est)
+    errors.append(abs(pi_est - math.pi))
+    print(f&quot;n={n:&gt;7d}  pi_est={pi_est:.6f}  error={abs(pi_est - math.pi):.6f}&quot;)
+
+plt.figure(figsize=(8, 5))
+plt.plot(sample_sizes, estimates, marker=&#x27;o&#x27;, label=&#x27;Monte Carlo estimate&#x27;)
+plt.axhline(y=math.pi, color=&#x27;r&#x27;, linestyle=&#x27;--&#x27;, label=&#x27;True pi&#x27;)
+plt.xscale(&#x27;log&#x27;)
+plt.xlabel(&#x27;Number of random points&#x27;)
+plt.ylabel(&#x27;Estimated pi&#x27;)
+plt.title(&#x27;Monte Carlo Estimation of Pi&#x27;)
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(&#x27;out/monte_carlo_pi.png&#x27;, dpi=150)
+print(&quot;Saved plot to out/monte_carlo_pi.png&quot;)
+print(f&quot;Final estimate with 1,000,000 points: {estimates[-1]:.6f}&quot;)
+print(f&quot;True pi: {math.pi:.6f}&quot;)
+</pre><pre>저장함: monte_carlo_pi.py (1165자)</pre></details><details><summary>[5] shell run monte carlo pi experiment</summary><pre>mkdir -p out
+python3 monte_carlo_pi.py
+</pre><pre>[종료코드 0]
+n=    100  pi_est=3.120000  error=0.021593
+n=    500  pi_est=3.112000  error=0.029593
+n=   1000  pi_est=3.128000  error=0.013593
+n=   5000  pi_est=3.140000  error=0.001593
+n=  10000  pi_est=3.135200  error=0.006393
+n=  50000  pi_est=3.135440  error=0.006153
+n= 100000  pi_est=3.144120  error=0.002527
+n= 500000  pi_est=3.143680  error=0.002087
+n=1000000  pi_est=3.140464  error=0.001129
+Saved plot to out/monte_carlo_pi.png
+Final estimate with 1,000,000 points: 3.140464
+True pi: 3.141593
+</pre></details></html>
