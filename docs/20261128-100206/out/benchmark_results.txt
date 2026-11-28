@@ -1,0 +1,7 @@
+model name	: AMD EPYC 9V74 80-Core Processor
+MemTotal:       16366632 kB
+Primes up to 1000000: 78498, Time: 0.0071 sec
+Primes up to 5000000: 348513, Time: 0.0365 sec
+Primes up to 10000000: 664579, Time: 0.0721 sec
+Primes up to 25000000: 1565927, Time: 0.1977 sec
+Primes up to 50000000: 3001134, Time: 0.5049 sec
