@@ -1,0 +1,45 @@
+<!doctype html><html lang="ko"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>웹사이트 응답 속도와 데이터 압축 효과 측정 실험</title>
+<style>body{font-family:sans-serif;max-width:860px;margin:auto;padding:16px;line-height:1.6}
+pre{background:#f4f4f4;padding:10px;overflow:auto;white-space:pre-wrap;font-size:13px}img{max-width:100%}
+details{border-bottom:1px solid #ddd;padding:4px 0}</style>
+<p><a href="../">← 연구 목록</a></p><h1>웹사이트 응답 속도와 데이터 압축 효과 측정 실험</h1>
+<p>주제: 인터넷에서 흥미로운 주제를 하나 찾아서 직접 실험해 봐<br>결과: 성공 · 행동 4번 · 모델 nvidia/nemotron-3.5-super-vl-120b-a12b</p>
+<h2>정리</h2><p>무엇을 했는지: curl로 여러 웹사이트에 접속해 HTTP 응답 코드, 응답 시간, 다운로드 크기, 전송 속도를 측정했고, Accept-Encoding 헤더를 바꿔가며 압축 사용 여부에 따른 전송 크기 차이를 비교했습니다.<br><br>결과 숫자: example.com은 577바이트를 0.043초에 받았고 압축 시 334바이트로 약 42퍼센트 줄었습니다. google.com은 87501바이트를 0.111초에 받았고 압축 시 29659바이트로 약 66퍼센트 줄었습니다. wikipedia.org는 122259바이트를 0.170초에 받았고 압축 시 29095바이트로 약 76퍼센트 줄었습니다. httpbin.org/get은 237바이트를 받았고 압축 시 246바이트로 오히려 약간 커졌습니다.<br><br>알게 된 점: 위키백과나 구글 같은 텍스트가 많은 사이트는 gzip 압축으로 전송량을 3분의 1 이하로 크게 줄일 수 있지만, 이미 작거나 이미 압축된 작은 데이터는 압축 헤더 때문에 오히려 커질 수 있습니다. 응답 시간은 서버 거리와 캐시 상태에 따라 달라지며, example.com은 클라우드플레어 캐시 히트로 매우 빨랐습니다.<br><br>다음에 해 볼 것: 여러 번 반복 측정해 평균과 편차를 내고, 서로 다른 시간대나 지역 서버를 비교해 보며 압축 알고리즘별 차이도 측정해 볼 수 있습니다.</p>
+<h2>결과 파일</h2><ul><li>없음</li></ul><h2>작업 기록</h2><details><summary>[1] search 리눅스 curl로 웹사이트 응답 시간 크기 압축률 측정 실험 방법</summary><pre></pre><pre>검색이 막혔어요. 검색어를 바꾸거나, 아는 주소를 fetch 하거나, shell에서 curl을 써 봐.</pre></details><details><summary>[2] shell curl -I -s --max-time 10 https://example.com &amp;&amp; echo &quot;---&quot; &amp;&amp; curl -s -o /dev/null -w &quot;HTTP_CODE: %{</summary><pre></pre><pre>[종료코드 0]
+HTTP/2 200 
+date: Sat, 28 Nov 2026 14:59:23 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+last-modified: Thu, 26 Nov 2026 17:29:13 GMT
+allow: GET, HEAD
+accept-ranges: bytes
+age: 12387
+cf-cache-status: HIT
+cf-ray: a61a3c77b93b2e6a-DFW
+alt-svc: h3=&quot;:443&quot;; ma=86400
+
+---
+HTTP_CODE: 200
+TIME_TOTAL: 0.053398s
+SIZE_DOWNLOAD: 577 bytes
+SPEED_DOWNLOAD: 10805 bytes/s
+</pre></details><details><summary>[3] shell for url in https://example.com https://httpbin.org/get https://www.google.com https://www.wikipedia.</summary><pre></pre><pre>[종료코드 0]
+=== https://example.com ===
+HTTP:200 TIME:0.043460s SIZE:577b SPEED:13276b/s
+=== https://httpbin.org/get ===
+HTTP:200 TIME:0.168729s SIZE:202b SPEED:1197b/s
+=== https://www.google.com ===
+HTTP:200 TIME:0.111155s SIZE:87298b SPEED:785371b/s
+=== https://www.wikipedia.org ===
+HTTP:200 TIME:0.170086s SIZE:122259b SPEED:718806b/s
+</pre></details><details><summary>[4] shell for url in https://example.com https://httpbin.org/get https://www.wikipedia.org https://www.google.</summary><pre></pre><pre>[종료코드 0]
+=== https://example.com ===
+NO_GZIP: 577 GZIP: 334
+=== https://httpbin.org/get ===
+NO_GZIP: 237 GZIP: 246
+=== https://www.wikipedia.org ===
+NO_GZIP: 122259 GZIP: 29095
+=== https://www.google.com ===
+NO_GZIP: 87501 GZIP: 29659
+</pre></details></html>
